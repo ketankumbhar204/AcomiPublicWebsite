@@ -8,7 +8,7 @@ export function AboutPage() {
   useEffect(() => {
     applySeo({
       title: 'About ACOMI',
-      description: 'ACOMI is operations software for occupancy, members, meals, and dues.',
+      description: 'ACOMI means Accommodation + Meals. Operations software for occupancy, headcount, members, and dues.',
       path: '/about',
     });
   }, []);
@@ -17,23 +17,20 @@ export function AboutPage() {
     <>
       <PageHero
         eyebrow="About"
-        title="About ACOMI"
-        description="ACOMI brings accommodation and meal operations into one product for owners and operators."
+        title="Accommodation + Meals"
+        description="ACOMI is operations software for owners — not a listing site, not a payment gateway."
       />
-      <section className="py-16 sm:py-20">
-        <Container className="max-w-3xl">
-          <p className="text-lg leading-relaxed text-text-secondary">
-            ACOMI stands for Accommodation + Meals. It is designed to help operators manage the operational side of a
-            space from one place — occupancy, members, meals, dues, complaints, and inventory.
+      <section className="bg-background py-16 sm:py-20">
+        <Container className="max-w-3xl space-y-6 text-lg leading-relaxed text-text-secondary">
+          <p>
+            ACOMI helps operators run a space: who lives there or eats there, occupancy when beds exist, daily meal
+            headcount when food is served, dues with payment proofs, and complaints.
           </p>
-          <p className="mt-6 text-lg leading-relaxed text-text-secondary">
-            Supported space types are PG, Mess, Hostel, Co-living, and Rental. Mess is meal-first and does not use
-            bed and room structure. Members join by invitation; ACOMI is not a marketplace for finding a PG.
+          <p>
+            Supported types are PG, Mess, Hostel, Co-living, and Rental. Mess is meal-first. Lodging is occupancy-first.
+            Members join by invitation.
           </p>
-          <p className="mt-6 text-lg leading-relaxed text-text-secondary">
-            Use the product at app.acomi.in, or on Android. This website is the public introduction — not the signed-in
-            application.
-          </p>
+          <p>Use the product at app.acomi.in or on Android. This website is the public introduction.</p>
         </Container>
       </section>
       <FinalCta />

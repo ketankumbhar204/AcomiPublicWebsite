@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="screen.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 2px;
+      }
+      .cust,
+      .poll {
+        padding: 12px 10px;
+      }
+      .cust {
+        background: #fff8ee;
+      }
+      .poll {
+        background: #eef5ff;
+      }
+      .hi {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .cust .n,
+      .poll .n {
+        margin-top: 4px;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+      .cust .n {
+        color: #b45309;
+      }
+      .poll .n {
+        color: #1d4ed8;
+      }
+      .poll-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .meals,
+      .menu {
+        padding: 10px;
+      }
+      .meal-row {
+        padding: 7px 0;
+      }
+      .meal-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      .meal-name {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .ratio {
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .ratio span {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .locs {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+      }
+      .loc {
+        padding: 10px 6px;
+        text-align: center;
+      }
+      .loc .n {
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .loc .l {
+        margin-top: 2px;
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .menu-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 0;
+        border-bottom: 1px solid #eef4f0;
+      }
+      .menu-row:last-child {
+        border-bottom: 0;
+      }
+      .menu-name {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .pending {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffe8ee;
+        border-radius: 14px;
+        padding: 11px 12px;
+      }
+      .pending .t {
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .pending .s {
+        font-size: 11px;
+        color: #9f1239;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <div class="status">
+        <span>8:24</span>
+        <span class="status-right">5G · 86%</span>
+      </div>
+      <div class="topbar">
+        <div class="topbar-left">
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          <span class="space">Sunrise Mess</span>
+          <span class="caret">▼</span>
+        </div>
+        <div class="top-icons">
+          <div class="avatar">K</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="hero">
+          <div class="card cust">
+            <div class="hi">Customers</div>
+            <div class="n money">86</div>
+            <div class="hi">On meals today</div>
+          </div>
+          <div class="card poll">
+            <div class="poll-row">
+              <div>
+                <div class="hi">Poll</div>
+                <div class="n money">78<span style="font-size: 14px; font-weight: 600; color: #64748b"> / 86</span></div>
+                <div class="hi">Responded</div>
+              </div>
+              <svg width="46" height="46" viewBox="0 0 46 46" aria-hidden>
+                <circle cx="23" cy="23" r="18" fill="none" stroke="#dbeafe" stroke-width="7" />
+                <circle
+                  cx="23"
+                  cy="23"
+                  r="18"
+                  fill="none"
+                  stroke="#2563eb"
+                  stroke-width="7"
+                  stroke-linecap="round"
+                  stroke-dasharray="102 113"
+                  transform="rotate(-90 23 23)"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Meal operations</div>
+        <div class="card meals">
+          <div class="meal-row">
+            <div class="meal-top">
+              <div class="meal-name">Breakfast</div>
+              <div class="ratio money">78 <span>/ 86</span></div>
+            </div>
+            <div class="bar"><i style="width: 91%; background: #128c7e"></i></div>
+          </div>
+          <div class="meal-row">
+            <div class="meal-top">
+              <div class="meal-name">Lunch</div>
+              <div class="ratio money">62 <span>/ 86</span></div>
+            </div>
+            <div class="bar"><i style="width: 72%; background: #d97706"></i></div>
+          </div>
+          <div class="meal-row">
+            <div class="meal-top">
+              <div class="meal-name">Dinner</div>
+              <div class="ratio money">48 <span>/ 86</span></div>
+            </div>
+            <div class="bar"><i style="width: 56%; background: #7c3aed"></i></div>
+          </div>
+        </div>
+
+        <div class="section-title">Meals to prepare</div>
+        <div class="locs">
+          <div class="card loc" style="background: #e7f6ee">
+            <div class="n money" style="color: #0f6b4c">46</div>
+            <div class="l">Main dining</div>
+          </div>
+          <div class="card loc" style="background: #fff1e0">
+            <div class="n money" style="color: #d97706">32</div>
+            <div class="l">Block B</div>
+          </div>
+          <div class="card loc" style="background: #e8f1ff">
+            <div class="n money" style="color: #2563eb">8</div>
+            <div class="l">Other</div>
+          </div>
+        </div>
+
+        <div class="section-title">Today’s menu</div>
+        <div class="card menu">
+          <div class="menu-row">
+            <div class="ico tone-green">🍽</div>
+            <div class="menu-name">Vegetable Thali</div>
+            <div class="ratio money">42</div>
+          </div>
+          <div class="menu-row">
+            <div class="ico tone-orange">🍛</div>
+            <div class="menu-name">Rice + Dal</div>
+            <div class="ratio money">21</div>
+          </div>
+          <div class="menu-row">
+            <div class="ico tone-purple">○</div>
+            <div class="menu-name">Extra Roti</div>
+            <div class="ratio money">15</div>
+          </div>
+        </div>
+
+        <div class="pending" style="margin-top: 10px">
+          <div class="ico tone-pink">👤</div>
+          <div style="flex: 1">
+            <div class="t">Pending responses</div>
+            <div class="s">8 customers yet to respond</div>
+          </div>
+          <div style="color: #9f1239; font-weight: 700">›</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav-item active">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-10.5z" />
+          </svg>
+          Dashboard
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="3" />
+            <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+          </svg>
+          Customers
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M8 12V6a2 2 0 012-2h4a2 2 0 012 2v6M6 16h12v5H6z" />
+          </svg>
+          Meals
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+          </svg>
+          Menu
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19V5h6v14H4zM14 19V9h6v10h-6z" />
+          </svg>
+          Reports
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="19" cy="12" r="1" />
+            <circle cx="5" cy="12" r="1" />
+          </svg>
+          More
+        </div>
+      </nav>
+    </div>
+  </body>
+</html>

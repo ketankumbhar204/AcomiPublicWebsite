@@ -1,58 +1,36 @@
-import { BedDouble, Building2, Home, Hotel, UtensilsCrossed } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { SpaceTypeCard } from '../cards/SpaceTypeCard';
-import { SectionHeading } from '../common/SectionHeading';
+import { BedDouble, Building2, Home, Users, UtensilsCrossed } from 'lucide-react';
 import { Container } from '../layout/Container';
 
 const types = [
-  {
-    icon: Home,
-    label: 'PG',
-    description: 'Paying Guest. Rooms, beds, members, meals, and dues.',
-  },
-  {
-    icon: UtensilsCrossed,
-    label: 'Mess',
-    description: 'Mess / canteen. Menus, customers, meal billing, and headcount.',
-    note: 'Meal-first — no bed or room map.',
-  },
-  {
-    icon: Hotel,
-    label: 'Hostel',
-    description: 'Hostel-style accommodation, occupancy, and members.',
-  },
-  {
-    icon: Building2,
-    label: 'Co-living',
-    description: 'Shared accommodation, occupancy, and member operations.',
-  },
-  {
-    icon: BedDouble,
-    label: 'Rental',
-    description: 'Flats and rooms — occupancy without a marketplace listing.',
-  },
+  { name: 'PG', line: 'Rooms · beds · members', Icon: BedDouble, tone: 'bg-mint text-primary' },
+  { name: 'MESS', line: 'Customers · menu · headcount', Icon: UtensilsCrossed, tone: 'bg-[#FFF8F1] text-orange' },
+  { name: 'HOSTEL', line: 'Accommodation · occupancy', Icon: Building2, tone: 'bg-mint text-primary' },
+  { name: 'CO-LIVING', line: 'Shared accommodation', Icon: Users, tone: 'bg-[#F7F4FF] text-purple' },
+  { name: 'RENTAL', line: 'Units · tenants', Icon: Home, tone: 'bg-[#F4F8FF] text-blue' },
 ];
 
 export function SpaceTypesSection() {
   return (
-    <section id="space-types" className="bg-background py-20 sm:py-24" aria-labelledby="space-types-heading">
+    <section className="bg-white py-12 sm:py-14" aria-labelledby="types-heading">
       <Container>
-        <SectionHeading
-          id="space-types-heading"
-          eyebrow="Who it's for"
-          title="Built for how Indian shared living actually runs"
-          description="Five space types. Mess is meal-first — no bed map. Accommodation structure applies to PG, hostel, co-living, and rental."
-        />
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <h2
+          id="types-heading"
+          className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
+        >
+          Space types
+        </h2>
+        <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {types.map((t) => (
-            <SpaceTypeCard key={t.label} {...t} />
+            <li
+              key={t.name}
+              className={`rounded-[20px] border border-black/5 p-5 shadow-[var(--shadow-sm)] ${t.tone}`}
+            >
+              <t.Icon className="h-8 w-8" strokeWidth={1.7} aria-hidden />
+              <p className="mt-4 text-lg font-semibold text-navy">{t.name}</p>
+              <p className="mt-1 text-sm text-text-secondary">{t.line}</p>
+            </li>
           ))}
-        </div>
-        <p className="mt-10 text-center">
-          <Link to="/who-its-for" className="text-sm font-semibold text-primary-dark hover:text-primary-hover">
-            See who it&apos;s for
-          </Link>
-        </p>
+        </ul>
       </Container>
     </section>
   );

@@ -1,58 +1,76 @@
-import { APP } from '../../constants/links';
-import { ButtonLink } from '../common/ButtonLink';
-import { PhoneScreenshot } from '../common/PhoneScreenshot';
-import { SectionHeading } from '../common/SectionHeading';
+import {
+  BedDouble,
+  CircleAlert,
+  ClipboardList,
+  Eye,
+  Mail,
+  Receipt,
+  Settings2,
+  UserPlus,
+  UtensilsCrossed,
+  WalletCards,
+  Warehouse,
+} from 'lucide-react';
 import { Container } from '../layout/Container';
+
+const owner = [
+  { label: 'Create spaces', Icon: Warehouse },
+  { label: 'Configure operations', Icon: Settings2 },
+  { label: 'Add people', Icon: UserPlus },
+  { label: 'Manage occupancy', Icon: BedDouble },
+  { label: 'Manage meals', Icon: UtensilsCrossed },
+  { label: 'Review payments', Icon: WalletCards },
+];
+
+const member = [
+  { label: 'Join by invitation', Icon: Mail },
+  { label: 'View relevant information', Icon: Eye },
+  { label: 'Respond to meal polls', Icon: ClipboardList },
+  { label: 'Submit payment proof', Icon: Receipt },
+  { label: 'Raise complaints', Icon: CircleAlert },
+];
 
 export function OwnerMemberSection() {
   return (
-    <section id="owner-member" className="border-y border-border bg-white py-20 sm:py-24" aria-labelledby="owner-member-heading">
+    <section className="bg-white py-12 sm:py-14" aria-labelledby="access-heading">
       <Container>
-        <SectionHeading
-          id="owner-member-heading"
-          eyebrow="How access works"
-          title="Owners run the space. Members join by invitation."
-          description="ACOMI is not a listing or booking site. People do not browse PGs here."
-        />
-
-        <div className="mt-14 grid items-start gap-8 lg:grid-cols-2">
-          <article className="rounded-2xl border border-primary/25 bg-soft/60 p-8 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary-dark">Owner / operator</p>
-            <h3 className="mt-2 text-2xl font-bold text-text">I am an owner</h3>
-            <ul className="mt-5 space-y-2 text-sm leading-relaxed text-text-secondary">
-              <li>Create a space — PG, Mess, Hostel, Co-living, or Rental</li>
-              <li>Set up beds or menus, depending on type</li>
-              <li>Add members as records, or invite a mobile number</li>
-              <li>Manage occupancy, meals, dues, and complaints</li>
-            </ul>
-            <div className="mt-6">
-              <ButtonLink href={APP.register}>Get started</ButtonLink>
-            </div>
-          </article>
-
-          <article className="rounded-2xl border border-border bg-surface p-8 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary">Member</p>
-            <h3 className="mt-2 text-2xl font-bold text-text">Tenant, customer, or staff</h3>
-            <ul className="mt-5 space-y-2 text-sm leading-relaxed text-text-secondary">
-              <li>Join after an owner invites your Indian mobile number</li>
-              <li>There is no public join code and no marketplace</li>
-              <li>Complete a profile when asked</li>
-              <li>Use stay, meals, payment proofs, and complaints that apply to you</li>
-            </ul>
-            <p className="mt-5 text-xs leading-relaxed text-muted">
-              Owners can add a member as an operational record without that person installing ACOMI.
-            </p>
-          </article>
-        </div>
-
-        <div className="mt-10 flex justify-center">
-          <PhoneScreenshot
-            src="/screenshots/spaces.png"
-            alt="ACOMI onboarding screen asking whether you are an owner or joining as a member"
-            caption="Manage your spaces"
-          />
+        <h2
+          id="access-heading"
+          className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
+        >
+          Access
+        </h2>
+        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+          <RoleCard title="Owner / operator" items={owner} tone="bg-mint" icon="text-primary" />
+          <RoleCard title="Member" items={member} tone="bg-[#F4F8FF]" icon="text-blue" />
         </div>
       </Container>
     </section>
+  );
+}
+
+function RoleCard({
+  title,
+  items,
+  tone,
+  icon,
+}: {
+  title: string;
+  items: readonly { label: string; Icon: typeof Warehouse }[];
+  tone: string;
+  icon: string;
+}) {
+  return (
+    <article className={`rounded-[20px] border border-black/5 p-6 shadow-[var(--shadow-sm)] ${tone}`}>
+      <h3 className="text-lg font-semibold text-navy">{title}</h3>
+      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+        {items.map((item) => (
+          <li key={item.label} className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-medium text-navy">
+            <item.Icon className={`h-4 w-4 ${icon}`} aria-hidden />
+            {item.label}
+          </li>
+        ))}
+      </ul>
+    </article>
   );
 }

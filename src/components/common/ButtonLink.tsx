@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
-type Variant = 'primary' | 'ghost' | 'ghostDark' | 'outline';
+type Variant = 'primary' | 'ghost' | 'ghostDark' | 'outline' | 'onDark';
 
 type ButtonLinkProps = {
   href: string;
@@ -13,13 +13,15 @@ type ButtonLinkProps = {
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary-hover focus-visible:ring-primary',
+    'bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary shadow-sm',
   ghost:
-    'bg-white text-text ring-1 ring-border hover:bg-slate-50 focus-visible:ring-primary-dark',
+    'bg-white text-primary ring-1 ring-primary/30 hover:bg-soft focus-visible:ring-primary',
   ghostDark:
-    'bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/15 focus-visible:ring-white',
+    'bg-transparent text-white ring-1 ring-white/70 hover:bg-white/10 focus-visible:ring-white',
   outline:
-    'bg-transparent text-primary-dark ring-2 ring-primary/40 hover:bg-soft focus-visible:ring-primary',
+    'bg-white text-primary ring-1 ring-primary hover:bg-soft focus-visible:ring-primary',
+  onDark:
+    'bg-accent text-cta-band hover:brightness-95 focus-visible:ring-white shadow-sm',
 };
 
 export function ButtonLink({
@@ -29,7 +31,7 @@ export function ButtonLink({
   className = '',
   external = true,
 }: ButtonLinkProps) {
-  const cls = `inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${variants[variant]} ${className}`;
+  const cls = `inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${variants[variant]} ${className}`;
 
   if (!external) {
     return (

@@ -5,16 +5,16 @@ import { Container } from './Container';
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/80 bg-white py-14">
+    <footer className="border-t border-border bg-white py-14">
       <Container>
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link to="/" className="inline-flex items-center gap-2 font-semibold text-text">
-              <BrandMark size={36} />
+              <BrandMark size={30} className="!rounded-md" />
               <span>ACOMI</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
-              Operations for PGs, hostels, co-living, rentals, and messes.
+              Accommodation + Meals. Operations software for PGs, messes, hostels, co-living, and rentals.
             </p>
           </div>
 
@@ -22,27 +22,32 @@ export function Footer() {
             <p className="text-xs font-bold uppercase tracking-wider text-muted">Product</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <Link to="/features" className="text-text-secondary transition hover:text-primary-dark">
+                <Link to="/features" className="text-text-secondary transition hover:text-primary">
                   Features
                 </Link>
               </li>
               <li>
-                <Link to="/how-it-works" className="text-text-secondary transition hover:text-primary-dark">
+                <Link to="/how-it-works" className="text-text-secondary transition hover:text-primary">
                   How it works
                 </Link>
               </li>
               <li>
-                <Link to="/who-its-for" className="text-text-secondary transition hover:text-primary-dark">
+                <Link to="/who-its-for" className="text-text-secondary transition hover:text-primary">
                   Who it&apos;s for
                 </Link>
               </li>
               <li>
-                <Link to="/platforms" className="text-text-secondary transition hover:text-primary-dark">
+                <Link to="/platforms" className="text-text-secondary transition hover:text-primary">
                   Platforms
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-text-secondary transition hover:text-primary-dark">
+                <Link to="/pricing" className="text-text-secondary transition hover:text-primary">
+                  Pricing
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="text-text-secondary transition hover:text-primary">
                   About
                 </Link>
               </li>
@@ -53,29 +58,33 @@ export function Footer() {
             <p className="text-xs font-bold uppercase tracking-wider text-muted">Account</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <a href={APP.register} className="text-text-secondary transition hover:text-primary-dark">
+                <a href={APP.register} className="text-text-secondary transition hover:text-primary">
                   Get started
                 </a>
               </li>
               <li>
-                <a href={APP.login} className="text-text-secondary transition hover:text-primary-dark">
+                <a href={APP.login} className="text-text-secondary transition hover:text-primary">
                   Sign in
+                </a>
+              </li>
+              <li>
+                <a href={APP.web} className="text-text-secondary transition hover:text-primary">
+                  Open web app
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Contact column: add when a real public email exists. */}
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-muted">Legal</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <a href={APP.privacy} className="text-text-secondary transition hover:text-primary-dark">
+                <a href={APP.privacy} className="text-text-secondary transition hover:text-primary">
                   Privacy
                 </a>
               </li>
               <li>
-                <a href={APP.deleteAccount} className="text-text-secondary transition hover:text-primary-dark">
+                <a href={APP.deleteAccount} className="text-text-secondary transition hover:text-primary">
                   Delete account
                 </a>
               </li>

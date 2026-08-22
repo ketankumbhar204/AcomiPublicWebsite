@@ -27,7 +27,7 @@ export function Layout() {
       <SkipLink />
       <Navbar />
       <RouteScroll />
-      <main id="main">
+      <main id="main" className="pt-16">
         <Outlet />
       </main>
       <Footer />

@@ -1,51 +1,15 @@
 import { useEffect } from 'react';
-import { LayoutDashboard, PlusSquare, Settings2, UserPlus, UserRound } from 'lucide-react';
 import { FinalCta } from '../components/home/FinalCta';
-import { StepCard } from '../components/cards/StepCard';
 import { PageHero } from '../components/common/PageHero';
 import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
-
-const ownerSteps = [
-  {
-    step: '01',
-    title: 'Create an account',
-    description: 'Register with your name, Indian mobile number, and a password. This is the current production sign-in model.',
-    icon: UserRound,
-  },
-  {
-    step: '02',
-    title: 'Create your space',
-    description: 'Choose PG, Mess, Hostel, Co-living, or Rental. Space type cannot be changed later.',
-    icon: PlusSquare,
-  },
-  {
-    step: '03',
-    title: 'Configure the space',
-    description:
-      'Set up buildings, rooms, and beds for lodging spaces — or menus and customers for a mess.',
-    icon: Settings2,
-  },
-  {
-    step: '04',
-    title: 'Add or invite members',
-    description:
-      'Create an operational record, or send an invitation to a mobile number. There is no public join code.',
-    icon: UserPlus,
-  },
-  {
-    step: '05',
-    title: 'Run daily operations',
-    description: 'Occupancy, meals, payment proofs, complaints, and in-app pending work from one space.',
-    icon: LayoutDashboard,
-  },
-];
 
 export function HowItWorksPage() {
   useEffect(() => {
     applySeo({
       title: 'How it works — ACOMI',
-      description: 'Create a space, set up beds or menus, add members, and run day-to-day operations.',
+      description:
+        'Create a space, set up beds or menus depending on type, add tenants or customers, and run occupancy or headcount.',
       path: '/how-it-works',
     });
   }, []);
@@ -54,37 +18,62 @@ export function HowItWorksPage() {
     <>
       <PageHero
         eyebrow="How it works"
-        title="Three steps. One space."
-        description="Owners create and configure. Members join only by invitation. ACOMI is not a place to browse or book a bed."
+        title="Lodging setup and Mess setup are different"
+        description="Space type is chosen once. PG, hostel, co-living, and rental start from property. Mess starts from menus and customers."
       />
-      <section className="py-16 sm:py-20">
-        <Container>
-          <h2 className="text-2xl font-bold text-text">Owner and operator workflow</h2>
-          <p className="mt-3 max-w-2xl text-text-secondary">
-            This is the path after you choose “I am an owner” in ACOMI.
-          </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {ownerSteps.map((s) => (
-              <StepCard key={s.step} {...s} />
-            ))}
+      <section className="bg-background py-16 sm:py-20">
+        <Container className="space-y-12">
+          <Step n="01" title="Create your space">
+            Register with name, Indian mobile, and password. Choose PG, Mess, Hostel, Co-living, or Rental.
+          </Step>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <div className="rounded-3xl bg-white p-7 ring-1 ring-border">
+              <p className="text-[11px] font-semibold tracking-[0.16em] text-primary uppercase">Lodging</p>
+              <h2 className="mt-2 text-xl font-bold text-text">02 — Buildings, rooms, beds</h2>
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+                Quick Setup or manual builder. Then add residents. Meals are optional except rental, which omits the
+                meal milestone.
+              </p>
+            </div>
+            <div className="rounded-3xl bg-[#0b5f7a] p-7 text-white">
+              <p className="text-[11px] font-semibold tracking-[0.16em] text-[#b8e6f3] uppercase">Mess</p>
+              <h2 className="mt-2 text-xl font-bold">02 — Menus, meals, serving locations</h2>
+              <p className="mt-3 text-sm leading-relaxed text-white/75">
+                Menu library, today&apos;s menu, share. Customers are optional at first. No building or bed map.
+              </p>
+            </div>
           </div>
-        </Container>
-      </section>
-      <section className="border-t border-border bg-white py-16 sm:py-20">
-        <Container>
-          <h2 className="text-2xl font-bold text-text">Member invitation workflow</h2>
-          <ol className="mt-6 max-w-2xl list-decimal space-y-3 pl-5 text-sm leading-relaxed text-text-secondary">
-            <li>An owner or manager invites a 10-digit Indian mobile number with a role.</li>
-            <li>That person registers or signs in with the same mobile number and a password.</li>
-            <li>They accept the invitation. Tenants and customers may be asked to complete a profile.</li>
-            <li>They see stay, meals, payment proofs, and complaints that apply to them — not the full operator console.</li>
-          </ol>
-          <p className="mt-6 max-w-2xl text-sm text-text-secondary">
-            Owners can also add a member record without that person installing ACOMI.
-          </p>
+          <Step n="03" title="Add people">
+            Tenants on lodging. Customers on Mess. Staff and managers on both. Invite a mobile number, or create a
+            record without the app.
+          </Step>
+          <Step n="04" title="Run the day">
+            Lodging: occupancy, dues, issues. Mess: participation, headcount, meal dues, food issues. One owner can run
+            both.
+          </Step>
+
+          <div className="rounded-3xl bg-white p-8 ring-1 ring-border">
+            <h2 className="text-xl font-bold text-text">Member invitation</h2>
+            <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-text-secondary">
+              <li>Owner or manager invites a 10-digit Indian mobile with a role.</li>
+              <li>That person registers or signs in with the same mobile and a password.</li>
+              <li>They accept. Tenants and customers may complete a profile.</li>
+              <li>They see stay, meals, proofs, and complaints that apply to them — not the full operator console.</li>
+            </ol>
+          </div>
         </Container>
       </section>
       <FinalCta />
     </>
+  );
+}
+
+function Step({ n, title, children }: { n: string; title: string; children: string }) {
+  return (
+    <div className="rounded-3xl bg-white p-7 ring-1 ring-border">
+      <p className="text-xs font-bold text-primary">{n}</p>
+      <h2 className="mt-2 text-xl font-bold text-text">{title}</h2>
+      <p className="mt-3 text-sm leading-relaxed text-text-secondary">{children}</p>
+    </div>
   );
 }

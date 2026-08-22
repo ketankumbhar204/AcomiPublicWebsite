@@ -6,6 +6,7 @@ import { HomePage } from './pages/HomePage';
 import { HowItWorksPage } from './pages/HowItWorksPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PlatformsPage } from './pages/PlatformsPage';
+import { PricingPage } from './pages/PricingPage';
 import { WhoItsForPage } from './pages/WhoItsForPage';
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/how-it-works" element={<HowItWorksPage />} />
           <Route path="/who-its-for" element={<WhoItsForPage />} />
           <Route path="/platforms" element={<PlatformsPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/404" replace />} />

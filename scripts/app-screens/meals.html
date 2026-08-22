@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="screen.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .plan {
+        padding: 12px 12px 10px;
+        margin-top: 2px;
+      }
+      .date-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .date {
+        font-size: 15px;
+        font-weight: 800;
+      }
+      .today {
+        font-size: 10px;
+        font-weight: 800;
+        color: #128c7e;
+        background: #e7f4ee;
+        border-radius: 99px;
+        padding: 3px 8px;
+        margin-left: 6px;
+      }
+      .share {
+        margin-top: 10px;
+        background: #f8fffb;
+        border: 1px solid #dcefe3;
+        border-radius: 12px;
+        padding: 8px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .shared-lab {
+        font-size: 12px;
+        font-weight: 800;
+        color: #059669;
+      }
+      .share-cta {
+        font-size: 11px;
+        font-weight: 700;
+        color: #128c7e;
+      }
+      .slots {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .slot {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 8px 6px;
+        text-align: center;
+        background: #fff;
+      }
+      .slot.on {
+        border-color: #25d366;
+        background: #f0fdf4;
+      }
+      .slot .n {
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .slot .st {
+        margin-top: 3px;
+        font-size: 9px;
+        font-weight: 700;
+        color: #059669;
+      }
+      .slot .r {
+        margin-top: 4px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .detail {
+        margin-top: 8px;
+        padding: 12px;
+      }
+      .dhead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .dhead h2 {
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .badge-s {
+        font-size: 10px;
+        font-weight: 800;
+        color: #059669;
+        background: #d1fae5;
+        border-radius: 99px;
+        padding: 3px 8px;
+      }
+      .menu-lab {
+        margin-top: 10px;
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .item {
+        display: flex;
+        justify-content: space-between;
+        padding: 7px 0;
+        border-bottom: 1px solid #eef4f0;
+        font-size: 13px;
+      }
+      .item b {
+        font-weight: 800;
+      }
+      .item:last-of-type {
+        border-bottom: 0;
+      }
+      .poll {
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 800;
+        color: #2563eb;
+      }
+      .members {
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <div class="status">
+        <span>8:24</span>
+        <span class="status-right">5G · 86%</span>
+      </div>
+      <div class="topbar">
+        <div class="topbar-left">
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          <div>
+            <div class="space" style="font-size: 15px">Menu planning</div>
+            <div style="font-size: 11px; color: #64748b; font-weight: 600">Sunrise PG</div>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="card plan">
+          <div class="date-row">
+            <div>
+              <span class="date">Sat, 22 Aug 2026</span>
+              <span class="today">Today</span>
+            </div>
+            <span style="color: #64748b">◀ ▶</span>
+          </div>
+          <div class="share">
+            <span class="shared-lab">● Shared</span>
+            <span class="share-cta">Share today's menu</span>
+          </div>
+          <div class="slots">
+            <div class="slot on">
+              <div class="n">Breakfast</div>
+              <div class="st">Shared</div>
+              <div class="r money">78/86</div>
+            </div>
+            <div class="slot">
+              <div class="n">Lunch</div>
+              <div class="st">Shared</div>
+              <div class="r money">62/86</div>
+            </div>
+            <div class="slot">
+              <div class="n">Dinner</div>
+              <div class="st">Shared</div>
+              <div class="r money">48/86</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card detail">
+          <div class="dhead">
+            <h2>Breakfast</h2>
+            <span class="badge-s">Shared</span>
+          </div>
+          <div class="menu-lab">PLANNED MENU · 3 ITEMS</div>
+          <div class="item">Vegetable Thali <b>42</b></div>
+          <div class="item">Rice + Dal <b>21</b></div>
+          <div class="item">Extra Roti <b>15</b></div>
+          <div class="poll">Poll open · 78 / 86 responded ›</div>
+          <div class="members">86 Members</div>
+        </div>
+        <div class="section-title">Quick actions</div>
+        <div class="qa">
+          <div class="qa-row">
+            <div>
+              <div class="qa-title">Menu Library</div>
+              <div class="qa-sub">Browse items & combos</div>
+            </div>
+          </div>
+          <div class="qa-row">
+            <div>
+              <div class="qa-title">Today’s headcount</div>
+              <div class="qa-sub">78 meals to prepare · 8 no response</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-10.5z" />
+          </svg>
+          Dashboard
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="3" />
+            <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+          </svg>
+          Members
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 21V8l9-5 9 5v13" />
+            <path d="M9 21v-8h6v8" />
+          </svg>
+          Accomm...
+        </div>
+        <div class="nav-item active">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M8 12V6a2 2 0 012-2h4a2 2 0 012 2v6M6 16h12v5H6z" />
+          </svg>
+          Meals
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="2" />
+            <path d="M2 10h20" />
+          </svg>
+          Payments
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z" />
+          </svg>
+          Complai...
+        </div>
+      </nav>
+    </div>
+  </body>
+</html>

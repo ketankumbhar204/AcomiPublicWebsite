@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="screen.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 0.92fr;
+        gap: 8px;
+        margin-top: 2px;
+      }
+      .welcome,
+      .health {
+        padding: 10px 10px 12px;
+      }
+      .hi {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .welcome h1 {
+        margin-top: 3px;
+        font-size: 16px;
+        color: var(--green);
+        line-height: 1.15;
+      }
+      .health {
+        text-align: center;
+      }
+      .health-label {
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .ring-wrap {
+        margin: 6px auto 2px;
+        width: 64px;
+        height: 64px;
+        position: relative;
+      }
+      .ring-wrap svg {
+        transform: rotate(-90deg);
+      }
+      .ring-num {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-size: 15px;
+        font-weight: 800;
+        color: #0f6b4c;
+      }
+      .health-band {
+        font-size: 11px;
+        font-weight: 700;
+        color: #059669;
+      }
+      .health-note {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .pay-grid,
+      .ops {
+        display: grid;
+        gap: 6px;
+      }
+      .pay-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .ops {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .pay,
+      .stat {
+        padding: 9px 10px;
+      }
+      .pay {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .pay .lab,
+      .stat .l {
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .pay .val,
+      .stat .n {
+        margin-top: 2px;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+      .stat {
+        text-align: center;
+      }
+      .stat .ico {
+        margin: 0 auto 4px;
+      }
+      .stat .n {
+        font-size: 20px;
+      }
+      .meals {
+        padding: 10px 10px 8px;
+      }
+      .meal-row {
+        padding: 6px 0;
+      }
+      .meal-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .meal-name {
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .ratio {
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .ratio span {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .people {
+        padding: 4px 10px;
+      }
+      .pname {
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .ploc {
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <div class="status">
+        <span>8:24</span>
+        <span class="status-right">5G · 86%</span>
+      </div>
+      <div class="topbar">
+        <div class="topbar-left">
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          <span class="space">Sunrise PG</span>
+          <span class="caret">▼</span>
+        </div>
+        <div class="top-icons">
+          <div class="bell">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
+              <path d="M13.7 21a2 2 0 01-3.4 0" />
+            </svg>
+            <span class="badge">2</span>
+          </div>
+          <div class="avatar">K</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="hero">
+          <div class="card welcome">
+            <div class="hi">Good morning</div>
+            <h1>Sunrise PG</h1>
+            <div class="hi" style="margin-top: 8px">Operations overview</div>
+          </div>
+          <div class="card health">
+            <div class="health-label">Space Health</div>
+            <div class="ring-wrap">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#e7f4ee" stroke-width="7" />
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="26"
+                  fill="none"
+                  stroke="#128c7e"
+                  stroke-width="7"
+                  stroke-linecap="round"
+                  stroke-dasharray="140.4 163.4"
+                />
+              </svg>
+              <div class="ring-num">86%</div>
+            </div>
+            <div class="health-band">Healthy</div>
+            <div class="health-note">Good operational shape</div>
+          </div>
+        </div>
+
+        <div class="section-title">Payment Summary <span class="section-sub">This month</span></div>
+        <div class="pay-grid">
+          <div class="card pay">
+            <div class="ico tone-blue">₹</div>
+            <div>
+              <div class="lab">Expected</div>
+              <div class="val money">₹1,28,450</div>
+            </div>
+          </div>
+          <div class="card pay">
+            <div class="ico tone-green">₹</div>
+            <div>
+              <div class="lab">Collected</div>
+              <div class="val money">₹1,10,130</div>
+            </div>
+          </div>
+          <div class="card pay">
+            <div class="ico tone-purple">₹</div>
+            <div>
+              <div class="lab">Under review</div>
+              <div class="val money">₹8,320</div>
+            </div>
+          </div>
+          <div class="card pay">
+            <div class="ico tone-orange">₹</div>
+            <div>
+              <div class="lab">Pending</div>
+              <div class="val money">₹10,000</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Property operations</div>
+        <div class="ops">
+          <div class="card stat">
+            <div class="ico tone-green">🛏</div>
+            <div class="n" style="color: #0f6b4c">96</div>
+            <div class="l">Occupied</div>
+          </div>
+          <div class="card stat">
+            <div class="ico tone-blue">☐</div>
+            <div class="n" style="color: #2563eb">18</div>
+            <div class="l">Vacant</div>
+          </div>
+          <div class="card stat">
+            <div class="ico tone-orange">☆</div>
+            <div class="n" style="color: #d97706">6</div>
+            <div class="l">Reserved</div>
+          </div>
+        </div>
+
+        <div class="section-title">Meal operations</div>
+        <div class="card meals">
+          <div class="meal-row">
+            <div class="meal-top">
+              <div class="meal-name">Breakfast <span class="chip chip-green">Shared</span></div>
+              <div class="ratio money">78 <span>/ 86</span></div>
+            </div>
+            <div class="bar"><i style="width: 91%; background: #128c7e"></i></div>
+          </div>
+          <div class="meal-row">
+            <div class="meal-top">
+              <div class="meal-name">Lunch <span class="chip chip-green">Shared</span></div>
+              <div class="ratio money">62 <span>/ 86</span></div>
+            </div>
+            <div class="bar"><i style="width: 72%; background: #d97706"></i></div>
+          </div>
+          <div class="meal-row">
+            <div class="meal-top">
+              <div class="meal-name">Dinner <span class="chip chip-green">Shared</span></div>
+              <div class="ratio money">48 <span>/ 86</span></div>
+            </div>
+            <div class="bar"><i style="width: 56%; background: #7c3aed"></i></div>
+          </div>
+        </div>
+
+        <div class="section-title">Recent residents</div>
+        <div class="card people">
+          <div class="person">
+            <div class="av tone-green">RS</div>
+            <div style="flex: 1">
+              <div class="pname">Rahul Sharma</div>
+              <div class="ploc">Room 204 · Bed A</div>
+            </div>
+            <span class="chip chip-green">Checked in</span>
+          </div>
+          <div class="person">
+            <div class="av tone-blue">AP</div>
+            <div style="flex: 1">
+              <div class="pname">Amit Patil</div>
+              <div class="ploc">Room 203 · Bed B</div>
+            </div>
+            <span class="chip chip-green">Checked in</span>
+          </div>
+          <div class="person">
+            <div class="av tone-purple">SJ</div>
+            <div style="flex: 1">
+              <div class="pname">Sneha Joshi</div>
+              <div class="ploc">Room 301 · Bed A</div>
+            </div>
+            <span class="chip chip-green">Checked in</span>
+          </div>
+        </div>
+
+        <div class="section-title">Quick actions</div>
+        <div class="qa-row4">
+          <div class="qa-tile"><div class="ico tone-green" style="margin: 0 auto">🛏</div><div class="lab">Allocate</div></div>
+          <div class="qa-tile"><div class="ico tone-blue" style="margin: 0 auto">📅</div><div class="lab">Reserve</div></div>
+          <div class="qa-tile"><div class="ico tone-purple" style="margin: 0 auto">🏠</div><div class="lab">Move-in</div></div>
+          <div class="qa-tile"><div class="ico tone-orange" style="margin: 0 auto">↩</div><div class="lab">Vacate</div></div>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav-item active">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-10.5z" />
+          </svg>
+          Dashboard
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="3" />
+            <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+          </svg>
+          Members
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 21V8l9-5 9 5v13" />
+            <path d="M9 21v-8h6v8" />
+          </svg>
+          Accomm...
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M8 12V6a2 2 0 012-2h4a2 2 0 012 2v6M6 16h12v5H6z" />
+          </svg>
+          Meals
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="2" />
+            <path d="M2 10h20" />
+          </svg>
+          Payments
+        </div>
+        <div class="nav-item">
+          <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4z" />
+          </svg>
+          More
+        </div>
+      </nav>
+    </div>
+  </body>
+</html>

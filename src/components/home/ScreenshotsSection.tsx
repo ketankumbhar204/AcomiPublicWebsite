@@ -1,43 +1,43 @@
-import { PhoneScreenshot } from '../common/PhoneScreenshot';
-import { SectionHeading } from '../common/SectionHeading';
-import { Container } from '../layout/Container';
+import { SHOTS } from '../../data/shots';
+import { PhoneMock } from '../common/PhoneMock';
 
 const shots = [
-  {
-    src: '/screenshots/dashboard.png',
-    alt: 'ACOMI dashboard on a phone',
-    caption: 'See your space at a glance',
-  },
-  {
-    src: '/screenshots/accommodation.png',
-    alt: 'ACOMI occupancy and accommodation screen',
-    caption: 'Know your occupancy',
-  },
-  {
-    src: '/screenshots/meals.png',
-    alt: 'ACOMI meal planning screen',
-    caption: 'Plan meals',
-  },
+  { ...SHOTS.dashboard, caption: 'PG Dashboard' },
+  { ...SHOTS.mess, caption: 'Mess Dashboard' },
+  { ...SHOTS.occupancy, caption: 'Occupancy' },
+  { ...SHOTS.payments, caption: 'Payments' },
+  { ...SHOTS.members, caption: 'Members' },
 ];
 
 export function ScreenshotsSection() {
   return (
-    <section id="screenshots" className="border-y border-border bg-white py-20 sm:py-24" aria-labelledby="screenshots-heading">
-      <Container>
-        <SectionHeading
+    <section
+      id="screenshots"
+      className="border-y border-border bg-[#F7F8FA] py-12 sm:py-14"
+      aria-labelledby="screenshots-heading"
+    >
+      <div className="mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
+        <h2
           id="screenshots-heading"
-          eyebrow="The product"
-          title="See ACOMI as it actually looks"
-          description="These are real screens from the ACOMI Android app — occupancy, meals, and the owner dashboard."
-        />
-        <div className="screenshot-scroll mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 lg:justify-center lg:overflow-visible">
-          {shots.map((s) => (
-            <div key={s.src} className="snap-center">
-              <PhoneScreenshot {...s} />
-            </div>
-          ))}
+          className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
+        >
+          See ACOMI in action.
+        </h2>
+        <div className="mt-8 overflow-x-auto pb-2">
+          <div className="flex w-max min-w-full flex-nowrap justify-between gap-5">
+            {shots.map((s) => (
+              <PhoneMock
+                key={s.caption}
+                src={s.src}
+                alt={s.alt}
+                caption={s.caption}
+                size="sm"
+                className="!w-[176px] shrink-0 xl:!w-[196px] 2xl:!w-[210px]"
+              />
+            ))}
+          </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }
