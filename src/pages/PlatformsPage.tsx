@@ -3,7 +3,10 @@ import { Monitor, Smartphone } from 'lucide-react';
 import { APP } from '../constants/links';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { FinalCta } from '../components/home/FinalCta';
-import { PageHero } from '../components/common/PageHero';
+import { PageHero, PageSectionHead } from '../components/common/PageHero';
+import { IconBadge } from '../components/common/IconBadge';
+import { BrowserChrome } from '../components/product/BrowserChrome';
+import { OperationsDashboard } from '../components/product/OperationsDashboard';
 import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
 
@@ -20,33 +23,39 @@ export function PlatformsPage() {
     <>
       <PageHero
         eyebrow="Platforms"
-        title="Use ACOMI on the web or Android"
-        description="The same product. Sign in with an Indian mobile number and password. Store listing badges are omitted until a public Play URL is verified. iOS is not offered as a public download on this site."
+        title="Use ACOMI on the web or Android."
+        description="The same product. Sign in with an Indian mobile number and password."
       />
-      <section className="bg-background py-16 sm:py-20">
+      <section className="bg-[#F7F8FA] py-12 sm:py-14" aria-labelledby="platforms-heading">
         <Container>
-          <div className="grid gap-6 lg:grid-cols-2">
-            <article className="rounded-3xl bg-white p-8 ring-1 ring-border">
-              <Monitor className="h-6 w-6 text-primary" aria-hidden />
-              <h2 className="mt-4 text-xl font-bold text-text">Web application</h2>
-              <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-                Operate from app.acomi.in — dashboard, members, occupancy, meals, headcount, payments, complaints, and
-                inventory.
-              </p>
-              <div className="mt-6">
-                <ButtonLink href={APP.web} variant="outline">
-                  Open the web app
-                </ButtonLink>
-              </div>
-            </article>
-            <article className="rounded-3xl bg-white p-8 ring-1 ring-border">
-              <Smartphone className="h-6 w-6 text-primary" aria-hidden />
-              <h2 className="mt-4 text-xl font-bold text-text">Android application</h2>
-              <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-                The ACOMI Android app (com.acomi) is the same product for on-site work.
-              </p>
-              <p className="mt-6 text-sm text-muted">No store URL is published on this page.</p>
-            </article>
+          <PageSectionHead id="platforms-heading" title="One product. Two places." />
+          <div className="mt-8 grid items-center gap-8 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
+            <div className="grid gap-4">
+              <article className="rounded-[20px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
+                <IconBadge icon={Monitor} tone="teal" />
+                <h2 className="mt-4 text-lg font-semibold text-navy">Web application</h2>
+                <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                  Operate from app.acomi.in — dashboard, members, occupancy, meals, headcount, payments, complaints, and
+                  inventory.
+                </p>
+                <div className="mt-5">
+                  <ButtonLink href={APP.web}>Open the web app</ButtonLink>
+                </div>
+              </article>
+              <article className="rounded-[20px] border border-black/5 bg-[#F4F8FF] p-6 shadow-[var(--shadow-sm)]">
+                <IconBadge icon={Smartphone} tone="blue" />
+                <h2 className="mt-4 text-lg font-semibold text-navy">Android application</h2>
+                <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                  The ACOMI Android app (com.acomi) is the same product for on-site work.
+                </p>
+                <p className="mt-4 text-sm text-muted">
+                  No store URL is published on this page. iOS is not offered as a public download.
+                </p>
+              </article>
+            </div>
+            <BrowserChrome url="app.acomi.in">
+              <OperationsDashboard compact />
+            </BrowserChrome>
           </div>
         </Container>
       </section>

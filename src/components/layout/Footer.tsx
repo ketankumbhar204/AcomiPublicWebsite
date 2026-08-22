@@ -9,7 +9,7 @@ export function Footer() {
       <Container>
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <Link to="/" className="inline-flex items-center gap-2 font-semibold text-text">
+            <Link to="/" className="inline-flex items-center gap-2 font-semibold text-navy">
               <BrandMark size={30} className="!rounded-md" />
               <span>ACOMI</span>
             </Link>
@@ -19,7 +19,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-muted">Product</p>
+            <p className="text-[11px] font-semibold tracking-[0.16em] text-muted uppercase">Product</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
                 <Link to="/features" className="text-text-secondary transition hover:text-primary">
@@ -55,7 +55,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-muted">Account</p>
+            <p className="text-[11px] font-semibold tracking-[0.16em] text-muted uppercase">Account</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
                 <a href={APP.register} className="text-text-secondary transition hover:text-primary">
@@ -76,7 +76,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-muted">Legal</p>
+            <p className="text-[11px] font-semibold tracking-[0.16em] text-muted uppercase">Legal</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
                 <a href={APP.privacy} className="text-text-secondary transition hover:text-primary">

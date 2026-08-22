@@ -1,10 +1,36 @@
 import { useEffect } from 'react';
+import { CalendarDays, UserPlus, Warehouse } from 'lucide-react';
 import { APP } from '../constants/links';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { FinalCta } from '../components/home/FinalCta';
-import { PageHero } from '../components/common/PageHero';
+import { PageHero, PageSectionHead } from '../components/common/PageHero';
+import { IconBadge } from '../components/common/IconBadge';
 import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
+
+const items = [
+  {
+    title: 'Create a space',
+    line: 'Create a PG, mess, hostel, co-living, or rental space.',
+    Icon: Warehouse,
+    tone: 'teal' as const,
+    bg: 'bg-mint',
+  },
+  {
+    title: 'Invite members',
+    line: 'Invite by Indian mobile number — no public listings.',
+    Icon: UserPlus,
+    tone: 'violet' as const,
+    bg: 'bg-[#F7F4FF]',
+  },
+  {
+    title: 'Run the day',
+    line: 'Occupancy or meal headcount, plus dues proofs and complaints, on web and Android.',
+    Icon: CalendarDays,
+    tone: 'amber' as const,
+    bg: 'bg-[#FFF8F1]',
+  },
+];
 
 export function PricingPage() {
   useEffect(() => {
@@ -19,24 +45,30 @@ export function PricingPage() {
     <>
       <PageHero
         eyebrow="Pricing"
-        title="No public price list"
+        title="No public price list."
         description="ACOMI does not publish plans, rupee amounts, free-trial length, or cancel-anytime terms on this website. Create a space and use the product."
-      />
-      <section className="bg-background py-16 sm:py-20">
-        <Container className="max-w-3xl">
-          <div className="rounded-3xl bg-white p-8 ring-1 ring-border sm:p-10">
-            <h2 className="text-xl font-bold text-text">What you can do today</h2>
-            <ul className="mt-5 space-y-3 text-sm leading-relaxed text-text-secondary">
-              <li>Create a PG, mess, hostel, co-living, or rental space.</li>
-              <li>Invite members by Indian mobile number — no public listings.</li>
-              <li>Run occupancy or meal headcount, plus dues proofs and complaints, on web and Android.</li>
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href={APP.register}>Get started</ButtonLink>
-              <ButtonLink href="/how-it-works" variant="ghost" external={false}>
-                How it works
-              </ButtonLink>
-            </div>
+      >
+        <div className="mt-6 flex flex-wrap gap-3">
+          <ButtonLink href={APP.register}>Get started</ButtonLink>
+          <ButtonLink href="/how-it-works" variant="ghost" external={false}>
+            How it works
+          </ButtonLink>
+        </div>
+      </PageHero>
+      <section className="bg-[#F7F8FA] py-12 sm:py-14" aria-labelledby="today-heading">
+        <Container>
+          <PageSectionHead id="today-heading" title="What you can do today." />
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            {items.map((item) => (
+              <article
+                key={item.title}
+                className={`rounded-[20px] border border-black/5 p-6 shadow-[var(--shadow-sm)] ${item.bg}`}
+              >
+                <IconBadge icon={item.Icon} tone={item.tone} />
+                <h2 className="mt-4 text-lg font-semibold text-navy">{item.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-text-secondary">{item.line}</p>
+              </article>
+            ))}
           </div>
         </Container>
       </section>
