@@ -23,7 +23,7 @@ export function HomePage() {
     applySeo({
       title: 'ACOMI — Know who’s staying, who’s eating, what’s due',
       description:
-        'Run your PG or mess from one place — occupancy, meals, headcount and payments.',
+        'Run your mess or PG from one place — occupancy, meals, headcount and payments.',
       path: '/',
     });
   }, []);

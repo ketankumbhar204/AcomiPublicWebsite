@@ -3,7 +3,7 @@ import { IconBadge } from '../common/IconBadge';
 import { Container } from '../layout/Container';
 
 const steps = [
-  { n: '01', title: 'Create space', line: 'PG or Mess.', Icon: Warehouse, tone: 'teal' as const },
+  { n: '01', title: 'Create space', line: 'Mess or PG.', Icon: Warehouse, tone: 'teal' as const },
   { n: '02', title: 'Set up operations', line: 'Rooms or menu.', Icon: Settings2, tone: 'blue' as const },
   { n: '03', title: 'Add people', line: 'Residents or customers.', Icon: UserPlus, tone: 'violet' as const },
   { n: '04', title: 'Run the day', line: 'Occupancy, plates, dues.', Icon: CalendarDays, tone: 'amber' as const },
@@ -37,8 +37,8 @@ export function HowItWorksHomeSection() {
           ))}
         </ol>
         <div className="mt-6 grid gap-3 lg:grid-cols-2">
-          <Flow label="PG" steps={pg} />
           <Flow label="MESS" steps={mess} />
+          <Flow label="PG" steps={pg} />
         </div>
       </Container>
     </section>

@@ -7,8 +7,8 @@ import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
 
 const types = [
-  { name: 'PG', line: 'Rooms · beds · members', Icon: BedDouble, tone: 'bg-mint text-primary' },
   { name: 'MESS', line: 'Customers · menu · headcount', Icon: UtensilsCrossed, tone: 'bg-[#FFF8F1] text-orange' },
+  { name: 'PG', line: 'Rooms · beds · members', Icon: BedDouble, tone: 'bg-mint text-primary' },
   { name: 'HOSTEL', line: 'Accommodation · occupancy', Icon: Building2, tone: 'bg-mint text-primary' },
   { name: 'CO-LIVING', line: 'Shared accommodation', Icon: Users, tone: 'bg-[#F7F4FF] text-purple' },
   { name: 'RENTAL', line: 'Units · tenants', Icon: Home, tone: 'bg-[#F4F8FF] text-blue' },
@@ -39,18 +39,18 @@ export function AboutPage() {
             intro="Who lives there or eats there, occupancy when beds exist, daily meal headcount when food is served, dues with payment proofs, and complaints."
           />
           <div className="mt-8 grid gap-5 lg:grid-cols-2">
-            <article className="rounded-[24px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
-              <IconBadge icon={BedDouble} tone="teal" />
-              <h2 className="mt-4 text-[1.35rem] font-semibold text-navy">Accommodation</h2>
-              <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-                Lodging is occupancy-first. PG, hostel, co-living, and rental start from property, rooms, and people.
-              </p>
-            </article>
             <article className="rounded-[24px] border border-black/5 bg-[#FFF8F1] p-6 shadow-[var(--shadow-sm)]">
               <IconBadge icon={UtensilsCrossed} tone="amber" />
               <h2 className="mt-4 text-[1.35rem] font-semibold text-navy">Meals</h2>
               <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                 Mess is meal-first. Customers, menus, participation, and kitchen headcount — no rooms or beds.
+              </p>
+            </article>
+            <article className="rounded-[24px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
+              <IconBadge icon={BedDouble} tone="teal" />
+              <h2 className="mt-4 text-[1.35rem] font-semibold text-navy">Accommodation</h2>
+              <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                Lodging is occupancy-first. PG, hostel, co-living, and rental start from property, rooms, and people.
               </p>
             </article>
           </div>

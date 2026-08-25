@@ -8,18 +8,18 @@ import { applySeo } from '../lib/seo';
 
 const audiences = [
   {
-    title: 'PG owners',
-    domain: 'Lodging',
-    body: 'Paying Guest operators: occupancy, tenants, optional meals when food is included, dues, complaints.',
-    Icon: BedDouble,
-    tone: 'bg-mint text-primary',
-  },
-  {
     title: 'Mess operators',
     domain: 'Meals',
     body: 'Meal-first: customers, menus, breakfast/lunch/dinner participation, daily headcount, meal billing. No rooms or beds.',
     Icon: UtensilsCrossed,
     tone: 'bg-[#FFF8F1] text-orange',
+  },
+  {
+    title: 'PG owners',
+    domain: 'Lodging',
+    body: 'Paying Guest operators: occupancy, tenants, optional meals when food is included, dues, complaints.',
+    Icon: BedDouble,
+    tone: 'bg-mint text-primary',
   },
   {
     title: 'Hostel operators',
@@ -49,7 +49,7 @@ export function WhoItsForPage() {
     applySeo({
       title: "Who ACOMI is for",
       description:
-        'Equal weight for PG and Mess operators, plus hostel, co-living, and rental. Not a PG marketplace.',
+        'Equal weight for Mess and PG operators, plus hostel, co-living, and rental. Not a PG marketplace.',
       path: '/who-its-for',
     });
   }, []);

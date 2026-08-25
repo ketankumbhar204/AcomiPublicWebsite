@@ -14,7 +14,7 @@ export function Footer() {
               <span>ACOMI</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
-              Accommodation + Meals. Operations software for PGs, messes, hostels, co-living, and rentals.
+              Accommodation + Meals. Operations software for messes, PGs, hostels, co-living, and rentals.
             </p>
           </div>
 

@@ -18,7 +18,7 @@ export function FeaturesPage() {
     applySeo({
       title: 'Features — ACOMI',
       description:
-        'Lodging occupancy and members. Mess menus, participation, and headcount. Dues proofs, complaints, inventory, multi-space.',
+        'Mess menus, participation, and headcount. Lodging occupancy and members. Dues proofs, complaints, inventory, multi-space.',
       path: '/features',
     });
   }, []);

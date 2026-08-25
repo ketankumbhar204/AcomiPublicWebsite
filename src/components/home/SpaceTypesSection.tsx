@@ -2,8 +2,8 @@ import { BedDouble, Building2, Home, Users, UtensilsCrossed } from 'lucide-react
 import { Container } from '../layout/Container';
 
 const types = [
-  { name: 'PG', line: 'Rooms · beds · members', Icon: BedDouble, tone: 'bg-mint text-primary' },
   { name: 'MESS', line: 'Customers · menu · headcount', Icon: UtensilsCrossed, tone: 'bg-[#FFF8F1] text-orange' },
+  { name: 'PG', line: 'Rooms · beds · members', Icon: BedDouble, tone: 'bg-mint text-primary' },
   { name: 'HOSTEL', line: 'Accommodation · occupancy', Icon: Building2, tone: 'bg-mint text-primary' },
   { name: 'CO-LIVING', line: 'Shared accommodation', Icon: Users, tone: 'bg-[#F7F4FF] text-purple' },
   { name: 'RENTAL', line: 'Units · tenants', Icon: Home, tone: 'bg-[#F4F8FF] text-blue' },

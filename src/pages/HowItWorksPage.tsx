@@ -7,7 +7,7 @@ import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
 
 const steps = [
-  { n: '01', title: 'Create your space', line: 'Register with name, Indian mobile, and password. Choose PG, Mess, Hostel, Co-living, or Rental.', Icon: Warehouse, tone: 'teal' as const },
+  { n: '01', title: 'Create your space', line: 'Register with name, Indian mobile, and password. Choose Mess, PG, Hostel, Co-living, or Rental.', Icon: Warehouse, tone: 'teal' as const },
   { n: '02', title: 'Set up operations', line: 'Lodging starts from buildings and beds. Mess starts from menus and serving locations.', Icon: Settings2, tone: 'blue' as const },
   { n: '03', title: 'Add people', line: 'Tenants on lodging. Customers on Mess. Staff and managers on both.', Icon: UserPlus, tone: 'violet' as const },
   { n: '04', title: 'Run the day', line: 'Lodging: occupancy, dues, issues. Mess: participation, headcount, meal dues, food issues.', Icon: CalendarDays, tone: 'amber' as const },
@@ -37,8 +37,8 @@ export function HowItWorksPage() {
     <>
       <PageHero
         eyebrow="How it works"
-        title="Lodging setup and Mess setup are different."
-        description="Space type is chosen once. PG, hostel, co-living, and rental start from property. Mess starts from menus and customers."
+        title="Mess setup and lodging setup are different."
+        description="Space type is chosen once. Mess starts from menus and customers. PG, hostel, co-living, and rental start from property."
       />
 
       <section className="bg-[#F7F8FA] py-12 sm:py-14" aria-labelledby="steps-heading">
@@ -61,6 +61,14 @@ export function HowItWorksPage() {
         <Container>
           <PageSectionHead id="setup-heading" title="Step 02 is different by type." />
           <div className="mt-8 grid gap-5 lg:grid-cols-2">
+            <article className="rounded-[24px] border border-black/5 bg-[#FFF8F1] p-6 shadow-[var(--shadow-sm)]">
+              <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">Mess · Food operations</p>
+              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Menus, meals, serving locations</h3>
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+                Menu library, today&apos;s menu, share. Customers are optional at first. No building or bed map.
+              </p>
+              <Flow label="MESS" steps={messFlow} />
+            </article>
             <article className="rounded-[24px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
               <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
                 PG · Hostel · Co-living · Rental
@@ -71,14 +79,6 @@ export function HowItWorksPage() {
                 meal milestone.
               </p>
               <Flow label="PG" steps={lodgingFlow} />
-            </article>
-            <article className="rounded-[24px] border border-black/5 bg-[#FFF8F1] p-6 shadow-[var(--shadow-sm)]">
-              <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">Mess · Food operations</p>
-              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Menus, meals, serving locations</h3>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                Menu library, today&apos;s menu, share. Customers are optional at first. No building or bed map.
-              </p>
-              <Flow label="MESS" steps={messFlow} />
             </article>
           </div>
         </Container>

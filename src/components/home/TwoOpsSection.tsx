@@ -22,25 +22,6 @@ export function TwoOpsSection() {
 
         <div className="mt-14 grid items-center gap-16 lg:grid-cols-2">
           <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
-            <PhoneMock {...SHOTS.occupancy} size="md" />
-            <div className="sm:pt-6">
-              <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
-                PG · Hostel · Co-living · Rental
-              </p>
-              <h3 className="mt-2 text-2xl font-bold tracking-tight text-text">
-                Know who is staying where.
-              </h3>
-              <p className="mt-5 text-4xl font-bold tabular-nums text-text">
-                {b.occupied}
-                <span className="text-xl font-semibold text-muted"> / {b.total}</span>
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                {b.occupied} occupied · {b.vacant} vacant · {b.reserved} reserved
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
             <PhoneMock {...SHOTS.meals} size="md" />
             <div className="sm:pt-6">
               <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">Mess</p>
@@ -58,6 +39,25 @@ export function TwoOpsSection() {
                   </li>
                 ))}
               </ul>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
+            <PhoneMock {...SHOTS.occupancy} size="md" />
+            <div className="sm:pt-6">
+              <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
+                PG · Hostel · Co-living · Rental
+              </p>
+              <h3 className="mt-2 text-2xl font-bold tracking-tight text-text">
+                Know who is staying where.
+              </h3>
+              <p className="mt-5 text-4xl font-bold tabular-nums text-text">
+                {b.occupied}
+                <span className="text-xl font-semibold text-muted"> / {b.total}</span>
+              </p>
+              <p className="mt-2 text-sm text-muted">
+                {b.occupied} occupied · {b.vacant} vacant · {b.reserved} reserved
+              </p>
             </div>
           </div>
         </div>

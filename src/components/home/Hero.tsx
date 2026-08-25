@@ -56,7 +56,7 @@ export function Hero() {
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#E7F4EE] text-primary">
                 <Check className="h-3 w-3" strokeWidth={2.4} aria-hidden />
               </span>
-              Built for Indian PG, hostel, mess and co-living operators.
+              Built for Indian mess, PG, hostel and co-living operators.
             </p>
           </div>
           <HeroPhones />

@@ -108,8 +108,8 @@ export function PeopleCard() {
         </div>
       </div>
       <div className="mt-5 grid grid-cols-2 gap-2">
-        <Mini n={DEMO.lodging.beds.occupied} l="PG residents" tone="bg-[#E7F6EE] text-[#0F6B4C]" />
         <Mini n={DEMO.mess.customers} l="MESS customers" tone="bg-[#F1EBFF] text-[#6D28D9]" />
+        <Mini n={DEMO.lodging.beds.occupied} l="PG residents" tone="bg-[#E7F6EE] text-[#0F6B4C]" />
       </div>
       <div className="mt-4 flex items-center gap-2">
         {people.map((p) => (

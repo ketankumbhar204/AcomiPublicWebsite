@@ -43,20 +43,20 @@ export function TwoModesSection() {
         </h2>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
-          <article className="rounded-[24px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
-            <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
-              PG · Hostel · Co-living · Rental
-            </p>
-            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Accommodation</h3>
-            <Workflow steps={lodging} accent="teal" />
-          </article>
-
           <article className="rounded-[24px] border border-black/5 bg-[#FFF8F1] p-6 shadow-[var(--shadow-sm)]">
             <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">
               Mess · Food operations
             </p>
             <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Meals</h3>
             <Workflow steps={meals} accent="orange" />
+          </article>
+
+          <article className="rounded-[24px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
+            <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
+              PG · Hostel · Co-living · Rental
+            </p>
+            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Accommodation</h3>
+            <Workflow steps={lodging} accent="teal" />
           </article>
         </div>
       </Container>

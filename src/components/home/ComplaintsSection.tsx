@@ -28,8 +28,8 @@ export function ComplaintsSection() {
           </div>
         </div>
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
-          <Issue badge="PG" item={DEMO.complaints.lodging} />
           <Issue badge="MESS" item={DEMO.complaints.mess} />
+          <Issue badge="PG" item={DEMO.complaints.lodging} />
         </div>
       </Container>
     </section>

@@ -11,7 +11,7 @@ import { applySeo } from '../lib/seo';
 const items = [
   {
     title: 'Create a space',
-    line: 'Create a PG, mess, hostel, co-living, or rental space.',
+    line: 'Create a mess, PG, hostel, co-living, or rental space.',
     Icon: Warehouse,
     tone: 'teal' as const,
     bg: 'bg-mint',
