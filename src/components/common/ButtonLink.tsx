@@ -1,19 +1,14 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
-type Variant = 'primary' | 'ghost' | 'ghostDark' | 'outline' | 'onDark';
+export type ButtonVariant = 'primary' | 'ghost' | 'ghostDark' | 'outline' | 'onDark';
 
-type ButtonLinkProps = {
-  href: string;
-  children: ReactNode;
-  variant?: Variant;
-  className?: string;
-  external?: boolean;
-};
+export const BUTTON_BASE =
+  'inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
 
-const variants: Record<Variant, string> = {
+export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    'bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary shadow-sm',
+    'bg-register text-white hover:bg-register-hover focus-visible:ring-register shadow-sm',
   ghost:
     'bg-white text-primary ring-1 ring-primary/30 hover:bg-soft focus-visible:ring-primary',
   ghostDark:
@@ -24,6 +19,14 @@ const variants: Record<Variant, string> = {
     'bg-accent text-cta-band hover:brightness-95 focus-visible:ring-white shadow-sm',
 };
 
+type ButtonLinkProps = {
+  href: string;
+  children: ReactNode;
+  variant?: ButtonVariant;
+  className?: string;
+  external?: boolean;
+};
+
 export function ButtonLink({
   href,
   children,
@@ -31,7 +34,7 @@ export function ButtonLink({
   className = '',
   external = true,
 }: ButtonLinkProps) {
-  const cls = `inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${variants[variant]} ${className}`;
+  const cls = `${BUTTON_BASE} ${BUTTON_VARIANTS[variant]} ${className}`;
 
   if (!external) {
     return (

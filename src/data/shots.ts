@@ -3,6 +3,7 @@ import dashboardPng from '../assets/screenshots/dashboard.png';
 import mealsPng from '../assets/screenshots/meals.png';
 import membersPng from '../assets/screenshots/members.png';
 import messPng from '../assets/screenshots/mess.png';
+import messPaymentsPng from '../assets/screenshots/mess-payments.png';
 import paymentsPng from '../assets/screenshots/payments.png';
 
 export const SHOTS = {
@@ -25,6 +26,11 @@ export const SHOTS = {
     src: mealsPng,
     alt: 'ACOMI meals screen with breakfast headcount',
     caption: 'Meals',
+  },
+  messPayments: {
+    src: messPaymentsPng,
+    alt: 'Sunrise Mess payments screen with expected and collected meal dues',
+    caption: 'Mess dues',
   },
   members: {
     src: membersPng,

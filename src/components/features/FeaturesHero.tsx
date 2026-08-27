@@ -1,6 +1,7 @@
 import { BedDouble, Check, IndianRupee, UtensilsCrossed } from 'lucide-react';
-import { APP } from '../../constants/links';
+import { useUserType } from '../../context/UserTypeContext';
 import { SHOTS } from '../../data/shots';
+import { ActionButton } from '../common/ActionButton';
 import { ButtonLink } from '../common/ButtonLink';
 import { PhoneMock } from '../common/PhoneMock';
 import { HeroValueRow } from '../home/HeroValueRow';
@@ -28,6 +29,8 @@ const lines = [
 ];
 
 export function FeaturesHero() {
+  const { openUserTypeModal } = useUserType();
+
   return (
     <section
       className="overflow-x-hidden bg-[radial-gradient(ellipse_at_top_left,rgba(184,240,200,0.28),transparent_46%)] bg-white pt-10 pb-10 sm:pt-14 sm:pb-12"
@@ -46,7 +49,7 @@ export function FeaturesHero() {
               Lodging answers who is staying. Meals answer how many plates. Dues and issues stay in the same space.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <ButtonLink href={APP.register}>Get started free</ButtonLink>
+              <ActionButton onClick={openUserTypeModal}>Get started free</ActionButton>
               <ButtonLink href="/how-it-works" variant="ghost" external={false}>
                 See how it works
               </ButtonLink>

@@ -1,5 +1,9 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { ListingDrawerProvider } from '../../context/ListingDrawerContext';
+import { ListingPreviewProvider } from '../../context/ListingPreviewContext';
+import { UserTypeProvider } from '../../context/UserTypeContext';
+import { PersistentListingActions } from '../common/PersistentListingActions';
 import { Footer } from './Footer';
 import { Navbar } from './Navbar';
 import { SkipLink } from './SkipLink';
@@ -23,14 +27,21 @@ function RouteScroll() {
 
 export function Layout() {
   return (
-    <div className="min-h-dvh bg-background text-text antialiased">
-      <SkipLink />
-      <Navbar />
-      <RouteScroll />
-      <main id="main" className="pt-16">
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
+    <UserTypeProvider>
+      <ListingDrawerProvider>
+        <ListingPreviewProvider>
+          <div className="min-h-dvh bg-background text-text antialiased">
+            <SkipLink />
+            <Navbar />
+            <PersistentListingActions />
+            <RouteScroll />
+            <main id="main" className="pt-16">
+              <Outlet />
+            </main>
+            <Footer />
+          </div>
+        </ListingPreviewProvider>
+      </ListingDrawerProvider>
+    </UserTypeProvider>
   );
 }

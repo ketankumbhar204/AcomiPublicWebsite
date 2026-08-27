@@ -1,8 +1,12 @@
 import { APP } from '../../constants/links';
+import { useUserType } from '../../context/UserTypeContext';
+import { ActionButton } from '../common/ActionButton';
 import { ButtonLink } from '../common/ButtonLink';
 import { Container } from '../layout/Container';
 
 export function FinalCta() {
+  const { openUserTypeModal } = useUserType();
+
   return (
     <section id="cta" className="bg-cta-band py-16 sm:py-20" aria-labelledby="cta-heading">
       <Container className="text-center">
@@ -16,9 +20,9 @@ export function FinalCta() {
           Occupancy, meals, headcount and payments — together.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <ButtonLink href={APP.register} variant="onDark">
+          <ActionButton onClick={openUserTypeModal} variant="onDark">
             Get started free
-          </ButtonLink>
+          </ActionButton>
           <ButtonLink href={APP.login} variant="ghostDark">
             Sign in
           </ButtonLink>

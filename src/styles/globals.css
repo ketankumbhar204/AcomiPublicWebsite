@@ -30,6 +30,13 @@
   --color-orange: #d97706;
   --color-purple: #7c3aed;
   --color-coral: #e11d48;
+  /*
+   * Registration-flow accent. Additive and deliberately scoped to the property
+   * registration drawer: the marketing site keeps --color-primary everywhere else.
+   */
+  --color-register: #25d366;
+  --color-register-hover: #1fbe5b;
+  --color-register-soft: #eafbf1;
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -57,6 +64,149 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Scroll lock. The gap keeps the fixed header from shifting when the scrollbar hides. */
+body.modal-open {
+  overflow: hidden;
+  padding-right: var(--scrollbar-gap, 0px);
+}
+
+body.modal-open header {
+  padding-right: var(--scrollbar-gap, 0px);
+}
+
+/*
+ * The global :focus-visible outline above is unlayered, so it beats Tailwind's
+ * layered ring utilities. The dialog is only a programmatic focus target, so it
+ * shows no ring; the intent cards recolour the outline via --focus-ring.
+ */
+.modal-panel:focus-visible,
+.drawer-panel:focus-visible {
+  outline: none;
+}
+
+.ui-lift:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--color-primary));
+  outline-offset: 2px;
+}
+
+/*
+ * The registration drawer runs on its own accent, so recolour the shared unlayered
+ * :focus-visible outline instead of trying to out-specify it with a ring utility.
+ */
+.reg-focus:focus-visible {
+  outline-color: var(--color-register);
+}
+
+.dual-range {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+}
+
+.dual-range::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+}
+
+.dual-range::-moz-range-track {
+  height: 6px;
+  background: transparent;
+}
+
+.dual-range::-webkit-slider-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  appearance: none;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: var(--color-register);
+  box-shadow: 0 1px 4px rgba(11, 28, 22, 0.2);
+}
+
+.dual-range::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: var(--color-register);
+}
+
+.modal-backdrop {
+  animation: modal-backdrop-in 0.18s ease both;
+}
+
+@keyframes modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-panel {
+  animation: modal-panel-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes modal-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.drawer-panel {
+  animation: drawer-panel-in 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes drawer-panel-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.ui-lift {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ui-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.ui-lift:active {
+  transform: translateY(0);
+}
+
+.ui-pop,
+.ui-nudge {
+  transition: transform 0.2s ease;
+}
+
+.ui-lift:hover .ui-pop {
+  transform: scale(1.06);
+}
+
+.ui-lift:hover .ui-nudge {
+  transform: translateX(2px);
 }
 
 .reveal-base {
@@ -138,10 +288,23 @@ body {
   .hero-float,
   .count-in,
   .bar-fill,
-  .phone-device {
+  .phone-device,
+  .modal-backdrop,
+  .modal-panel,
+  .drawer-panel,
+  .ui-lift,
+  .ui-pop,
+  .ui-nudge {
     opacity: 1;
     transform: none;
     transition: none;
     animation: none;
+  }
+
+  .ui-lift:hover,
+  .ui-lift:active,
+  .ui-lift:hover .ui-pop,
+  .ui-lift:hover .ui-nudge {
+    transform: none;
   }
 }

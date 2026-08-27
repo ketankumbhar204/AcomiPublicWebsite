@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { CalendarDays, UserPlus, Warehouse } from 'lucide-react';
-import { APP } from '../constants/links';
+import { useUserType } from '../context/UserTypeContext';
+import { ActionButton } from '../components/common/ActionButton';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { FinalCta } from '../components/home/FinalCta';
 import { PageHero, PageSectionHead } from '../components/common/PageHero';
@@ -33,6 +34,8 @@ const items = [
 ];
 
 export function PricingPage() {
+  const { openUserTypeModal } = useUserType();
+
   useEffect(() => {
     applySeo({
       title: 'Pricing — ACOMI',
@@ -49,7 +52,7 @@ export function PricingPage() {
         description="ACOMI does not publish plans, rupee amounts, free-trial length, or cancel-anytime terms on this website. Create a space and use the product."
       >
         <div className="mt-6 flex flex-wrap gap-3">
-          <ButtonLink href={APP.register}>Get started</ButtonLink>
+          <ActionButton onClick={openUserTypeModal}>Get started</ActionButton>
           <ButtonLink href="/how-it-works" variant="ghost" external={false}>
             How it works
           </ButtonLink>

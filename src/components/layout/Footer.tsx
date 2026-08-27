@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import { APP } from '../../constants/links';
+import { useUserType } from '../../context/UserTypeContext';
 import { BrandMark } from '../common/BrandMark';
 import { Container } from './Container';
 
 export function Footer() {
+  const { openUserTypeModal } = useUserType();
+
   return (
     <footer className="border-t border-border bg-white py-14">
       <Container>
@@ -58,9 +61,13 @@ export function Footer() {
             <p className="text-[11px] font-semibold tracking-[0.16em] text-muted uppercase">Account</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <a href={APP.register} className="text-text-secondary transition hover:text-primary">
+                <button
+                  type="button"
+                  onClick={openUserTypeModal}
+                  className="text-left text-text-secondary transition hover:text-primary"
+                >
                   Get started
-                </a>
+                </button>
               </li>
               <li>
                 <a href={APP.login} className="text-text-secondary transition hover:text-primary">
