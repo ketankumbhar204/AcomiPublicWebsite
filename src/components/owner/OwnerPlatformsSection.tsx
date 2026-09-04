@@ -1,4 +1,5 @@
 import { Monitor, Smartphone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { APP } from '../../constants/links';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { DemoLabel } from '../common/DemoLabel';
@@ -7,6 +8,8 @@ import { BrowserChrome } from '../product/BrowserChrome';
 import { Container } from '../layout/Container';
 
 export function OwnerPlatformsSection() {
+  const { t } = useTranslation();
+
   return (
     <section
       className="border-t border-border bg-[#F7F8FA] py-12 sm:py-14"
@@ -17,25 +20,25 @@ export function OwnerPlatformsSection() {
           id="owner-platforms-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          Use ACOMI on the web or Android.
+          {t('platformsPage.title')}
         </h2>
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-          The same product. Sign in with an Indian mobile number and password.
+          {t('platformsPage.description')}
         </p>
         <div className="mt-8 grid items-center gap-8 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
           <div className="grid gap-3">
             <article className="rounded-[20px] border border-black/5 bg-mint p-5 shadow-[var(--shadow-sm)]">
               <IconBadge icon={Monitor} tone="teal" />
-              <h3 className="mt-3 text-lg font-semibold text-navy">Web</h3>
+              <h3 className="mt-3 text-lg font-semibold text-navy">{t('common.web')}</h3>
               <p className="mt-1 text-sm text-text-secondary">app.acomi.in</p>
               <a href={APP.web} className="mt-3 inline-block text-sm font-semibold text-primary">
-                Open web app
+                {t('common.openWebApp')}
               </a>
             </article>
             <article className="rounded-[20px] border border-black/5 bg-[#F4F8FF] p-5 shadow-[var(--shadow-sm)]">
               <IconBadge icon={Smartphone} tone="blue" />
-              <h3 className="mt-3 text-lg font-semibold text-navy">Android</h3>
-              <p className="mt-1 text-sm text-text-secondary">ACOMI Android app</p>
+              <h3 className="mt-3 text-lg font-semibold text-navy">{t('common.android')}</h3>
+              <p className="mt-1 text-sm text-text-secondary">{t('home.platforms.androidApp')}</p>
             </article>
           </div>
           <BrowserChrome url="app.acomi.in">
@@ -47,12 +50,8 @@ export function OwnerPlatformsSection() {
   );
 }
 
-/*
- * The shared OperationsDashboard also carries a meal-headcount panel, which belongs
- * to a mess space. Modules are per space, so a lodging-only owner sees occupancy and
- * payments — same panels, same data, mess module omitted.
- */
 function OwnerDashboardMock() {
+  const { t } = useTranslation();
   const { lodging, dues } = DEMO;
   const b = lodging.beds;
 
@@ -61,21 +60,21 @@ function OwnerDashboardMock() {
       <div className="flex items-center justify-between border-b border-border/80 bg-white px-3 py-2.5 sm:px-4">
         <div className="min-w-0">
           <p className="text-[10px] font-semibold tracking-[0.14em] text-primary uppercase">
-            Today&apos;s operations
+            {t('owner.dashboard.todaysOps')}
           </p>
           <p className="truncate text-sm font-bold text-text">{lodging.name}</p>
         </div>
         <span className="rounded-full bg-soft px-2 py-0.5 text-[10px] font-semibold text-primary">
-          Owner view
+          {t('owner.dashboard.ownerView')}
         </span>
       </div>
 
       <div className="space-y-3 p-3">
         <section className="rounded-xl bg-white p-3 ring-1 ring-border">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="text-xs font-semibold text-text">Occupancy</h3>
+            <h3 className="text-xs font-semibold text-text">{t('home.visual.occupancy')}</h3>
             <p className="text-xs font-bold tabular-nums text-primary">
-              {b.occupied} / {b.total} occupied
+              {t('home.multiSpace.occupiedOf', { occupied: b.occupied, total: b.total })}
             </p>
           </div>
           <div className="mt-2 flex h-2 overflow-hidden rounded-full bg-brand-50">
@@ -84,9 +83,9 @@ function OwnerDashboardMock() {
             <span className="bg-warning" style={{ width: `${lodging.reservedPct}%` }} />
           </div>
           <dl className="mt-2 grid grid-cols-3 gap-2 text-center">
-            <Mini label="Occupied" value={b.occupied} hint={`${lodging.occupancyPct}%`} />
-            <Mini label="Vacant" value={b.vacant} hint={`${lodging.vacantPct}%`} />
-            <Mini label="Reserved" value={b.reserved} hint={`${lodging.reservedPct}%`} />
+            <Mini label={t('status.occupied')} value={b.occupied} hint={`${lodging.occupancyPct}%`} />
+            <Mini label={t('status.vacant')} value={b.vacant} hint={`${lodging.vacantPct}%`} />
+            <Mini label={t('status.reserved')} value={b.reserved} hint={`${lodging.reservedPct}%`} />
           </dl>
           <ul className="mt-3 space-y-1.5">
             {lodging.members.map((m) => (
@@ -108,14 +107,14 @@ function OwnerDashboardMock() {
 
         <section className="rounded-xl bg-white p-3 ring-1 ring-border">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="text-xs font-semibold text-text">Payment summary</h3>
-            <p className="text-[10px] text-muted">This month</p>
+            <h3 className="text-xs font-semibold text-text">{t('owner.dashboard.paymentSummary')}</h3>
+            <p className="text-[10px] text-muted">{t('owner.dashboard.thisMonth')}</p>
           </div>
           <dl className="mt-2 grid grid-cols-2 gap-2">
-            <Pay label="Expected" value={dues.expected} />
-            <Pay label="Collected" value={dues.collected} />
-            <Pay label="Under review" value={dues.underReview} />
-            <Pay label="Pending" value={dues.pending} />
+            <Pay label={t('status.expected')} value={dues.expected} />
+            <Pay label={t('status.collected')} value={dues.collected} />
+            <Pay label={t('status.underReview')} value={dues.underReview} />
+            <Pay label={t('status.pending')} value={dues.pending} />
           </dl>
         </section>
       </div>

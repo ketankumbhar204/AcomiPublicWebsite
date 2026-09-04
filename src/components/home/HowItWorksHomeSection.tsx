@@ -1,18 +1,57 @@
 import { ArrowRight, CalendarDays, Settings2, UserPlus, Warehouse } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { IconBadge } from '../common/IconBadge';
 import { Container } from '../layout/Container';
 
-const steps = [
-  { n: '01', title: 'Create space', line: 'Mess or PG.', Icon: Warehouse, tone: 'teal' as const },
-  { n: '02', title: 'Set up operations', line: 'Rooms or menu.', Icon: Settings2, tone: 'blue' as const },
-  { n: '03', title: 'Add people', line: 'Residents or customers.', Icon: UserPlus, tone: 'violet' as const },
-  { n: '04', title: 'Run the day', line: 'Occupancy, plates, dues.', Icon: CalendarDays, tone: 'amber' as const },
-];
-
-const pg = ['Create PG', 'Configure rooms/beds', 'Add residents', 'Track occupancy', 'Track payments'];
-const mess = ['Create Mess', 'Add customers', 'Create menu', 'Collect participation', 'See headcount'];
-
 export function HowItWorksHomeSection() {
+  const { t } = useTranslation();
+
+  const steps = [
+    {
+      n: '01',
+      title: t('home.howItWorks.steps.createSpace.title'),
+      line: t('home.howItWorks.steps.createSpace.line'),
+      Icon: Warehouse,
+      tone: 'teal' as const,
+    },
+    {
+      n: '02',
+      title: t('home.howItWorks.steps.setUp.title'),
+      line: t('home.howItWorks.steps.setUp.line'),
+      Icon: Settings2,
+      tone: 'blue' as const,
+    },
+    {
+      n: '03',
+      title: t('home.howItWorks.steps.addPeople.title'),
+      line: t('home.howItWorks.steps.addPeople.line'),
+      Icon: UserPlus,
+      tone: 'violet' as const,
+    },
+    {
+      n: '04',
+      title: t('home.howItWorks.steps.runDay.title'),
+      line: t('home.howItWorks.steps.runDay.line'),
+      Icon: CalendarDays,
+      tone: 'amber' as const,
+    },
+  ];
+
+  const pg = [
+    t('home.howItWorks.flow.pg.0'),
+    t('home.howItWorks.flow.pg.1'),
+    t('home.howItWorks.flow.pg.2'),
+    t('home.howItWorks.flow.pg.3'),
+    t('home.howItWorks.flow.pg.4'),
+  ];
+  const mess = [
+    t('home.howItWorks.flow.mess.0'),
+    t('home.howItWorks.flow.mess.1'),
+    t('home.howItWorks.flow.mess.2'),
+    t('home.howItWorks.flow.mess.3'),
+    t('home.howItWorks.flow.mess.4'),
+  ];
+
   return (
     <section
       id="how-it-works"
@@ -24,7 +63,7 @@ export function HowItWorksHomeSection() {
           id="hiw-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          How it works
+          {t('home.howItWorks.title')}
         </h2>
         <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s) => (

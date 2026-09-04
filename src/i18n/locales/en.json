@@ -1,0 +1,964 @@
+{
+  "brand": "ACOMI",
+  "nav": {
+    "features": "Features",
+    "howItWorks": "How it works",
+    "whoItsFor": "Who it's for",
+    "platforms": "Platforms",
+    "signIn": "Sign in",
+    "getStarted": "Get started",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "primary": "Primary",
+    "pricing": "Pricing",
+    "about": "About",
+    "home": "Home"
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select language",
+    "names": {
+      "en": "English",
+      "hi": "हिन्दी",
+      "mr": "मराठी",
+      "kn": "ಕನ್ನಡ",
+      "te": "తెలుగు",
+      "ta": "தமிழ்"
+    }
+  },
+  "hero": {
+    "heading": "How can ACOMI help you?",
+    "getStartedFree": "Get started free",
+    "seeHowItWorks": "See how it works",
+    "builtFor": "Built for Indian mess, PG, hostel and co-living operators."
+  },
+  "userTypes": {
+    "PROPERTY_OWNER": {
+      "title": "I manage a property",
+      "description": "PG • Hostel • Rental • Co-living",
+      "shortLabel": "Property owner"
+    },
+    "MESS_VENDOR": {
+      "title": "I run a mess / food service",
+      "description": "Mess • Tiffin • Meal service",
+      "shortLabel": "Mess vendor"
+    },
+    "ACCOMMODATION_SEEKER": {
+      "title": "I'm looking for a place",
+      "description": "Find PGs • Hostels • Rentals • Co-living",
+      "shortLabel": "Looking for a place"
+    },
+    "MEAL_SEEKER": {
+      "title": "I'm looking for meals",
+      "description": "Find messes • Tiffin • Meal plans",
+      "shortLabel": "Looking for meals"
+    }
+  },
+  "userTypeModal": {
+    "welcome": "Welcome to ACOMI",
+    "howUse": "How would you like to use ACOMI?",
+    "choose": "Choose the option that best describes you to get started.",
+    "close": "Close",
+    "changeAnytime": "You can change this anytime.",
+    "currentSelection": "Current selection",
+    "usingAs": "Using ACOMI as",
+    "usingAsA11y": "Using ACOMI as {{role}}. Change how you use ACOMI."
+  },
+  "listing": {
+    "listProperty": "List Your Property",
+    "listMess": "List Your Mess"
+  },
+  "common": {
+    "close": "Close",
+    "home": "Home",
+    "pricing": "Pricing",
+    "about": "About",
+    "openWebApp": "Open web app",
+    "privacy": "Privacy",
+    "deleteAccount": "Delete account",
+    "web": "Web",
+    "android": "Android",
+    "meals": "Meals",
+    "accommodation": "Accommodation",
+    "members": "Members",
+    "payments": "Payments",
+    "inventory": "Inventory",
+    "complaints": "Complaints",
+    "platforms": "Platforms",
+    "access": "Access"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "atAGlance": "ACOMI at a glance"
+  },
+  "status": {
+    "occupied": "Occupied",
+    "vacant": "Vacant",
+    "reserved": "Reserved",
+    "expected": "Expected",
+    "toPrepare": "To prepare",
+    "noResponse": "No response",
+    "collected": "Collected",
+    "underReview": "Under review",
+    "pending": "Pending",
+    "open": "Open",
+    "inProgress": "In progress",
+    "resolved": "Resolved",
+    "low": "Low",
+    "maintenance": "Maintenance",
+    "review": "Review",
+    "available": "Available",
+    "inUse": "In use"
+  },
+  "meals": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner"
+  },
+  "labels": {
+    "allocate": "Allocate",
+    "reserve": "Reserve",
+    "menu": "Menu",
+    "poll": "Poll",
+    "customer": "Customer",
+    "tenants": "Tenants",
+    "today": "Today",
+    "selectMeal": "Select meal",
+    "headcount": "Headcount",
+    "rentPending": "Rent pending",
+    "mealPending": "Meal pending",
+    "due": "Due",
+    "proof": "Proof",
+    "viewMenu": "View Menu",
+    "viewInAcomi": "View in ACOMI",
+    "shareReceipt": "Share receipt",
+    "paymentReminder": "Payment reminder"
+  },
+  "footer": {
+    "tagline": "Accommodation + Meals. Operations software for messes, PGs, hostels, co-living, and rentals.",
+    "product": "Product",
+    "account": "Account",
+    "legal": "Legal",
+    "copyright": "© 2026 ACOMI. All rights reserved."
+  },
+  "finalCta": {
+    "title": "Run your space from one place.",
+    "subtitle": "Occupancy, meals, headcount and payments — together."
+  },
+  "home": {
+    "problem": {
+      "title": "Still in notebooks, spreadsheets and WhatsApp.",
+      "whosStaying": "Who's staying?",
+      "howManyPlates": "How many plates?"
+    },
+    "twoModes": {
+      "title": "One platform. Two operations.",
+      "mealsEyebrow": "Mess · Food operations",
+      "mealsTitle": "Meals",
+      "lodgingEyebrow": "PG · Hostel · Co-living · Rental",
+      "lodgingTitle": "Accommodation",
+      "steps": {
+        "building": "Building",
+        "floor": "Floor",
+        "room": "Room",
+        "bed": "Bed",
+        "member": "Member",
+        "payment": "Payment",
+        "customer": "Customer",
+        "menu": "Menu",
+        "poll": "Poll",
+        "participation": "Participation",
+        "headcount": "Headcount",
+        "kitchen": "Kitchen"
+      }
+    },
+    "headcount": {
+      "eyebrow": "Mess · Headcount",
+      "title": "Know how many plates to prepare.",
+      "expected": "Expected",
+      "toPrepare": "To prepare",
+      "noResponse": "No response",
+      "todayPrefix": "Today — {{date}}"
+    },
+    "payments": {
+      "eyebrow": "Payments",
+      "title": "Know what's due."
+    },
+    "person": {
+      "eyebrow": "Members",
+      "title": "People in one place.",
+      "messCustomers": "MESS · Customers",
+      "pgTenants": "PG · Tenants",
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "allocate": "Allocate",
+      "reserve": "Reserve",
+      "menu": "Menu",
+      "poll": "Poll"
+    },
+    "screenshots": {
+      "title": "See ACOMI in action.",
+      "captions": {
+        "dashboard": "PG Dashboard",
+        "mess": "Mess Dashboard",
+        "occupancy": "Occupancy",
+        "payments": "Payments",
+        "members": "Members"
+      }
+    },
+    "whatsapp": {
+      "eyebrow": "WhatsApp updates",
+      "title": "Keep people updated on WhatsApp.",
+      "subtitle": "Tenants and customers get menus, poll, and pending payment updates where they already check.",
+      "chips": {
+        "selectMeal": "Select meal",
+        "pollOpen": "Poll is open",
+        "headcount": "Headcount",
+        "headcountDetail": "78 / 86 responded",
+        "rentPending": "Rent pending",
+        "rentPendingDetail": "₹12,000 due",
+        "mealPending": "Meal pending",
+        "mealPendingDetail": "₹4,800 due"
+      },
+      "captions": {
+        "selectMeal": "Select your meal",
+        "todaysMenu": "Today's menu",
+        "mealPaymentPending": "Meal payment pending",
+        "paymentReminder": "Payment reminder",
+        "rentPending": "Rent payment pending",
+        "paymentReceived": "Payment received"
+      },
+      "bubbles": {
+        "pollOpen": "🍽 Meal poll is open",
+        "hiName": "Hi {{name}},",
+        "selectMealsBefore": "Select your meals for today before 10:00 AM.",
+        "todaysMenu": "🍽 Today's Menu — {{name}}",
+        "expectedMeals": "👥 Expected meals {{prepare}} / {{customers}}",
+        "mealPaymentPending": "💰 Meal payment pending",
+        "mealPaymentForMonth": "Meal payment for {{month}} is pending.",
+        "paymentReminder": "💰 Payment Reminder",
+        "friendlyRentReminder": "This is a friendly reminder for your monthly rent.",
+        "rentPending": "⚠ Rent payment is pending",
+        "stillPendingRent": "Rent payment for {{month}} is still pending.",
+        "paymentReceived": "✅ Payment received",
+        "proofReceived": "Your payment proof for {{month}} has been received.",
+        "verifySoon": "We will verify and update the status soon.",
+        "oneUpdate": "One update. Everyone knows.",
+        "shareableNote": "Shareable text, not automatic WhatsApp sending",
+        "amountDue": "Amount due {{amount}}",
+        "amountPending": "Amount pending {{amount}}",
+        "plan": "Plan",
+        "month": "Month",
+        "dueDate": "Due date",
+        "roomBed": "Room / Bed",
+        "status": "Status",
+        "monthlyMeals": "Monthly meals",
+        "statusUnderReview": "Status · Under review"
+      },
+      "flow": {
+        "customer": "CUSTOMER",
+        "tenant": "TENANT",
+        "mess": {
+          "poll": "Poll",
+          "whatsapp": "WhatsApp",
+          "customer": "Customer",
+          "headcount": "78 / 86"
+        },
+        "pg": {
+          "due": "Due",
+          "tenant": "Tenant",
+          "proof": "Proof",
+          "review": "Review"
+        }
+      }
+    },
+    "spaceTypes": {
+      "title": "Space types",
+      "types": {
+        "mess": {
+          "name": "MESS",
+          "line": "Customers · menu · headcount"
+        },
+        "pg": {
+          "name": "PG",
+          "line": "Rooms · beds · members"
+        },
+        "hostel": {
+          "name": "HOSTEL",
+          "line": "Accommodation · occupancy"
+        },
+        "coliving": {
+          "name": "CO-LIVING",
+          "line": "Shared accommodation"
+        },
+        "rental": {
+          "name": "RENTAL",
+          "line": "Units · tenants"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "steps": {
+        "createSpace": {
+          "title": "Create space",
+          "line": "Mess or PG."
+        },
+        "setUp": {
+          "title": "Set up operations",
+          "line": "Rooms or menu."
+        },
+        "addPeople": {
+          "title": "Add people",
+          "line": "Residents or customers."
+        },
+        "runDay": {
+          "title": "Run the day",
+          "line": "Occupancy, plates, dues."
+        }
+      },
+      "flow": {
+        "pg": {
+          "0": "Create PG",
+          "1": "Configure rooms/beds",
+          "2": "Add residents",
+          "3": "Track occupancy",
+          "4": "Track payments"
+        },
+        "mess": {
+          "0": "Create Mess",
+          "1": "Add customers",
+          "2": "Create menu",
+          "3": "Collect participation",
+          "4": "See headcount"
+        }
+      }
+    },
+    "access": {
+      "title": "Access",
+      "ownerTitle": "Owner / operator",
+      "memberTitle": "Member",
+      "owner": {
+        "createSpaces": "Create spaces",
+        "configureOperations": "Configure operations",
+        "addPeople": "Add people",
+        "manageOccupancy": "Manage occupancy",
+        "manageMeals": "Manage meals",
+        "reviewPayments": "Review payments"
+      },
+      "member": {
+        "joinByInvitation": "Join by invitation",
+        "viewRelevant": "View relevant information",
+        "respondToPolls": "Respond to meal polls",
+        "submitProof": "Submit payment proof",
+        "raiseComplaints": "Raise complaints"
+      }
+    },
+    "multiSpace": {
+      "title": "One owner. Multiple spaces.",
+      "occupiedOf": "{{occupied}} / {{total}} occupied",
+      "mealsMetric": "{{b}} breakfast · {{l}} lunch · {{d}} dinner",
+      "ownersAcomi": "{{name}}'s ACOMI"
+    },
+    "inventory": {
+      "title": "Inventory",
+      "messStock": "MESS food stock",
+      "lodgingAssets": "PG / Hostel assets"
+    },
+    "complaints": {
+      "title": "Complaints"
+    },
+    "platforms": {
+      "title": "Platforms",
+      "web": "Web",
+      "androidApp": "ACOMI Android app",
+      "openWebApp": "Open web app"
+    },
+    "visual": {
+      "occupancy": "Occupancy",
+      "occupancySub": "Know who's staying",
+      "mealsHeadcount": "Meals + Headcount",
+      "mealsSub": "Know how many plates",
+      "payments": "Payments",
+      "paymentsSub": "Know what's due",
+      "people": "People",
+      "peopleSub": "Tenants + Customers",
+      "activePeople": "Active people",
+      "messCustomers": "MESS customers",
+      "pgResidents": "PG residents"
+    }
+  },
+  "features": {
+    "eyebrow": "Features",
+    "lines": {
+      "staying": "Know who's staying.",
+      "eating": "Know who's eating.",
+      "due": "Know what's due."
+    },
+    "body": "Lodging answers who is staying. Meals answer how many plates. Dues and issues stay in the same space.",
+    "footnote": "Occupancy, meals, headcount and payments — one place.",
+    "captionPg": "PG · Occupancy",
+    "captionMess": "MESS · Headcount"
+  },
+  "howItWorksPage": {
+    "seo": {
+      "title": "How it works — ACOMI",
+      "description": "Create a space, set up beds or menus depending on type, add tenants or customers, and run occupancy or headcount."
+    },
+    "eyebrow": "How it works",
+    "title": "Mess setup and lodging setup are different.",
+    "description": "Space type is chosen once. Mess starts from menus and customers. PG, hostel, co-living, and rental start from property.",
+    "fourSteps": "Four steps.",
+    "setupTitle": "Step 02 is different by type.",
+    "messEyebrow": "Mess · Food operations",
+    "messTitle": "Menus, meals, serving locations",
+    "messBody": "Menu library, today's menu, share. Customers are optional at first. No building or bed map.",
+    "lodgingEyebrow": "PG · Hostel · Co-living · Rental",
+    "lodgingTitle": "Buildings, rooms, beds",
+    "lodgingBody": "Quick Setup or manual builder. Then add residents. Meals are optional except rental, which omits the meal milestone.",
+    "inviteEyebrow": "Members",
+    "inviteTitle": "Member invitation.",
+    "inviteIntro": "Invite a mobile number, or create a record without the app.",
+    "steps": {
+      "create": {
+        "title": "Create your space",
+        "line": "Register with name, Indian mobile, and password. Choose Mess, PG, Hostel, Co-living, or Rental."
+      },
+      "setUp": {
+        "title": "Set up operations",
+        "line": "Lodging starts from buildings and beds. Mess starts from menus and serving locations."
+      },
+      "addPeople": {
+        "title": "Add people",
+        "line": "Tenants on lodging. Customers on Mess. Staff and managers on both."
+      },
+      "runDay": {
+        "title": "Run the day",
+        "line": "Lodging: occupancy, dues, issues. Mess: participation, headcount, meal dues, food issues."
+      }
+    },
+    "flow": {
+      "pg": {
+        "0": "Create PG",
+        "1": "Configure rooms/beds",
+        "2": "Add residents",
+        "3": "Track occupancy",
+        "4": "Track payments"
+      },
+      "mess": {
+        "0": "Create Mess",
+        "1": "Add customers",
+        "2": "Create menu",
+        "3": "Collect participation",
+        "4": "See headcount"
+      }
+    },
+    "invite": {
+      "0": "Owner or manager invites a 10-digit Indian mobile with a role.",
+      "1": "That person registers or signs in with the same mobile and a password.",
+      "2": "They accept. Tenants and customers may complete a profile.",
+      "3": "They see stay, meals, proofs, and complaints that apply to them — not the full operator console."
+    }
+  },
+  "whoItsForPage": {
+    "seo": {
+      "title": "Who ACOMI is for",
+      "description": "Equal weight for Mess and PG operators, plus hostel, co-living, and rental. Not a PG marketplace."
+    },
+    "eyebrow": "Who it's for",
+    "title": "Sold to owners. Used by invited people.",
+    "description": "ACOMI is for operators of Indian shared living and messes. Tenants, meal customers, and staff join by invitation. This site is not for people looking for a PG.",
+    "operatorsTitle": "Operators, by space type.",
+    "audiences": {
+      "mess": {
+        "title": "Mess operators",
+        "domain": "Meals",
+        "body": "Meal-first: customers, menus, breakfast/lunch/dinner participation, daily headcount, meal billing. No rooms or beds."
+      },
+      "pg": {
+        "title": "PG owners",
+        "domain": "Lodging",
+        "body": "Paying Guest operators: occupancy, tenants, optional meals when food is included, dues, complaints."
+      },
+      "hostel": {
+        "title": "Hostel operators",
+        "domain": "Lodging",
+        "body": "Hostel beds and rooms, occupancy lifecycle, members, dues, and issues."
+      },
+      "coliving": {
+        "title": "Co-living operators",
+        "domain": "Lodging",
+        "body": "Shared units, occupancy, members, optional meals, dues."
+      },
+      "rental": {
+        "title": "Rental operators",
+        "domain": "Lodging",
+        "body": "Flats and rooms as units — occupancy and tenants. Not a listing marketplace. Meals are not required."
+      }
+    }
+  },
+  "platformsPage": {
+    "seo": {
+      "title": "Web and Android — ACOMI",
+      "description": "Use ACOMI in the browser at app.acomi.in or on the Android app. No iOS download is offered here."
+    },
+    "eyebrow": "Platforms",
+    "title": "Use ACOMI on the web or Android.",
+    "description": "The same product. Sign in with an Indian mobile number and password.",
+    "sectionTitle": "One product. Two places.",
+    "web": {
+      "title": "Web application",
+      "body": "Operate from app.acomi.in — dashboard, members, occupancy, meals, headcount, payments, complaints, and inventory.",
+      "cta": "Open the web app"
+    },
+    "android": {
+      "title": "Android application",
+      "body": "The ACOMI Android app (com.acomi) is the same product for on-site work.",
+      "note": "No store URL is published on this page. iOS is not offered as a public download."
+    }
+  },
+  "pricingPage": {
+    "seo": {
+      "title": "Pricing — ACOMI",
+      "description": "Create an ACOMI space to get started. Public plan prices are not listed on this site."
+    },
+    "eyebrow": "Pricing",
+    "title": "No public price list.",
+    "description": "ACOMI does not publish plans, rupee amounts, free-trial length, or cancel-anytime terms on this website. Create a space and use the product.",
+    "todayTitle": "What you can do today.",
+    "items": {
+      "create": {
+        "title": "Create a space",
+        "line": "Create a mess, PG, hostel, co-living, or rental space."
+      },
+      "invite": {
+        "title": "Invite members",
+        "line": "Invite by Indian mobile number — no public listings."
+      },
+      "runDay": {
+        "title": "Run the day",
+        "line": "Occupancy or meal headcount, plus dues proofs and complaints, on web and Android."
+      }
+    }
+  },
+  "aboutPage": {
+    "seo": {
+      "title": "About ACOMI",
+      "description": "ACOMI means Accommodation + Meals. Operations software for occupancy, headcount, members, and dues."
+    },
+    "eyebrow": "About",
+    "title": "Accommodation + Meals.",
+    "description": "ACOMI is operations software for owners — not a listing site, not a payment gateway.",
+    "helpsTitle": "What ACOMI helps you run.",
+    "helpsIntro": "Who lives there or eats there, occupancy when beds exist, daily meal headcount when food is served, dues with payment proofs, and complaints.",
+    "mealsBody": "Mess is meal-first. Customers, menus, participation, and kitchen headcount — no rooms or beds.",
+    "accommodationBody": "Lodging is occupancy-first. PG, hostel, co-living, and rental start from property, rooms, and people.",
+    "typesTitle": "Supported space types.",
+    "footnote": "This website is the public introduction.",
+    "facts": {
+      "owners": {
+        "title": "Owners first",
+        "line": "Members join by invitation."
+      },
+      "web": {
+        "title": "Web",
+        "line": "Use the product at app.acomi.in."
+      },
+      "android": {
+        "title": "Android",
+        "line": "The same product on site."
+      }
+    }
+  },
+  "notFound": {
+    "seo": {
+      "title": "Page not found — ACOMI",
+      "description": "That page is not on the ACOMI public website."
+    },
+    "title": "Page not found.",
+    "body": "The page you opened is not part of this site."
+  },
+  "owner": {
+    "seo": {
+      "title": "ACOMI for property owners — occupancy, members and dues",
+      "description": "Operations software for PG, hostel, co-living and rental owners. Track occupancy, members, rent dues and complaints — on web and Android."
+    },
+    "hero": {
+      "eyebrow": "PG · Hostel · Co-living · Rental",
+      "body": "Occupancy, members, payments and issues — one place.",
+      "builtFor": "Built for Indian PG, hostel, co-living and rental operators.",
+      "captionPg": "PG · Know who's staying",
+      "captionOccupancy": "Occupancy at a glance"
+    },
+    "problem": {
+      "body": "Which beds are free? Who has paid? Which complaints are open? Across one property or several?"
+    },
+    "spaceTypes": {
+      "title": "One product. Four property types.",
+      "subtitle": "Space type is chosen once. The layout follows the property."
+    },
+    "occupancy": {
+      "eyebrow": "Occupancy",
+      "title": "Know who's staying.",
+      "body": "Buildings, floors, rooms and beds. Occupied, vacant and reserved. Allocate, reserve, move in, transfer, vacate.",
+      "occupiedLabel": "occupied"
+    },
+    "payments": {
+      "body": "ACOMI records payments made outside the product and helps operators review proofs. It is not a payment gateway and does not collect UPI or cards.",
+      "stepApprove": "Approve / Reject / Request update"
+    },
+    "operations": {
+      "title": "Run the day.",
+      "subtitle": "Members and roles. Open issues. Assets and furniture.",
+      "complaintsNote": "Maintenance, housekeeping, billing and safety — with comments and photos.",
+      "inventoryNote": "Assets on PG, hostel and co-living. Furniture on rental.",
+      "roles": {
+        "owner": "Owner",
+        "manager": "Manager",
+        "tenant": "Tenant",
+        "staff": "Staff"
+      }
+    },
+    "multiSpace": {
+      "subtitle": "My Spaces, a default space, and a switcher. Permissions and modules are per space."
+    },
+    "whatsapp": {
+      "title": "Keep your tenants updated on WhatsApp.",
+      "subtitle": "Rent reminders, pending dues and payment confirmations — as text you share where your tenants already are."
+    },
+    "howItWorks": {
+      "steps": {
+        "create": {
+          "title": "Create your space",
+          "line": "PG, hostel, co-living or rental."
+        },
+        "setUp": {
+          "title": "Set up the property",
+          "line": "Buildings, rooms and beds. Quick Setup or manual builder."
+        },
+        "addPeople": {
+          "title": "Add your people",
+          "line": "Add a member record, or invite a mobile number."
+        },
+        "runDay": {
+          "title": "Run the day",
+          "line": "Occupancy, payments and issues."
+        }
+      }
+    },
+    "trust": {
+      "eyebrow": "Product facts",
+      "title": "Access is yours to control.",
+      "subtitle": "Trust from how the product works — not invented customer counts.",
+      "facts": {
+        "spaces": {
+          "title": "Owner-controlled spaces",
+          "body": "You create the space. Type is set once. Members do not list or book a bed here."
+        },
+        "invite": {
+          "title": "Invitation-based membership",
+          "body": "Invite a 10-digit Indian mobile, or add a record without the app."
+        },
+        "roles": {
+          "title": "Role-based access",
+          "body": "Owner, Manager, Tenant and Staff see what their role allows."
+        },
+        "platforms": {
+          "title": "Same product on web and Android",
+          "body": "One API. Desk work on app.acomi.in; on-site on Android."
+        },
+        "privacy": {
+          "title": "Account deletion and privacy",
+          "body": "Delete from the app or on the web. Privacy lives on the product site."
+        }
+      }
+    },
+    "finalCta": {
+      "title": "Run your property from one place.",
+      "subtitle": "Occupancy, members, payments and issues — together."
+    },
+    "dashboard": {
+      "todaysOps": "Today's operations",
+      "ownerView": "Owner view",
+      "paymentSummary": "Payment summary",
+      "thisMonth": "This month"
+    }
+  },
+  "messVendor": {
+    "seo": {
+      "title": "ACOMI for mess vendors — headcount, menus and meal dues",
+      "description": "Operations software for mess, tiffin and meal-service operators. Track customers, menus, headcount and meal dues — on web and Android."
+    },
+    "hero": {
+      "eyebrow": "Mess · Tiffin · Meal service",
+      "knowEating": "Know who's eating.",
+      "knowPlates": "Know how many plates.",
+      "body": "Customers, menus, headcount and meal dues — one place.",
+      "builtFor": "Built for Indian mess, tiffin and meal-service operators.",
+      "captionMess": "MESS · Know who's eating",
+      "captionDues": "Meal dues at a glance"
+    },
+    "problem": {
+      "body": "How many plates for lunch? Who has not responded? What is on today's menu?"
+    },
+    "serviceTypes": {
+      "title": "One product. Food operations.",
+      "subtitle": "Space type is chosen once. The layout follows the mess.",
+      "tiffin": {
+        "name": "TIFFIN",
+        "line": "Daily meals · participation"
+      },
+      "mealService": {
+        "name": "MEAL SERVICE",
+        "line": "Menu · plates · kitchen"
+      }
+    },
+    "headcount": {
+      "title": "Know how many plates to cook.",
+      "body": "Breakfast, lunch and dinner. Expected, to prepare, and no response.",
+      "customersCount": "{{count}} customers"
+    },
+    "menu": {
+      "eyebrow": "Menu · Poll",
+      "title": "Set the menu. Collect participation.",
+      "body": "Breakfast, lunch and dinner. Customers select meals. You see who has responded.",
+      "todaysMenu": "Today's menu — {{name}}",
+      "noResponseCount": "{{poll}} · {{count}} no response",
+      "selectedSummary": "{{name}} selected {{choices}}."
+    },
+    "operations": {
+      "title": "Run the kitchen day.",
+      "subtitle": "Customers and roles. Open issues. Stock on hand.",
+      "complaintsNote": "Food quality and service issues — with comments.",
+      "inventoryNote": "Kitchen stock for the mess.",
+      "roles": {
+        "owner": "Owner",
+        "manager": "Manager",
+        "customer": "Customer",
+        "staff": "Staff"
+      }
+    },
+    "payments": {
+      "eyebrow": "Meal dues",
+      "mealPendingAmount": "Meal payment pending {{amount}}"
+    },
+    "whatsapp": {
+      "title": "Keep your customers updated on WhatsApp.",
+      "subtitle": "Menus, meal polls and pending meal dues — as text you share where your customers already are."
+    },
+    "howItWorks": {
+      "steps": {
+        "create": {
+          "title": "Create your mess",
+          "line": "Mess, tiffin or meal service."
+        },
+        "setUp": {
+          "title": "Set the menu",
+          "line": "Breakfast, lunch and dinner."
+        },
+        "addPeople": {
+          "title": "Add your customers",
+          "line": "Add a customer record, or invite a mobile number."
+        },
+        "runDay": {
+          "title": "Run the day",
+          "line": "Participation, headcount and dues."
+        }
+      }
+    },
+    "trust": {
+      "facts": {
+        "spaces": {
+          "title": "Owner-controlled spaces",
+          "body": "You create the space. Type is set once. Customers do not list or book a mess here."
+        },
+        "roles": {
+          "title": "Role-based access",
+          "body": "Owner, Manager, Customer and Staff see what their role allows."
+        }
+      }
+    },
+    "finalCta": {
+      "title": "Run your mess from one place.",
+      "subtitle": "Customers, menus, headcount and meal dues — together."
+    },
+    "dashboard": {
+      "noResponseLine": "{{poll}} · {{count}} no response"
+    }
+  },
+  "discovery": {
+    "filters": "Filters",
+    "clearAll": "Clear all",
+    "apply": "Apply",
+    "clearFilters": "Clear filters",
+    "closeFilters": "Close filters",
+    "sortLabel": "Sort listings",
+    "openMaps": "Open in Google Maps",
+    "contactEnquire": "Contact / Enquire",
+    "openFullPage": "Open full page",
+    "location": "Location",
+    "amenities": "Amenities",
+    "rating": "Rating",
+    "aboutPlace": "About this place",
+    "aboutMess": "About this mess",
+    "whatsIncluded": "What's included",
+    "sampleRatings": "Ratings shown here are sample listing data.",
+    "sampleScores": "Listing scores are sample preview data, not live reviews.",
+    "perMonth": "/ month",
+    "perMeal": "/ meal",
+    "mealsAvailable": "Meals available",
+    "enquireAbout": "Enquire about {{name}}",
+    "enquire": "Enquire",
+    "enquireBody": "Direct enquiries are not connected yet. When listings go live, you will be able to contact the operator from this page.",
+    "pagesNav": "Listing pages",
+    "save": "Save {{name}}",
+    "unsave": "Remove {{name}} from saved",
+    "availableNow": "Available now",
+    "currentlyOccupied": "Currently occupied",
+    "bedsAvailable": "{{count}} beds available",
+    "roomsAvailable": "{{count}} rooms available",
+    "availableAbout": "{{available}} available · about {{capacity}} {{unit}}",
+    "rentalAvailability": "{{status}} · {{capacity}} {{unit}}",
+    "customersAbout": "About {{count}} customers",
+    "filterGroups": {
+      "propertyType": "Property type",
+      "priceRangeMonth": "Price range (per month)",
+      "monthlyPrice": "Monthly price range",
+      "perMealPrice": "Per meal price range"
+    },
+    "sort": {
+      "recommended": "Recommended",
+      "price-asc": "Price: Low to High",
+      "price-desc": "Price: High to Low",
+      "rating-desc": "Rating: High to Low",
+      "newest": "Newly added"
+    },
+    "ratingPresets": {
+      "35": "3.5+",
+      "40": "4.0+",
+      "45": "4.5+",
+      "any": "Any rating"
+    },
+    "pricePresets": {
+      "any": "Any price",
+      "under8": "Under ₹8,000",
+      "8to12": "₹8,000 – ₹12,000",
+      "12to18": "₹12,000 – ₹18,000",
+      "18plus": "₹18,000+",
+      "anyMonthly": "Any monthly price",
+      "under25": "Under ₹2,500",
+      "25to30": "₹2,500 – ₹3,000",
+      "30plus": "₹3,000+",
+      "anyMeal": "Any per-meal price",
+      "under85": "Under ₹85",
+      "85to100": "₹85 – ₹100",
+      "100plus": "₹100+"
+    },
+    "propertyTypes": {
+      "PG": "PG",
+      "HOSTEL": "Hostel",
+      "RENTAL": "Rental",
+      "CO_LIVING": "Co-living"
+    },
+    "priceSuffix": {
+      "PG": "per bed / month",
+      "HOSTEL": "per bed / month",
+      "RENTAL": "per month",
+      "CO_LIVING": "per room / month"
+    },
+    "capacityUnit": {
+      "PG": "beds",
+      "HOSTEL": "beds",
+      "RENTAL": "units",
+      "CO_LIVING": "residents"
+    },
+    "amenity": {
+      "WIFI": "Wi-Fi",
+      "FOOD_INCLUDED": "Meals",
+      "WASHING_MACHINE": "Laundry",
+      "PARKING": "Parking",
+      "HOUSEKEEPING": "Housekeeping",
+      "POWER_BACKUP": "Power backup",
+      "RO_WATER": "RO water",
+      "CCTV": "CCTV",
+      "HOT_WATER": "Hot water",
+      "REFRIGERATOR": "Refrigerator",
+      "WARDROBE": "Wardrobe"
+    }
+  },
+  "places": {
+    "seo": {
+      "title": "Find a place — ACOMI",
+      "description": "Browse PGs, hostels, rentals and co-living in Pune."
+    },
+    "eyebrow": "Find a place",
+    "title": "Find your new place",
+    "description": "PGs, Hostels, Rentals & Co-living spaces across Pune.",
+    "searchLabel": "Search properties",
+    "searchPlaceholder": "Search by city, area or property name",
+    "foundOne": "{{count}} place found",
+    "foundMany": "{{count}} places found",
+    "emptyTitle": "No properties found",
+    "emptyDescription": "Try another area, property type or price range.",
+    "detailFallback": "Place details"
+  },
+  "mealsPage": {
+    "seo": {
+      "title": "Find meals — ACOMI",
+      "description": "Browse messes, tiffin and meal services in Pune."
+    },
+    "eyebrow": "Find meals",
+    "title": "Find meals near you",
+    "description": "Mess, tiffin and meal services across Pune.",
+    "searchLabel": "Search meals",
+    "searchPlaceholder": "Search by city, area or mess name",
+    "foundOne": "{{count}} mess found",
+    "foundMany": "{{count}} messes found",
+    "emptyTitle": "No messes found",
+    "emptyDescription": "Try another area or price range.",
+    "detailFallback": "Mess details"
+  },
+  "propertyDetail": {
+    "seoNotFound": {
+      "title": "Place not found — ACOMI",
+      "description": "That property listing is not available."
+    },
+    "notFoundTitle": "Place not found",
+    "notFoundBody": "This listing is not in the current preview set.",
+    "back": "Back to places",
+    "breadcrumb": "Places"
+  },
+  "messDetail": {
+    "seoNotFound": {
+      "title": "Mess not found — ACOMI",
+      "description": "That meal listing is not available."
+    },
+    "notFoundTitle": "Mess not found",
+    "notFoundBody": "This listing is not in the current preview set.",
+    "back": "Back to meals",
+    "breadcrumb": "Meals"
+  },
+  "comingSoon": {
+    "badge": "Coming soon",
+    "backHome": "Back to home",
+    "changeChoice": "Change my choice",
+    "registerMess": {
+      "eyebrow": "Mess & food service",
+      "title": "Register your mess on ACOMI",
+      "description": "List your mess, tiffin or meal service on ACOMI.",
+      "seoTitle": "Register your mess — ACOMI"
+    }
+  },
+  "registerSpace": {
+    "seo": {
+      "title": "Register your property — ACOMI",
+      "description": "PG, hostel, rental or co-living. Share your property details and our team will take it forward."
+    },
+    "eyebrow": "Property registration",
+    "title": "List your property in 3 simple steps",
+    "description": "PG, hostel, rental or co-living. Share your property details and our team will take it forward.",
+    "freeNote": "It's free to register your property.",
+    "backHome": "Back to home"
+  }
+}

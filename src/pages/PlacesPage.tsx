@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../components/common/ActionButton';
 import { ActiveFilterChips } from '../components/discovery/ActiveFilterChips';
 import { DiscoveryPageShell } from '../components/discovery/DiscoveryPageShell';
@@ -24,6 +25,7 @@ import { applySeo } from '../lib/seo';
 const PAGE_SIZE = 12;
 
 export function PlacesPage() {
+  const { t } = useTranslation();
   const listings = getPropertyListings();
   const localities = uniqueLocalities(listings);
   const [query, setQuery] = useState<PropertyQuery>(DEFAULT_PROPERTY_QUERY);
@@ -36,18 +38,18 @@ export function PlacesPage() {
 
   useEffect(() => {
     applySeo({
-      title: 'Find a place — ACOMI',
-      description: 'Browse PGs, hostels, rentals and co-living in Pune.',
+      title: t('places.seo.title'),
+      description: t('places.seo.description'),
       path: '/places',
     });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     setPage(1);
   }, [query]);
 
   const results = useMemo(() => filterProperties(listings, query), [listings, query]);
-  const chips = propertyFilterChips(query, setQuery);
+  const chips = propertyFilterChips(query, setQuery, t);
   const filtered = propertyQueryIsFiltered(query) || query.query.trim().length > 0;
   const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
   const shown = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -75,15 +77,15 @@ export function PlacesPage() {
   return (
     <>
       <DiscoveryPageShell
-        eyebrow="Find a place"
-        title="Find your new place"
-        description="PGs, Hostels, Rentals & Co-living spaces across Pune."
+        eyebrow={t('places.eyebrow')}
+        title={t('places.title')}
+        description={t('places.description')}
         search={
           <DiscoverySearchBar
             searchId="places-search"
-            searchLabel="Search properties"
+            searchLabel={t('places.searchLabel')}
             searchValue={query.query}
-            searchPlaceholder="Search by city, area or property name"
+            searchPlaceholder={t('places.searchPlaceholder')}
             onSearchChange={(value) => setQuery({ ...query, query: value })}
             city="Pune"
             sortId="places-sort"
@@ -93,7 +95,7 @@ export function PlacesPage() {
         }
         filters={
           <>
-            <h2 className="text-sm font-semibold text-navy">Filters</h2>
+            <h2 className="text-sm font-semibold text-navy">{t('discovery.filters')}</h2>
             <div className="mt-4">
               <PropertyFilters
                 query={query}
@@ -108,11 +110,13 @@ export function PlacesPage() {
           <>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-text-secondary">
-                {results.length} {results.length === 1 ? 'place found' : 'places found'}
+                {t(results.length === 1 ? 'places.foundOne' : 'places.foundMany', {
+                  count: results.length,
+                })}
               </p>
               <ActionButton onClick={() => setSheetOpen(true)} variant="ghost" className="lg:hidden">
                 <SlidersHorizontal aria-hidden className="h-4 w-4" />
-                Filters
+                {t('discovery.filters')}
               </ActionButton>
             </div>
             <div className="mt-3">
@@ -124,8 +128,8 @@ export function PlacesPage() {
           results.length === 0 ? (
             <div className="mt-6">
               <ListingEmpty
-                title="No properties found"
-                description="Try another area, property type or price range."
+                title={t('places.emptyTitle')}
+                description={t('places.emptyDescription')}
                 onClear={filtered ? clearFilters : () => setQuery(DEFAULT_PROPERTY_QUERY)}
               />
             </div>
@@ -151,7 +155,7 @@ export function PlacesPage() {
 
       <FilterSheet
         open={sheetOpen}
-        title="Filters"
+        title={t('discovery.filters')}
         labelledBy="places-filters-title"
         value={query}
         onClose={() => setSheetOpen(false)}
@@ -171,7 +175,7 @@ export function PlacesPage() {
       <ListingDetailDrawer
         open={detailOpen && selected != null}
         titleId="places-detail-title"
-        title={selected?.name ?? 'Place details'}
+        title={selected?.name ?? t('places.detailFallback')}
         onClose={() => setDetailOpen(false)}
       >
         {selected ? <PropertyDetailPanel listing={selected} onEnquire={() => setEnquireOpen(true)} /> : null}
@@ -179,7 +183,7 @@ export function PlacesPage() {
 
       <EnquireDialog
         open={enquireOpen}
-        title={selected ? `Enquire about ${selected.name}` : 'Enquire'}
+        title={selected ? t('discovery.enquireAbout', { name: selected.name }) : t('discovery.enquire')}
         onClose={() => setEnquireOpen(false)}
       />
     </>

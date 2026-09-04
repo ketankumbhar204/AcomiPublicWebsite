@@ -1,14 +1,17 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { APP, NAV_LINKS } from '../../constants/links';
 import { useUserType } from '../../context/UserTypeContext';
 import { ActionButton } from '../common/ActionButton';
 import { BrandMark } from '../common/BrandMark';
+import { LanguageSelect } from '../common/LanguageSelect';
 import { UserTypeSwitcher } from '../onboarding/UserTypeSwitcher';
 import { Container } from './Container';
 
 export function Navbar() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const { openUserTypeModal } = useUserType();
@@ -19,10 +22,10 @@ export function Navbar() {
       <Container className="flex h-16 !max-w-none items-center justify-between gap-4">
         <Link to="/" className="flex items-center gap-2.5 font-bold text-text" onClick={() => setOpen(false)}>
           <BrandMark size={30} className="!rounded-md" />
-          <span className="text-[15px] tracking-tight">ACOMI</span>
+          <span className="text-[15px] tracking-tight">{t('brand')}</span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-0.5 lg:flex" aria-label={t('nav.primary')}>
           {NAV_LINKS.map((l) => (
             <NavLink
               key={l.to}
@@ -33,22 +36,24 @@ export function Navbar() {
                 }`
               }
             >
-              {l.label}
+              {t(l.labelKey)}
             </NavLink>
           ))}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex xl:gap-4">
           {showSwitcher ? <UserTypeSwitcher /> : null}
+          <LanguageSelect />
           <a href={APP.login} className="text-sm font-medium text-text-secondary transition hover:text-text">
-            Sign in
+            {t('nav.signIn')}
           </a>
           <ActionButton onClick={openUserTypeModal} className="!px-4 !py-2 bg-register hover:bg-register-hover">
-            Get started
+            {t('nav.getStarted')}
           </ActionButton>
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSelect />
           <ActionButton
             onClick={() => {
               setOpen(false);
@@ -56,14 +61,14 @@ export function Navbar() {
             }}
             className="!px-3.5 !py-2 bg-register hover:bg-register-hover"
           >
-            Get started
+            {t('nav.getStarted')}
           </ActionButton>
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-text"
             aria-expanded={open}
             aria-controls="mobile-nav"
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -82,11 +87,11 @@ export function Navbar() {
                 className="px-1 py-3 text-sm font-medium text-text"
                 onClick={() => setOpen(false)}
               >
-                {l.label}
+                {t(l.labelKey)}
               </NavLink>
             ))}
             <a href={APP.login} className="px-1 py-3 text-sm font-medium text-text-secondary">
-              Sign in
+              {t('nav.signIn')}
             </a>
           </Container>
         </div>

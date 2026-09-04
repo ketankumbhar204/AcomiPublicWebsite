@@ -1,5 +1,6 @@
 import { BedDouble, Check, IndianRupee } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { SHOTS } from '../../data/shots';
 import { useListingDrawer } from '../../context/ListingDrawerContext';
 import { ButtonLink } from '../common/ButtonLink';
@@ -14,23 +15,24 @@ import { Container } from '../layout/Container';
 export const REGISTER_CTA_CLS =
   'reg-focus inline-flex items-center justify-center gap-2 rounded-lg bg-register px-5 py-3 text-sm font-semibold text-cta-band transition hover:bg-register-hover';
 
-const lines: Array<{ Icon: LucideIcon; text: string; iconBg: string; iconFg: string }> = [
-  {
-    Icon: BedDouble,
-    text: "Know who's staying.",
-    iconBg: 'bg-[#E7F4EE]',
-    iconFg: 'text-primary',
-  },
-  {
-    Icon: IndianRupee,
-    text: "Know what's due.",
-    iconBg: 'bg-[#E8F0FF]',
-    iconFg: 'text-blue',
-  },
-];
-
 export function OwnerHero() {
+  const { t } = useTranslation();
   const { openListing } = useListingDrawer();
+
+  const lines: Array<{ Icon: LucideIcon; text: string; iconBg: string; iconFg: string }> = [
+    {
+      Icon: BedDouble,
+      text: t('features.lines.staying'),
+      iconBg: 'bg-[#E7F4EE]',
+      iconFg: 'text-primary',
+    },
+    {
+      Icon: IndianRupee,
+      text: t('features.lines.due'),
+      iconBg: 'bg-[#E8F0FF]',
+      iconFg: 'text-blue',
+    },
+  ];
 
   return (
     <section
@@ -41,7 +43,7 @@ export function OwnerHero() {
         <div className="grid items-center gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
           <div className="max-w-[34rem]">
             <p className="text-[11px] font-semibold tracking-[0.18em] text-primary uppercase">
-              PG · Hostel · Co-living · Rental
+              {t('owner.hero.eyebrow')}
             </p>
             <h1 id="owner-hero-heading" className="mt-3 space-y-2 sm:mt-5 sm:space-y-5">
               {lines.map((line) => (
@@ -58,21 +60,21 @@ export function OwnerHero() {
               ))}
             </h1>
             <p className="mt-5 max-w-[26rem] text-[15px] leading-relaxed text-text-secondary sm:text-[16px]">
-              Occupancy, members, payments and issues — one place.
+              {t('owner.hero.body')}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <button type="button" onClick={() => openListing('property')} className={REGISTER_CTA_CLS}>
-                List your property
+                {t('listing.listProperty')}
               </button>
               <ButtonLink href="/how-it-works" variant="ghost" external={false}>
-                See how it works
+                {t('hero.seeHowItWorks')}
               </ButtonLink>
             </div>
             <p className="mt-4 flex items-center gap-2 text-xs text-muted">
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#E7F4EE] text-primary">
                 <Check className="h-3 w-3" strokeWidth={2.4} aria-hidden />
               </span>
-              Built for Indian PG, hostel, co-living and rental operators.
+              {t('owner.hero.builtFor')}
             </p>
           </div>
 
@@ -85,7 +87,7 @@ export function OwnerHero() {
               <PhoneMock
                 src={SHOTS.dashboard.src}
                 alt={SHOTS.dashboard.alt}
-                caption="PG · Know who's staying"
+                caption={t('owner.hero.captionPg')}
                 size="hero"
                 tilt={-6}
                 priority
@@ -95,7 +97,7 @@ export function OwnerHero() {
               <PhoneMock
                 src={SHOTS.occupancy.src}
                 alt={SHOTS.occupancy.alt}
-                caption="Occupancy at a glance"
+                caption={t('owner.hero.captionOccupancy')}
                 size="hero"
                 tilt={6}
                 priority

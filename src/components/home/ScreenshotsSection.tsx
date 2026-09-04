@@ -1,15 +1,18 @@
+import { useTranslation } from 'react-i18next';
 import { SHOTS } from '../../data/shots';
 import { PhoneMock } from '../common/PhoneMock';
 
-const shots = [
-  { ...SHOTS.dashboard, caption: 'PG Dashboard' },
-  { ...SHOTS.mess, caption: 'Mess Dashboard' },
-  { ...SHOTS.occupancy, caption: 'Occupancy' },
-  { ...SHOTS.payments, caption: 'Payments' },
-  { ...SHOTS.members, caption: 'Members' },
-];
-
 export function ScreenshotsSection() {
+  const { t } = useTranslation();
+
+  const shots = [
+    { ...SHOTS.dashboard, caption: t('home.screenshots.captions.dashboard') },
+    { ...SHOTS.mess, caption: t('home.screenshots.captions.mess') },
+    { ...SHOTS.occupancy, caption: t('home.screenshots.captions.occupancy') },
+    { ...SHOTS.payments, caption: t('home.screenshots.captions.payments') },
+    { ...SHOTS.members, caption: t('home.screenshots.captions.members') },
+  ];
+
   return (
     <section
       id="screenshots"
@@ -21,7 +24,7 @@ export function ScreenshotsSection() {
           id="screenshots-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
         >
-          See ACOMI in action.
+          {t('home.screenshots.title')}
         </h2>
         <div className="mt-8 overflow-x-auto pb-2">
           <div className="flex w-max min-w-full flex-nowrap justify-between gap-5">

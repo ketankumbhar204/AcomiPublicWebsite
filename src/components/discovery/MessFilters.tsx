@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { RATING_PRESETS } from '../../data/listings/defaults';
 import type { MessQuery } from '../../data/listings/types';
 import { FilterCheck } from './FilterCheck';
@@ -15,9 +16,11 @@ function toggleValue(list: string[], value: string): string[] {
 }
 
 export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6">
-      <FilterGroup legend="Location" layout="stack">
+      <FilterGroup legend={t('discovery.location')} layout="stack">
         {localities.map((locality) => (
           <FilterCheck
             key={locality}
@@ -29,7 +32,7 @@ export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
         ))}
       </FilterGroup>
 
-      <FilterGroup legend="Monthly price range">
+      <FilterGroup legend={t('discovery.filterGroups.monthlyPrice')}>
         <PriceRangeFilter
           id="mess-monthly"
           minBound={1000}
@@ -42,7 +45,7 @@ export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
         />
       </FilterGroup>
 
-      <FilterGroup legend="Per meal price range">
+      <FilterGroup legend={t('discovery.filterGroups.perMealPrice')}>
         <PriceRangeFilter
           id="mess-meal"
           minBound={40}
@@ -55,7 +58,7 @@ export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
         />
       </FilterGroup>
 
-      <FilterGroup legend="Rating" layout="stack">
+      <FilterGroup legend={t('discovery.rating')} layout="stack">
         {RATING_PRESETS.filter((preset) => preset.value != null).map((preset) => (
           <FilterCheck
             key={preset.id}
@@ -64,7 +67,7 @@ export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
               onChange({ ...query, minRating: query.minRating === preset.value ? null : preset.value })
             }
           >
-            {preset.label}
+            {t(`discovery.ratingPresets.${preset.id}`)}
           </FilterCheck>
         ))}
       </FilterGroup>

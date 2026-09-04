@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { DemoLabel } from '../common/DemoLabel';
 import { ProgressBar } from '../product/MetricCard';
@@ -11,6 +12,7 @@ const locTones = [
 ];
 
 export function MessVendorProblemSection() {
+  const { t } = useTranslation();
   const d = DEMO.mess.breakfastDetail;
 
   return (
@@ -22,10 +24,10 @@ export function MessVendorProblemSection() {
               id="mess-problem-heading"
               className="max-w-xl text-[1.7rem] leading-[1.15] font-semibold tracking-tight text-navy sm:text-[2.1rem]"
             >
-              Still in notebooks, spreadsheets and WhatsApp.
+              {t('home.problem.title')}
             </h2>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-text-secondary">
-              How many plates for lunch? Who has not responded? What is on today&apos;s menu?
+              {t('messVendor.problem.body')}
             </p>
           </div>
 
@@ -34,7 +36,9 @@ export function MessVendorProblemSection() {
               <p className="text-[11px] font-semibold tracking-[0.16em] text-orange uppercase">
                 {DEMO.mess.type}
               </p>
-              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">How many plates?</h3>
+              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">
+                {t('home.problem.howManyPlates')}
+              </h3>
               <ul className="mt-5 space-y-3">
                 {DEMO.mess.meals.map((m, i) => (
                   <li key={m.name}>

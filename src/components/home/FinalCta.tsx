@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { APP } from '../../constants/links';
 import { useUserType } from '../../context/UserTypeContext';
 import { ActionButton } from '../common/ActionButton';
@@ -5,6 +6,7 @@ import { ButtonLink } from '../common/ButtonLink';
 import { Container } from '../layout/Container';
 
 export function FinalCta() {
+  const { t } = useTranslation();
   const { openUserTypeModal } = useUserType();
 
   return (
@@ -14,17 +16,15 @@ export function FinalCta() {
           id="cta-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-white sm:text-[2.4rem]"
         >
-          Run your space from one place.
+          {t('finalCta.title')}
         </h2>
-        <p className="mt-3 text-[15px] text-white/75">
-          Occupancy, meals, headcount and payments — together.
-        </p>
+        <p className="mt-3 text-[15px] text-white/75">{t('finalCta.subtitle')}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <ActionButton onClick={openUserTypeModal} variant="onDark">
-            Get started free
+            {t('hero.getStartedFree')}
           </ActionButton>
           <ButtonLink href={APP.login} variant="ghostDark">
-            Sign in
+            {t('nav.signIn')}
           </ButtonLink>
         </div>
       </Container>

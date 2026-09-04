@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { SORT_OPTIONS } from '../../data/listings/defaults';
 import type { PropertySort } from '../../data/listings/types';
 import { FIELD_INPUT_BASE } from '../form/Field';
@@ -9,10 +10,12 @@ type ListingSortSelectProps = {
 };
 
 export function ListingSortSelect({ id, value, onChange }: ListingSortSelectProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="min-w-[11rem]">
       <label htmlFor={id} className="sr-only">
-        Sort listings
+        {t('discovery.sortLabel')}
       </label>
       <select
         id={id}
@@ -22,7 +25,7 @@ export function ListingSortSelect({ id, value, onChange }: ListingSortSelectProp
       >
         {SORT_OPTIONS.map((option) => (
           <option key={option.id} value={option.id}>
-            {option.label}
+            {t(`discovery.sort.${option.id}`)}
           </option>
         ))}
       </select>

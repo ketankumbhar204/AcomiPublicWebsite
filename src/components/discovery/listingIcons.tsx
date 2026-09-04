@@ -11,6 +11,7 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
+import type { TFunction } from 'i18next';
 import { getPropertyTypeOption } from '../../constants/propertyRegistration';
 import type { PropertyListing } from '../../data/listings/types';
 
@@ -32,13 +33,14 @@ export function amenityIcon(code: string): LucideIcon {
   return AMENITY_ICONS[code] ?? Wifi;
 }
 
-export function propertyAvailabilityLabel(listing: PropertyListing): string {
+export function propertyAvailabilityLabel(listing: PropertyListing, t: TFunction): string {
   const available = listing.listingMetadata.availableCount;
   if (listing.type === 'RENTAL') {
-    return available > 0 ? 'Available now' : 'Currently occupied';
+    return available > 0 ? t('discovery.availableNow') : t('discovery.currentlyOccupied');
   }
-  const unit = listing.type === 'CO_LIVING' ? 'rooms' : 'beds';
-  return `${available} ${unit} available`;
+  return t(listing.type === 'CO_LIVING' ? 'discovery.roomsAvailable' : 'discovery.bedsAvailable', {
+    count: available,
+  });
 }
 
 export { getPropertyTypeOption };

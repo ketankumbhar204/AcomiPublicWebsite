@@ -1,49 +1,87 @@
 import { useEffect } from 'react';
 import { ArrowRight, CalendarDays, Settings2, UserPlus, Warehouse } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { FinalCta } from '../components/home/FinalCta';
 import { PageHero, PageSectionHead } from '../components/common/PageHero';
 import { IconBadge } from '../components/common/IconBadge';
 import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
 
-const steps = [
-  { n: '01', title: 'Create your space', line: 'Register with name, Indian mobile, and password. Choose Mess, PG, Hostel, Co-living, or Rental.', Icon: Warehouse, tone: 'teal' as const },
-  { n: '02', title: 'Set up operations', line: 'Lodging starts from buildings and beds. Mess starts from menus and serving locations.', Icon: Settings2, tone: 'blue' as const },
-  { n: '03', title: 'Add people', line: 'Tenants on lodging. Customers on Mess. Staff and managers on both.', Icon: UserPlus, tone: 'violet' as const },
-  { n: '04', title: 'Run the day', line: 'Lodging: occupancy, dues, issues. Mess: participation, headcount, meal dues, food issues.', Icon: CalendarDays, tone: 'amber' as const },
-];
-
-const lodgingFlow = ['Create PG', 'Configure rooms/beds', 'Add residents', 'Track occupancy', 'Track payments'];
-const messFlow = ['Create Mess', 'Add customers', 'Create menu', 'Collect participation', 'See headcount'];
-
-const invite = [
-  'Owner or manager invites a 10-digit Indian mobile with a role.',
-  'That person registers or signs in with the same mobile and a password.',
-  'They accept. Tenants and customers may complete a profile.',
-  'They see stay, meals, proofs, and complaints that apply to them — not the full operator console.',
-];
-
 export function HowItWorksPage() {
+  const { t } = useTranslation();
+
+  const steps = [
+    {
+      n: '01',
+      title: t('howItWorksPage.steps.create.title'),
+      line: t('howItWorksPage.steps.create.line'),
+      Icon: Warehouse,
+      tone: 'teal' as const,
+    },
+    {
+      n: '02',
+      title: t('howItWorksPage.steps.setUp.title'),
+      line: t('howItWorksPage.steps.setUp.line'),
+      Icon: Settings2,
+      tone: 'blue' as const,
+    },
+    {
+      n: '03',
+      title: t('howItWorksPage.steps.addPeople.title'),
+      line: t('howItWorksPage.steps.addPeople.line'),
+      Icon: UserPlus,
+      tone: 'violet' as const,
+    },
+    {
+      n: '04',
+      title: t('howItWorksPage.steps.runDay.title'),
+      line: t('howItWorksPage.steps.runDay.line'),
+      Icon: CalendarDays,
+      tone: 'amber' as const,
+    },
+  ];
+
+  const lodgingFlow = [
+    t('howItWorksPage.flow.pg.0'),
+    t('howItWorksPage.flow.pg.1'),
+    t('howItWorksPage.flow.pg.2'),
+    t('howItWorksPage.flow.pg.3'),
+    t('howItWorksPage.flow.pg.4'),
+  ];
+  const messFlow = [
+    t('howItWorksPage.flow.mess.0'),
+    t('howItWorksPage.flow.mess.1'),
+    t('howItWorksPage.flow.mess.2'),
+    t('howItWorksPage.flow.mess.3'),
+    t('howItWorksPage.flow.mess.4'),
+  ];
+
+  const invite = [
+    t('howItWorksPage.invite.0'),
+    t('howItWorksPage.invite.1'),
+    t('howItWorksPage.invite.2'),
+    t('howItWorksPage.invite.3'),
+  ];
+
   useEffect(() => {
     applySeo({
-      title: 'How it works — ACOMI',
-      description:
-        'Create a space, set up beds or menus depending on type, add tenants or customers, and run occupancy or headcount.',
+      title: t('howItWorksPage.seo.title'),
+      description: t('howItWorksPage.seo.description'),
       path: '/how-it-works',
     });
-  }, []);
+  }, [t]);
 
   return (
     <>
       <PageHero
-        eyebrow="How it works"
-        title="Mess setup and lodging setup are different."
-        description="Space type is chosen once. Mess starts from menus and customers. PG, hostel, co-living, and rental start from property."
+        eyebrow={t('howItWorksPage.eyebrow')}
+        title={t('howItWorksPage.title')}
+        description={t('howItWorksPage.description')}
       />
 
       <section className="bg-[#F7F8FA] py-12 sm:py-14" aria-labelledby="steps-heading">
         <Container>
-          <PageSectionHead id="steps-heading" title="Four steps." />
+          <PageSectionHead id="steps-heading" title={t('howItWorksPage.fourSteps')} />
           <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => (
               <li key={s.n} className="rounded-[20px] border border-black/5 bg-white p-5 shadow-[var(--shadow-sm)]">
@@ -59,25 +97,22 @@ export function HowItWorksPage() {
 
       <section className="bg-white py-12 sm:py-14" aria-labelledby="setup-heading">
         <Container>
-          <PageSectionHead id="setup-heading" title="Step 02 is different by type." />
+          <PageSectionHead id="setup-heading" title={t('howItWorksPage.setupTitle')} />
           <div className="mt-8 grid gap-5 lg:grid-cols-2">
             <article className="rounded-[24px] border border-black/5 bg-[#FFF8F1] p-6 shadow-[var(--shadow-sm)]">
-              <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">Mess · Food operations</p>
-              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Menus, meals, serving locations</h3>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                Menu library, today&apos;s menu, share. Customers are optional at first. No building or bed map.
+              <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">
+                {t('howItWorksPage.messEyebrow')}
               </p>
+              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">{t('howItWorksPage.messTitle')}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">{t('howItWorksPage.messBody')}</p>
               <Flow label="MESS" steps={messFlow} />
             </article>
             <article className="rounded-[24px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
               <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
-                PG · Hostel · Co-living · Rental
+                {t('howItWorksPage.lodgingEyebrow')}
               </p>
-              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Buildings, rooms, beds</h3>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                Quick Setup or manual builder. Then add residents. Meals are optional except rental, which omits the
-                meal milestone.
-              </p>
+              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">{t('howItWorksPage.lodgingTitle')}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">{t('howItWorksPage.lodgingBody')}</p>
               <Flow label="PG" steps={lodgingFlow} />
             </article>
           </div>
@@ -88,10 +123,10 @@ export function HowItWorksPage() {
         <Container>
           <PageSectionHead
             id="invite-heading"
-            eyebrow="Members"
+            eyebrow={t('howItWorksPage.inviteEyebrow')}
             eyebrowClass="text-blue"
-            title="Member invitation."
-            intro="Invite a mobile number, or create a record without the app."
+            title={t('howItWorksPage.inviteTitle')}
+            intro={t('howItWorksPage.inviteIntro')}
           />
           <ol className="mt-8 grid gap-4 sm:grid-cols-2">
             {invite.map((line, i) => (

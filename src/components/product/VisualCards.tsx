@@ -1,4 +1,5 @@
 import { BedDouble, IndianRupee, Users, UtensilsCrossed } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO } from '../../data/demo';
 import { IconBadge } from '../common/IconBadge';
 import { ProgressBar } from './MetricCard';
@@ -7,6 +8,7 @@ const mealColors = ['bg-[#128C7E]', 'bg-[#D97706]', 'bg-[#7C3AED]'];
 const locTones = ['bg-[#E7F6EE] text-[#0F6B4C]', 'bg-[#FFF1E0] text-[#D97706]', 'bg-[#E8F1FF] text-[#2563EB]'];
 
 export function OccupancyCard() {
+  const { t } = useTranslation();
   const b = DEMO.lodging.beds;
 
   return (
@@ -14,16 +16,18 @@ export function OccupancyCard() {
       <div className="flex items-center gap-2">
         <IconBadge icon={BedDouble} tone="teal" />
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">Occupancy</p>
-          <p className="text-sm font-semibold text-navy">Know who&apos;s staying</p>
+          <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
+            {t('home.visual.occupancy')}
+          </p>
+          <p className="text-sm font-semibold text-navy">{t('home.visual.occupancySub')}</p>
         </div>
       </div>
       <div className="mt-5 flex items-center gap-5">
         <OccupancyDonut occupied={b.occupied} total={b.total} />
         <div className="grid flex-1 grid-cols-3 gap-2">
-          <Mini n={b.occupied} l="Occupied" tone="bg-[#E7F6EE] text-[#0F6B4C]" />
-          <Mini n={b.vacant} l="Vacant" tone="bg-[#E8F1FF] text-[#2563EB]" />
-          <Mini n={b.reserved} l="Reserved" tone="bg-[#FFF1E0] text-[#D97706]" />
+          <Mini n={b.occupied} l={t('status.occupied')} tone="bg-[#E7F6EE] text-[#0F6B4C]" />
+          <Mini n={b.vacant} l={t('status.vacant')} tone="bg-[#E8F1FF] text-[#2563EB]" />
+          <Mini n={b.reserved} l={t('status.reserved')} tone="bg-[#FFF1E0] text-[#D97706]" />
         </div>
       </div>
     </article>
@@ -31,6 +35,7 @@ export function OccupancyCard() {
 }
 
 export function MealHeadcountCard() {
+  const { t } = useTranslation();
   const d = DEMO.mess.breakfastDetail;
 
   return (
@@ -38,8 +43,10 @@ export function MealHeadcountCard() {
       <div className="flex items-center gap-2">
         <IconBadge icon={UtensilsCrossed} tone="amber" />
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">Meals + Headcount</p>
-          <p className="text-sm font-semibold text-navy">Know how many plates</p>
+          <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">
+            {t('home.visual.mealsHeadcount')}
+          </p>
+          <p className="text-sm font-semibold text-navy">{t('home.visual.mealsSub')}</p>
         </div>
       </div>
       <ul className="mt-5 space-y-2.5">
@@ -70,6 +77,7 @@ export function MealHeadcountCard() {
 }
 
 export function PaymentSummaryCard() {
+  const { t } = useTranslation();
   const d = DEMO.dues;
 
   return (
@@ -77,21 +85,24 @@ export function PaymentSummaryCard() {
       <div className="flex items-center gap-2">
         <IconBadge icon={IndianRupee} tone="blue" />
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.14em] text-blue uppercase">Payments</p>
-          <p className="text-sm font-semibold text-navy">Know what&apos;s due</p>
+          <p className="text-[11px] font-semibold tracking-[0.14em] text-blue uppercase">
+            {t('home.visual.payments')}
+          </p>
+          <p className="text-sm font-semibold text-navy">{t('home.visual.paymentsSub')}</p>
         </div>
       </div>
       <div className="mt-5 grid grid-cols-2 gap-2">
-        <PayTile label="Expected" value={d.expected} tone="bg-[#E8F1FF] text-[#1D4ED8]" />
-        <PayTile label="Collected" value={d.collected} tone="bg-[#E7F6EE] text-[#0F6B4C]" />
-        <PayTile label="Review" value={d.underReview} tone="bg-[#F1EBFF] text-[#6D28D9]" />
-        <PayTile label="Pending" value={d.pending} tone="bg-[#FFF1E0] text-[#B45309]" />
+        <PayTile label={t('status.expected')} value={d.expected} tone="bg-[#E8F1FF] text-[#1D4ED8]" />
+        <PayTile label={t('status.collected')} value={d.collected} tone="bg-[#E7F6EE] text-[#0F6B4C]" />
+        <PayTile label={t('status.review')} value={d.underReview} tone="bg-[#F1EBFF] text-[#6D28D9]" />
+        <PayTile label={t('status.pending')} value={d.pending} tone="bg-[#FFF1E0] text-[#B45309]" />
       </div>
     </article>
   );
 }
 
 export function PeopleCard() {
+  const { t } = useTranslation();
   const people = [
     { initials: 'RS', tone: 'bg-[#E7F6EE] text-primary' },
     { initials: 'AP', tone: 'bg-[#E8F1FF] text-blue' },
@@ -103,15 +114,21 @@ export function PeopleCard() {
       <div className="flex items-center gap-2">
         <IconBadge icon={Users} tone="violet" />
         <div>
-          <p className="text-[11px] font-semibold tracking-[0.14em] text-purple uppercase">People</p>
-          <p className="text-sm font-semibold text-navy">Tenants + Customers</p>
+          <p className="text-[11px] font-semibold tracking-[0.14em] text-purple uppercase">
+            {t('home.visual.people')}
+          </p>
+          <p className="text-sm font-semibold text-navy">{t('home.visual.peopleSub')}</p>
         </div>
       </div>
       <div className="mt-5 grid grid-cols-2 gap-2">
-        <Mini n={DEMO.mess.customers} l="MESS customers" tone="bg-[#F1EBFF] text-[#6D28D9]" />
-        <Mini n={DEMO.lodging.beds.occupied} l="PG residents" tone="bg-[#E7F6EE] text-[#0F6B4C]" />
+        <Mini n={DEMO.mess.customers} l={t('home.visual.messCustomers')} tone="bg-[#F1EBFF] text-[#6D28D9]" />
+        <Mini
+          n={DEMO.lodging.beds.occupied}
+          l={t('home.visual.pgResidents')}
+          tone="bg-[#E7F6EE] text-[#0F6B4C]"
+        />
       </div>
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-4 flex items-center gap-2" aria-label={t('home.visual.activePeople')}>
         {people.map((p) => (
           <span
             key={p.initials}

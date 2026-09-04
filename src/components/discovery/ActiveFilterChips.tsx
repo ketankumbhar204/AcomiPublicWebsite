@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { RemovableChip } from './FilterChip';
 
 export type ActiveFilter = {
@@ -12,6 +13,8 @@ type ActiveFilterChipsProps = {
 };
 
 export function ActiveFilterChips({ filters, onClearAll }: ActiveFilterChipsProps) {
+  const { t } = useTranslation();
+
   if (filters.length === 0) {
     return null;
   }
@@ -26,7 +29,7 @@ export function ActiveFilterChips({ filters, onClearAll }: ActiveFilterChipsProp
         onClick={onClearAll}
         className="text-[12px] font-semibold text-primary underline-offset-2 hover:underline"
       >
-        Clear all
+        {t('discovery.clearAll')}
       </button>
     </div>
   );

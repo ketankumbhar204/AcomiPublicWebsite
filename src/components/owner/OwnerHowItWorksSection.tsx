@@ -1,5 +1,6 @@
 import { ArrowRight, CalendarDays, Settings2, UserPlus, Warehouse } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { IconBadge } from '../common/IconBadge';
 import { Container } from '../layout/Container';
 
@@ -11,46 +12,16 @@ type Step = {
   tone: 'teal' | 'blue' | 'violet' | 'amber';
 };
 
-const steps: Step[] = [
-  {
-    n: '01',
-    title: 'Create your space',
-    line: 'PG, hostel, co-living or rental.',
-    Icon: Warehouse,
-    tone: 'teal',
-  },
-  {
-    n: '02',
-    title: 'Set up the property',
-    line: 'Buildings, rooms and beds. Quick Setup or manual builder.',
-    Icon: Settings2,
-    tone: 'blue',
-  },
-  {
-    n: '03',
-    title: 'Add your people',
-    line: 'Add a member record, or invite a mobile number.',
-    Icon: UserPlus,
-    tone: 'violet',
-  },
-  {
-    n: '04',
-    title: 'Run the day',
-    line: 'Occupancy, payments and issues.',
-    Icon: CalendarDays,
-    tone: 'amber',
-  },
-];
-
-const pgFlow = [
-  'Create PG',
-  'Configure rooms/beds',
-  'Add residents',
-  'Track occupancy',
-  'Track payments',
-];
-
 export function OwnerHowItWorksSection() {
+  const { t } = useTranslation();
+  const steps: Step[] = [
+    { n: '01', title: t('owner.howItWorks.steps.create.title'), line: t('owner.howItWorks.steps.create.line'), Icon: Warehouse, tone: 'teal' },
+    { n: '02', title: t('owner.howItWorks.steps.setUp.title'), line: t('owner.howItWorks.steps.setUp.line'), Icon: Settings2, tone: 'blue' },
+    { n: '03', title: t('owner.howItWorks.steps.addPeople.title'), line: t('owner.howItWorks.steps.addPeople.line'), Icon: UserPlus, tone: 'violet' },
+    { n: '04', title: t('owner.howItWorks.steps.runDay.title'), line: t('owner.howItWorks.steps.runDay.line'), Icon: CalendarDays, tone: 'amber' },
+  ];
+  const pgFlow = Array.from({ length: 5 }, (_, i) => t(`home.howItWorks.flow.pg.${i}`));
+
   return (
     <section
       className="border-t border-border bg-[#F7F8FA] py-12 sm:py-14"
@@ -61,7 +32,7 @@ export function OwnerHowItWorksSection() {
           id="owner-hiw-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          How it works
+          {t('home.howItWorks.title')}
         </h2>
         <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s) => (

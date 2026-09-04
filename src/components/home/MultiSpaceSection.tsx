@@ -1,9 +1,11 @@
 import { BedDouble, Building2, UtensilsCrossed } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { DemoLabel } from '../common/DemoLabel';
 import { Container } from '../layout/Container';
 
 export function MultiSpaceSection() {
+  const { t } = useTranslation();
   const b = DEMO.lodging.beds;
   const h = DEMO.hostel.beds;
 
@@ -14,27 +16,33 @@ export function MultiSpaceSection() {
           id="multi-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          One owner. Multiple spaces.
+          {t('home.multiSpace.title')}
         </h2>
         <div className="mt-8 max-w-2xl rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
-          <p className="text-sm font-semibold text-navy">{DEMO.ownerName}&apos;s ACOMI</p>
+          <p className="text-sm font-semibold text-navy">
+            {t('home.multiSpace.ownersAcomi', { name: DEMO.ownerName })}
+          </p>
           <ul className="mt-4 space-y-3">
             <SpaceRow
               Icon={BedDouble}
               name={DEMO.lodging.name}
-              metric={`${b.occupied} / ${b.total} occupied`}
+              metric={t('home.multiSpace.occupiedOf', { occupied: b.occupied, total: b.total })}
               tone="bg-mint text-primary"
             />
             <SpaceRow
               Icon={UtensilsCrossed}
               name={DEMO.mess.name}
-              metric={`${DEMO.mess.meals[0].prepare} breakfast · ${DEMO.mess.meals[1].prepare} lunch · ${DEMO.mess.meals[2].prepare} dinner`}
+              metric={t('home.multiSpace.mealsMetric', {
+                b: DEMO.mess.meals[0].prepare,
+                l: DEMO.mess.meals[1].prepare,
+                d: DEMO.mess.meals[2].prepare,
+              })}
               tone="bg-[#FFF8F1] text-orange"
             />
             <SpaceRow
               Icon={Building2}
               name={DEMO.hostel.name}
-              metric={`${h.occupied} / ${h.total} occupied`}
+              metric={t('home.multiSpace.occupiedOf', { occupied: h.occupied, total: h.total })}
               tone="bg-[#F4F8FF] text-blue"
             />
           </ul>

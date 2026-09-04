@@ -1,4 +1,5 @@
 import { Lock, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { UserType } from '../../constants/userTypes';
 import { USER_TYPE_OPTIONS } from '../../constants/userTypes';
 import { Modal } from '../common/Modal';
@@ -13,6 +14,7 @@ type UserTypeModalProps = {
 };
 
 export function UserTypeModal({ open, selectedType, onClose, onSelect }: UserTypeModalProps) {
+  const { t } = useTranslation();
   const isSwitching = selectedType !== null;
 
   return (
@@ -27,7 +29,7 @@ export function UserTypeModal({ open, selectedType, onClose, onSelect }: UserTyp
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={t('common.close')}
           className="absolute top-3.5 right-3.5 inline-flex h-9 w-9 items-center justify-center rounded-full text-muted transition hover:bg-soft hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:top-4 sm:right-4"
         >
           <X className="h-5 w-5" aria-hidden />
@@ -38,16 +40,16 @@ export function UserTypeModal({ open, selectedType, onClose, onSelect }: UserTyp
             id="user-type-title"
             className="text-[1.5rem] leading-[1.15] font-semibold tracking-tight text-navy sm:text-[1.9rem]"
           >
-            Welcome to ACOMI
+            {t('userTypeModal.welcome')}
           </h2>
           <p className="mt-2 text-sm font-semibold text-navy sm:text-[15px]">
-            How would you like to use ACOMI?
+            {t('userTypeModal.howUse')}
           </p>
           <p
             id="user-type-description"
             className="mt-1.5 text-xs leading-relaxed text-text-secondary sm:text-[13px]"
           >
-            Choose the option that best describes you to get started.
+            {t('userTypeModal.choose')}
           </p>
         </div>
 
@@ -69,13 +71,13 @@ export function UserTypeModal({ open, selectedType, onClose, onSelect }: UserTyp
               onClick={onClose}
               className="rounded-lg px-5 py-2.5 text-sm font-semibold text-text-secondary ring-1 ring-border transition hover:bg-soft hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
-              Close
+              {t('userTypeModal.close')}
             </button>
           </div>
         ) : (
           <p className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-muted">
             <Lock className="h-3 w-3" aria-hidden />
-            You can change this anytime.
+            {t('userTypeModal.changeAnytime')}
           </p>
         )}
       </div>

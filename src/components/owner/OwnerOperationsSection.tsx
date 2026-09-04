@@ -1,19 +1,24 @@
 import { CircleAlert, Package, UserRound, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { DemoLabel } from '../common/DemoLabel';
 import { IconBadge } from '../common/IconBadge';
 import { Container } from '../layout/Container';
 
-const roles = ['Owner', 'Manager', 'Tenant', 'Staff'];
-
-const pipeline = [
-  { label: 'Open', cls: 'bg-[#FFF1F2] text-[#BE123C]' },
-  { label: 'In progress', cls: 'bg-[#FFF8F1] text-[#B45309]' },
-  { label: 'Resolved', cls: 'bg-mint text-primary' },
-];
-
 export function OwnerOperationsSection() {
+  const { t } = useTranslation();
   const issue = DEMO.complaints.lodging;
+  const roles = [
+    t('owner.operations.roles.owner'),
+    t('owner.operations.roles.manager'),
+    t('owner.operations.roles.tenant'),
+    t('owner.operations.roles.staff'),
+  ];
+  const pipeline = [
+    { label: t('status.open'), cls: 'bg-[#FFF1F2] text-[#BE123C]' },
+    { label: t('status.inProgress'), cls: 'bg-[#FFF8F1] text-[#B45309]' },
+    { label: t('status.resolved'), cls: 'bg-mint text-primary' },
+  ];
 
   return (
     <section
@@ -25,17 +30,17 @@ export function OwnerOperationsSection() {
           id="owner-operations-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          Run the day.
+          {t('owner.operations.title')}
         </h2>
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-          Members and roles. Open issues. Assets and furniture.
+          {t('owner.operations.subtitle')}
         </p>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-3">
           <article className="rounded-[20px] border border-black/5 bg-white p-5 shadow-[var(--shadow-sm)]">
             <div className="flex items-center gap-2.5">
               <IconBadge icon={Users} tone="teal" size="sm" />
-              <h3 className="text-sm font-semibold text-navy">Members</h3>
+              <h3 className="text-sm font-semibold text-navy">{t('common.members')}</h3>
             </div>
             <ul className="mt-4 space-y-3">
               {DEMO.lodging.members.map((m) => (
@@ -67,7 +72,7 @@ export function OwnerOperationsSection() {
           <article className="rounded-[20px] border border-black/5 bg-white p-5 shadow-[var(--shadow-sm)]">
             <div className="flex items-center gap-2.5">
               <IconBadge icon={CircleAlert} tone="coral" size="sm" />
-              <h3 className="text-sm font-semibold text-navy">Complaints</h3>
+              <h3 className="text-sm font-semibold text-navy">{t('common.complaints')}</h3>
             </div>
             <ul className="mt-4 flex flex-wrap gap-1.5">
               {pipeline.map((s) => (
@@ -90,15 +95,13 @@ export function OwnerOperationsSection() {
                 </span>
               </div>
             </div>
-            <p className="mt-3 text-xs text-text-secondary">
-              Maintenance, housekeeping, billing and safety — with comments and photos.
-            </p>
+            <p className="mt-3 text-xs text-text-secondary">{t('owner.operations.complaintsNote')}</p>
           </article>
 
           <article className="rounded-[20px] border border-black/5 bg-white p-5 shadow-[var(--shadow-sm)]">
             <div className="flex items-center gap-2.5">
               <IconBadge icon={Package} tone="violet" size="sm" />
-              <h3 className="text-sm font-semibold text-navy">Inventory</h3>
+              <h3 className="text-sm font-semibold text-navy">{t('common.inventory')}</h3>
             </div>
             <ul className="mt-4 space-y-2">
               {DEMO.inventory.lodging.map((r) => (
@@ -113,9 +116,7 @@ export function OwnerOperationsSection() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-text-secondary">
-              Assets on PG, hostel and co-living. Furniture on rental.
-            </p>
+            <p className="mt-3 text-xs text-text-secondary">{t('owner.operations.inventoryNote')}</p>
           </article>
         </div>
         <DemoLabel className="mt-4">{DEMO_LABEL}</DemoLabel>

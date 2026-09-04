@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Monitor, Smartphone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { APP } from '../constants/links';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { FinalCta } from '../components/home/FinalCta';
@@ -11,46 +12,45 @@ import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
 
 export function PlatformsPage() {
+  const { t } = useTranslation();
+
   useEffect(() => {
     applySeo({
-      title: 'Web and Android — ACOMI',
-      description: 'Use ACOMI in the browser at app.acomi.in or on the Android app. No iOS download is offered here.',
+      title: t('platformsPage.seo.title'),
+      description: t('platformsPage.seo.description'),
       path: '/platforms',
     });
-  }, []);
+  }, [t]);
 
   return (
     <>
       <PageHero
-        eyebrow="Platforms"
-        title="Use ACOMI on the web or Android."
-        description="The same product. Sign in with an Indian mobile number and password."
+        eyebrow={t('platformsPage.eyebrow')}
+        title={t('platformsPage.title')}
+        description={t('platformsPage.description')}
       />
       <section className="bg-[#F7F8FA] py-12 sm:py-14" aria-labelledby="platforms-heading">
         <Container>
-          <PageSectionHead id="platforms-heading" title="One product. Two places." />
+          <PageSectionHead id="platforms-heading" title={t('platformsPage.sectionTitle')} />
           <div className="mt-8 grid items-center gap-8 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
             <div className="grid gap-4">
               <article className="rounded-[20px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
                 <IconBadge icon={Monitor} tone="teal" />
-                <h2 className="mt-4 text-lg font-semibold text-navy">Web application</h2>
+                <h2 className="mt-4 text-lg font-semibold text-navy">{t('platformsPage.web.title')}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-                  Operate from app.acomi.in — dashboard, members, occupancy, meals, headcount, payments, complaints, and
-                  inventory.
+                  {t('platformsPage.web.body')}
                 </p>
                 <div className="mt-5">
-                  <ButtonLink href={APP.web}>Open the web app</ButtonLink>
+                  <ButtonLink href={APP.web}>{t('platformsPage.web.cta')}</ButtonLink>
                 </div>
               </article>
               <article className="rounded-[20px] border border-black/5 bg-[#F4F8FF] p-6 shadow-[var(--shadow-sm)]">
                 <IconBadge icon={Smartphone} tone="blue" />
-                <h2 className="mt-4 text-lg font-semibold text-navy">Android application</h2>
+                <h2 className="mt-4 text-lg font-semibold text-navy">{t('platformsPage.android.title')}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-                  The ACOMI Android app (com.acomi) is the same product for on-site work.
+                  {t('platformsPage.android.body')}
                 </p>
-                <p className="mt-4 text-sm text-muted">
-                  No store URL is published on this page. iOS is not offered as a public download.
-                </p>
+                <p className="mt-4 text-sm text-muted">{t('platformsPage.android.note')}</p>
               </article>
             </div>
             <BrowserChrome url="app.acomi.in">

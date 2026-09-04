@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../common/ActionButton';
 import { Modal } from '../common/Modal';
 
@@ -24,6 +25,7 @@ export function FilterSheet<T>({
   onClear,
   children,
 }: FilterSheetProps<T>) {
+  const { t } = useTranslation();
   const [draft, setDraft] = useState(value);
 
   useEffect(() => {
@@ -50,7 +52,7 @@ export function FilterSheet<T>({
             type="button"
             onClick={onClose}
             className="rounded-full p-2 text-muted hover:bg-soft"
-            aria-label="Close filters"
+            aria-label={t('discovery.closeFilters')}
           >
             <X className="h-5 w-5" />
           </button>
@@ -58,7 +60,7 @@ export function FilterSheet<T>({
         <div className="flex-1 overflow-y-auto px-5 py-5">{children(draft, setDraft)}</div>
         <div className="flex gap-3 border-t border-border px-5 py-4">
           <ActionButton onClick={onClear} variant="ghost" className="flex-1">
-            Clear all
+            {t('discovery.clearAll')}
           </ActionButton>
           <ActionButton
             onClick={() => {
@@ -67,7 +69,7 @@ export function FilterSheet<T>({
             }}
             className="flex-1"
           >
-            Apply
+            {t('discovery.apply')}
           </ActionButton>
         </div>
       </div>

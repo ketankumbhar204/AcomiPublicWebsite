@@ -1,46 +1,30 @@
+import { useTranslation } from 'react-i18next';
 import { APP } from '../../constants/links';
 import { Reveal } from '../common/Reveal';
 import { Container } from '../layout/Container';
 
-const facts = [
-  {
-    title: 'Owner-controlled spaces',
-    body: 'You create the space. Type is set once. Members do not list or book a bed here.',
-  },
-  {
-    title: 'Invitation-based membership',
-    body: 'Invite a 10-digit Indian mobile, or add a record without the app.',
-  },
-  {
-    title: 'Role-based access',
-    body: 'Owner, Manager, Tenant and Staff see what their role allows.',
-  },
-  {
-    title: 'Same product on web and Android',
-    body: 'One API. Desk work on app.acomi.in; on-site on Android.',
-  },
-  {
-    title: 'Account deletion and privacy',
-    body: 'Delete from the app or on the web. Privacy lives on the product site.',
-  },
-];
-
 export function OwnerTrustSection() {
+  const { t } = useTranslation();
+  const facts = ['spaces', 'invite', 'roles', 'platforms', 'privacy'].map((key) => ({
+    title: t(`owner.trust.facts.${key}.title`),
+    body: t(`owner.trust.facts.${key}.body`),
+  }));
+
   return (
     <section className="bg-white py-12 sm:py-14" aria-labelledby="owner-trust-heading">
       <Container>
         <Reveal>
           <p className="text-[11px] font-semibold tracking-[0.16em] text-primary uppercase">
-            Product facts
+            {t('owner.trust.eyebrow')}
           </p>
           <h2
             id="owner-trust-heading"
             className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
           >
-            Access is yours to control.
+            {t('owner.trust.title')}
           </h2>
           <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-            Trust from how the product works — not invented customer counts.
+            {t('owner.trust.subtitle')}
           </p>
         </Reveal>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -55,13 +39,13 @@ export function OwnerTrustSection() {
         </div>
         <p className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <a href={APP.privacy} className="font-semibold text-primary hover:text-primary-hover">
-            Privacy
+            {t('common.privacy')}
           </a>
           <a
             href={APP.deleteAccount}
             className="font-semibold text-primary hover:text-primary-hover"
           >
-            Delete account
+            {t('common.deleteAccount')}
           </a>
         </p>
       </Container>

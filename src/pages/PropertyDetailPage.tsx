@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { MapPin, MessageCircle, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../components/common/ActionButton';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { EnquireDialog } from '../components/discovery/EnquireDialog';
 import { ListingGallery } from '../components/discovery/ListingGallery';
 import { ListingMapLink } from '../components/discovery/ListingMapLink';
 import { Container } from '../components/layout/Container';
-import { getPropertyTypeOption } from '../constants/propertyRegistration';
-import { amenityLabel, formatInr, getPropertyListing } from '../data/listings';
+import { formatInr, getPropertyListing } from '../data/listings';
 import { applySeo } from '../lib/seo';
 
 export function PropertyDetailPage() {
+  const { t } = useTranslation();
   const { id = '' } = useParams();
   const listing = getPropertyListing(id);
   const [enquireOpen, setEnquireOpen] = useState(false);
@@ -19,8 +20,8 @@ export function PropertyDetailPage() {
   useEffect(() => {
     if (!listing) {
       applySeo({
-        title: 'Place not found — ACOMI',
-        description: 'That property listing is not available.',
+        title: t('propertyDetail.seoNotFound.title'),
+        description: t('propertyDetail.seoNotFound.description'),
         path: `/places/${id}`,
       });
       return;
@@ -30,17 +31,19 @@ export function PropertyDetailPage() {
       description: `${listing.name} in ${listing.locality}, ${listing.city}.`,
       path: `/places/${listing.id}`,
     });
-  }, [id, listing]);
+  }, [id, listing, t]);
 
   if (!listing) {
     return (
       <section className="bg-white py-20">
         <Container className="max-w-xl text-center">
-          <h1 className="text-[2rem] font-semibold tracking-tight text-navy">Place not found</h1>
-          <p className="mt-3 text-[15px] text-text-secondary">This listing is not in the current preview set.</p>
+          <h1 className="text-[2rem] font-semibold tracking-tight text-navy">
+            {t('propertyDetail.notFoundTitle')}
+          </h1>
+          <p className="mt-3 text-[15px] text-text-secondary">{t('propertyDetail.notFoundBody')}</p>
           <div className="mt-8">
             <ButtonLink href="/places" variant="ghost" external={false}>
-              Back to places
+              {t('propertyDetail.back')}
             </ButtonLink>
           </div>
         </Container>
@@ -48,7 +51,6 @@ export function PropertyDetailPage() {
     );
   }
 
-  const type = getPropertyTypeOption(listing.type);
   const meta = listing.listingMetadata;
 
   return (
@@ -56,7 +58,7 @@ export function PropertyDetailPage() {
       <Container>
         <p className="text-[13px] text-text-secondary">
           <Link to="/places" className="font-medium text-primary hover:underline">
-            Places
+            {t('propertyDetail.breadcrumb')}
           </Link>
           <span aria-hidden> / </span>
           {listing.name}
@@ -68,7 +70,7 @@ export function PropertyDetailPage() {
           <div className="rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-soft px-2.5 py-1 text-[11px] font-semibold tracking-wide text-primary uppercase">
-                {type.title}
+                {t(`discovery.propertyTypes.${listing.type}`)}
               </span>
               <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-navy">
                 <Star aria-hidden className="h-3.5 w-3.5 fill-register text-register" />
@@ -82,33 +84,43 @@ export function PropertyDetailPage() {
             </p>
             <p className="mt-5 text-[1.5rem] font-semibold text-navy">
               {formatInr(listing.startingPrice)}
-              <span className="ml-1 text-[13px] font-medium text-muted">{type.priceSuffix}</span>
+              <span className="ml-1 text-[13px] font-medium text-muted">
+                {t(`discovery.priceSuffix.${listing.type}`)}
+              </span>
             </p>
             <p className="mt-2 text-[14px] text-text-secondary">
               {listing.type === 'RENTAL'
-                ? `${meta.availableCount > 0 ? 'Available now' : 'Currently occupied'} · ${listing.capacityEstimate} ${type.capacityLabel.toLowerCase()}`
-                : `${meta.availableCount} available · about ${listing.capacityEstimate} ${type.capacityLabel.toLowerCase()}`}
+                ? t('discovery.rentalAvailability', {
+                    status: t(meta.availableCount > 0 ? 'discovery.availableNow' : 'discovery.currentlyOccupied'),
+                    capacity: listing.capacityEstimate,
+                    unit: t(`discovery.capacityUnit.${listing.type}`),
+                  })
+                : t('discovery.availableAbout', {
+                    available: meta.availableCount,
+                    capacity: listing.capacityEstimate,
+                    unit: t(`discovery.capacityUnit.${listing.type}`),
+                  })}
             </p>
             <div className="mt-6">
               <ActionButton onClick={() => setEnquireOpen(true)} className="w-full">
                 <MessageCircle aria-hidden className="h-4 w-4" />
-                Contact / Enquire
+                {t('discovery.contactEnquire')}
               </ActionButton>
             </div>
-            <p className="mt-3 text-[12px] text-muted">Listing scores are sample preview data, not live reviews.</p>
+            <p className="mt-3 text-[12px] text-muted">{t('discovery.sampleScores')}</p>
           </div>
         </div>
 
         {listing.amenityCodes.length > 0 ? (
           <div className="mt-8 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
-            <h2 className="text-lg font-semibold text-navy">Amenities</h2>
+            <h2 className="text-lg font-semibold text-navy">{t('discovery.amenities')}</h2>
             <ul className="mt-4 flex flex-wrap gap-2">
               {listing.amenityCodes.map((code) => (
                 <li
                   key={code}
                   className="rounded-full border border-border bg-soft px-3 py-1.5 text-[12px] font-medium text-text-secondary"
                 >
-                  {amenityLabel(code)}
+                  {t(`discovery.amenity.${code}`)}
                 </li>
               ))}
             </ul>
@@ -116,18 +128,22 @@ export function PropertyDetailPage() {
         ) : null}
 
         <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
-          <h2 className="text-lg font-semibold text-navy">About this place</h2>
+          <h2 className="text-lg font-semibold text-navy">{t('discovery.aboutPlace')}</h2>
           <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-text-secondary">{listing.description}</p>
         </div>
 
         <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
-          <h2 className="text-lg font-semibold text-navy">Location</h2>
+          <h2 className="text-lg font-semibold text-navy">{t('discovery.location')}</h2>
           <div className="mt-3">
             <ListingMapLink listing={listing} />
           </div>
         </div>
       </Container>
-      <EnquireDialog open={enquireOpen} title={`Enquire about ${listing.name}`} onClose={() => setEnquireOpen(false)} />
+      <EnquireDialog
+        open={enquireOpen}
+        title={t('discovery.enquireAbout', { name: listing.name })}
+        onClose={() => setEnquireOpen(false)}
+      />
     </section>
   );
 }

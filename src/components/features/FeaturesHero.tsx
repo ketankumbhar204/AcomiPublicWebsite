@@ -1,4 +1,5 @@
 import { BedDouble, Check, IndianRupee, UtensilsCrossed } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useUserType } from '../../context/UserTypeContext';
 import { SHOTS } from '../../data/shots';
 import { ActionButton } from '../common/ActionButton';
@@ -7,29 +8,30 @@ import { PhoneMock } from '../common/PhoneMock';
 import { HeroValueRow } from '../home/HeroValueRow';
 import { Container } from '../layout/Container';
 
-const lines = [
-  {
-    Icon: BedDouble,
-    text: "Know who's staying.",
-    iconBg: 'bg-[#E7F4EE]',
-    iconFg: 'text-primary',
-  },
-  {
-    Icon: UtensilsCrossed,
-    text: "Know who's eating.",
-    iconBg: 'bg-[#FFF1E0]',
-    iconFg: 'text-orange',
-  },
-  {
-    Icon: IndianRupee,
-    text: "Know what's due.",
-    iconBg: 'bg-[#E8F0FF]',
-    iconFg: 'text-blue',
-  },
-];
-
 export function FeaturesHero() {
+  const { t } = useTranslation();
   const { openUserTypeModal } = useUserType();
+
+  const lines = [
+    {
+      Icon: BedDouble,
+      text: t('features.lines.staying'),
+      iconBg: 'bg-[#E7F4EE]',
+      iconFg: 'text-primary',
+    },
+    {
+      Icon: UtensilsCrossed,
+      text: t('features.lines.eating'),
+      iconBg: 'bg-[#FFF1E0]',
+      iconFg: 'text-orange',
+    },
+    {
+      Icon: IndianRupee,
+      text: t('features.lines.due'),
+      iconBg: 'bg-[#E8F0FF]',
+      iconFg: 'text-blue',
+    },
+  ];
 
   return (
     <section
@@ -39,26 +41,28 @@ export function FeaturesHero() {
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
           <div className="max-w-[34rem]">
-            <p className="text-[11px] font-semibold tracking-[0.18em] text-primary uppercase">Features</p>
+            <p className="text-[11px] font-semibold tracking-[0.18em] text-primary uppercase">
+              {t('features.eyebrow')}
+            </p>
             <h1 id="features-hero-heading" className="mt-3 space-y-2 sm:mt-5 sm:space-y-5">
               {lines.map((line) => (
                 <HeroValueRow key={line.text} {...line} />
               ))}
             </h1>
             <p className="mt-5 max-w-[26rem] text-[15px] leading-relaxed text-text-secondary sm:text-[16px]">
-              Lodging answers who is staying. Meals answer how many plates. Dues and issues stay in the same space.
+              {t('features.body')}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <ActionButton onClick={openUserTypeModal}>Get started free</ActionButton>
+              <ActionButton onClick={openUserTypeModal}>{t('hero.getStartedFree')}</ActionButton>
               <ButtonLink href="/how-it-works" variant="ghost" external={false}>
-                See how it works
+                {t('hero.seeHowItWorks')}
               </ButtonLink>
             </div>
             <p className="mt-4 flex items-center gap-2 text-xs text-muted">
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#E7F4EE] text-primary">
                 <Check className="h-3 w-3" strokeWidth={2.4} aria-hidden />
               </span>
-              Occupancy, meals, headcount and payments — one place.
+              {t('features.footnote')}
             </p>
           </div>
           <FeaturesHeroPhones />
@@ -69,6 +73,8 @@ export function FeaturesHero() {
 }
 
 function FeaturesHeroPhones() {
+  const { t } = useTranslation();
+
   return (
     <div className="relative mx-auto flex w-full max-w-[560px] flex-col items-center gap-8 lg:h-[580px] lg:block">
       <div
@@ -79,7 +85,7 @@ function FeaturesHeroPhones() {
         <PhoneMock
           src={SHOTS.occupancy.src}
           alt={SHOTS.occupancy.alt}
-          caption="PG · Occupancy"
+          caption={t('features.captionPg')}
           size="hero"
           tilt={-6}
           priority
@@ -89,7 +95,7 @@ function FeaturesHeroPhones() {
         <PhoneMock
           src={SHOTS.mess.src}
           alt={SHOTS.mess.alt}
-          caption="MESS · Headcount"
+          caption={t('features.captionMess')}
           size="hero"
           tilt={6}
           priority

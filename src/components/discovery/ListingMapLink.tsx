@@ -1,4 +1,5 @@
 import { ExternalLink, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { listingMapUrl } from '../../data/listings/query';
 
 type ListingMapLinkProps = {
@@ -14,6 +15,7 @@ type ListingMapLinkProps = {
 };
 
 export function ListingMapLink({ listing, compact = false }: ListingMapLinkProps) {
+  const { t } = useTranslation();
   const href = listingMapUrl(listing);
 
   if (compact) {
@@ -25,7 +27,7 @@ export function ListingMapLink({ listing, compact = false }: ListingMapLinkProps
         className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-register hover:underline"
       >
         <MapPin aria-hidden className="h-4 w-4" />
-        Open in Google Maps
+        {t('discovery.openMaps')}
         <ExternalLink aria-hidden className="h-3.5 w-3.5" />
       </a>
     );
@@ -43,7 +45,7 @@ export function ListingMapLink({ listing, compact = false }: ListingMapLinkProps
         className="mt-4 inline-flex items-center gap-2 rounded-lg bg-register px-4 py-2.5 text-sm font-semibold text-white hover:bg-register-hover"
       >
         <MapPin aria-hidden className="h-4 w-4" />
-        Open in Google Maps
+        {t('discovery.openMaps')}
       </a>
     </div>
   );

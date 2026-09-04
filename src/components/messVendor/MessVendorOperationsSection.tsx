@@ -1,19 +1,21 @@
 import { CircleAlert, Package, UserRound, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { DemoLabel } from '../common/DemoLabel';
 import { IconBadge } from '../common/IconBadge';
 import { Container } from '../layout/Container';
 
-const roles = ['Owner', 'Manager', 'Customer', 'Staff'];
-
-const pipeline = [
-  { label: 'Open', cls: 'bg-[#FFF1F2] text-[#BE123C]' },
-  { label: 'In progress', cls: 'bg-[#FFF8F1] text-[#B45309]' },
-  { label: 'Resolved', cls: 'bg-mint text-primary' },
-];
-
 export function MessVendorOperationsSection() {
+  const { t } = useTranslation();
   const issue = DEMO.complaints.mess;
+  const roles = ['owner', 'manager', 'customer', 'staff'].map((role) =>
+    t(`messVendor.operations.roles.${role}`),
+  );
+  const pipeline = [
+    { label: t('status.open'), cls: 'bg-[#FFF1F2] text-[#BE123C]' },
+    { label: t('status.inProgress'), cls: 'bg-[#FFF8F1] text-[#B45309]' },
+    { label: t('status.resolved'), cls: 'bg-mint text-primary' },
+  ];
 
   return (
     <section
@@ -25,17 +27,17 @@ export function MessVendorOperationsSection() {
           id="mess-operations-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          Run the kitchen day.
+          {t('messVendor.operations.title')}
         </h2>
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-          Customers and roles. Open issues. Stock on hand.
+          {t('messVendor.operations.subtitle')}
         </p>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-3">
           <article className="rounded-[20px] border border-black/5 bg-white p-5 shadow-[var(--shadow-sm)]">
             <div className="flex items-center gap-2.5">
               <IconBadge icon={Users} tone="amber" size="sm" />
-              <h3 className="text-sm font-semibold text-navy">Customers</h3>
+              <h3 className="text-sm font-semibold text-navy">{t('labels.customer')}</h3>
             </div>
             <ul className="mt-4 space-y-3">
               {DEMO.mess.customersList.map((c) => (
@@ -46,8 +48,8 @@ export function MessVendorOperationsSection() {
                   <span className="min-w-0">
                     <span className="block text-sm font-semibold text-navy">{c.name}</span>
                     <span className="text-xs text-muted">
-                      {c.breakfast ? 'Breakfast' : '—'} · {c.lunch ? 'Lunch' : '—'} ·{' '}
-                      {c.dinner ? 'Dinner' : '—'}
+                      {c.breakfast ? t('meals.breakfast') : '—'} · {c.lunch ? t('meals.lunch') : '—'} ·{' '}
+                      {c.dinner ? t('meals.dinner') : '—'}
                     </span>
                   </span>
                 </li>
@@ -68,7 +70,7 @@ export function MessVendorOperationsSection() {
           <article className="rounded-[20px] border border-black/5 bg-white p-5 shadow-[var(--shadow-sm)]">
             <div className="flex items-center gap-2.5">
               <IconBadge icon={CircleAlert} tone="coral" size="sm" />
-              <h3 className="text-sm font-semibold text-navy">Complaints</h3>
+              <h3 className="text-sm font-semibold text-navy">{t('common.complaints')}</h3>
             </div>
             <ul className="mt-4 flex flex-wrap gap-1.5">
               {pipeline.map((s) => (
@@ -92,14 +94,14 @@ export function MessVendorOperationsSection() {
               </div>
             </div>
             <p className="mt-3 text-xs text-text-secondary">
-              Food quality and service issues — with comments.
+              {t('messVendor.operations.complaintsNote')}
             </p>
           </article>
 
           <article className="rounded-[20px] border border-black/5 bg-white p-5 shadow-[var(--shadow-sm)]">
             <div className="flex items-center gap-2.5">
               <IconBadge icon={Package} tone="violet" size="sm" />
-              <h3 className="text-sm font-semibold text-navy">Inventory</h3>
+              <h3 className="text-sm font-semibold text-navy">{t('common.inventory')}</h3>
             </div>
             <ul className="mt-4 space-y-2">
               {DEMO.inventory.mess.map((r) => (
@@ -112,7 +114,9 @@ export function MessVendorOperationsSection() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-text-secondary">Kitchen stock for the mess.</p>
+            <p className="mt-3 text-xs text-text-secondary">
+              {t('messVendor.operations.inventoryNote')}
+            </p>
           </article>
         </div>
         <DemoLabel className="mt-4">{DEMO_LABEL}</DemoLabel>

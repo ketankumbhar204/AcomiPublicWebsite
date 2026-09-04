@@ -1,4 +1,5 @@
 import { BedDouble } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { SHOTS } from '../../data/shots';
 import { DemoLabel } from '../common/DemoLabel';
@@ -7,6 +8,7 @@ import { MetricCard, ProgressBar } from '../product/MetricCard';
 import { Container } from '../layout/Container';
 
 export function OwnerOccupancySection() {
+  const { t } = useTranslation();
   const { lodging } = DEMO;
   const b = lodging.beds;
 
@@ -19,17 +21,16 @@ export function OwnerOccupancySection() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] text-primary uppercase">
-              Occupancy
+              {t('owner.occupancy.eyebrow')}
             </p>
             <h2
               id="owner-occupancy-heading"
               className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
             >
-              Know who&apos;s staying.
+              {t('owner.occupancy.title')}
             </h2>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-              Buildings, floors, rooms and beds. Occupied, vacant and reserved. Allocate, reserve,
-              move in, transfer, vacate.
+              {t('owner.occupancy.body')}
             </p>
 
             <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-md)]">
@@ -41,7 +42,7 @@ export function OwnerOccupancySection() {
                 {b.occupied}
                 <span className="text-xl text-muted"> / {b.total}</span>
               </p>
-              <p className="mt-1 text-sm text-muted">occupied</p>
+              <p className="mt-1 text-sm text-muted">{t('owner.occupancy.occupiedLabel')}</p>
               <div className="mt-5">
                 <ProgressBar
                   segments={[
@@ -52,9 +53,9 @@ export function OwnerOccupancySection() {
                 />
               </div>
               <div className="mt-5 grid grid-cols-3 gap-3">
-                <MetricCard label="Occupied" value={b.occupied} tone="teal" />
-                <MetricCard label="Vacant" value={b.vacant} tone="blue" />
-                <MetricCard label="Reserved" value={b.reserved} tone="amber" />
+                <MetricCard label={t('status.occupied')} value={b.occupied} tone="teal" />
+                <MetricCard label={t('status.vacant')} value={b.vacant} tone="blue" />
+                <MetricCard label={t('status.reserved')} value={b.reserved} tone="amber" />
               </div>
               <ul className="mt-5 divide-y divide-border">
                 {lodging.members.map((m) => (
@@ -71,7 +72,7 @@ export function OwnerOccupancySection() {
           </div>
 
           <div className="flex justify-center lg:justify-end">
-            <PhoneMock {...SHOTS.occupancy} caption="Occupancy" size="lg" />
+            <PhoneMock {...SHOTS.occupancy} caption={t('home.visual.occupancy')} size="lg" />
           </div>
         </div>
       </Container>

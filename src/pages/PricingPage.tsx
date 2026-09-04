@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { CalendarDays, UserPlus, Warehouse } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useUserType } from '../context/UserTypeContext';
 import { ActionButton } from '../components/common/ActionButton';
 import { ButtonLink } from '../components/common/ButtonLink';
@@ -9,58 +10,59 @@ import { IconBadge } from '../components/common/IconBadge';
 import { Container } from '../components/layout/Container';
 import { applySeo } from '../lib/seo';
 
-const items = [
-  {
-    title: 'Create a space',
-    line: 'Create a mess, PG, hostel, co-living, or rental space.',
-    Icon: Warehouse,
-    tone: 'teal' as const,
-    bg: 'bg-mint',
-  },
-  {
-    title: 'Invite members',
-    line: 'Invite by Indian mobile number — no public listings.',
-    Icon: UserPlus,
-    tone: 'violet' as const,
-    bg: 'bg-[#F7F4FF]',
-  },
-  {
-    title: 'Run the day',
-    line: 'Occupancy or meal headcount, plus dues proofs and complaints, on web and Android.',
-    Icon: CalendarDays,
-    tone: 'amber' as const,
-    bg: 'bg-[#FFF8F1]',
-  },
-];
-
 export function PricingPage() {
+  const { t } = useTranslation();
   const { openUserTypeModal } = useUserType();
+
+  const items = [
+    {
+      title: t('pricingPage.items.create.title'),
+      line: t('pricingPage.items.create.line'),
+      Icon: Warehouse,
+      tone: 'teal' as const,
+      bg: 'bg-mint',
+    },
+    {
+      title: t('pricingPage.items.invite.title'),
+      line: t('pricingPage.items.invite.line'),
+      Icon: UserPlus,
+      tone: 'violet' as const,
+      bg: 'bg-[#F7F4FF]',
+    },
+    {
+      title: t('pricingPage.items.runDay.title'),
+      line: t('pricingPage.items.runDay.line'),
+      Icon: CalendarDays,
+      tone: 'amber' as const,
+      bg: 'bg-[#FFF8F1]',
+    },
+  ];
 
   useEffect(() => {
     applySeo({
-      title: 'Pricing — ACOMI',
-      description: 'Create an ACOMI space to get started. Public plan prices are not listed on this site.',
+      title: t('pricingPage.seo.title'),
+      description: t('pricingPage.seo.description'),
       path: '/pricing',
     });
-  }, []);
+  }, [t]);
 
   return (
     <>
       <PageHero
-        eyebrow="Pricing"
-        title="No public price list."
-        description="ACOMI does not publish plans, rupee amounts, free-trial length, or cancel-anytime terms on this website. Create a space and use the product."
+        eyebrow={t('pricingPage.eyebrow')}
+        title={t('pricingPage.title')}
+        description={t('pricingPage.description')}
       >
         <div className="mt-6 flex flex-wrap gap-3">
-          <ActionButton onClick={openUserTypeModal}>Get started</ActionButton>
+          <ActionButton onClick={openUserTypeModal}>{t('nav.getStarted')}</ActionButton>
           <ButtonLink href="/how-it-works" variant="ghost" external={false}>
-            How it works
+            {t('nav.howItWorks')}
           </ButtonLink>
         </div>
       </PageHero>
       <section className="bg-[#F7F8FA] py-12 sm:py-14" aria-labelledby="today-heading">
         <Container>
-          <PageSectionHead id="today-heading" title="What you can do today." />
+          <PageSectionHead id="today-heading" title={t('pricingPage.todayTitle')} />
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {items.map((item) => (
               <article

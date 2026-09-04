@@ -1,4 +1,5 @@
 import { UtensilsCrossed } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { SHOTS } from '../../data/shots';
 import { IconBadge } from '../common/IconBadge';
@@ -12,6 +13,7 @@ const locTones = ['bg-[#E7F6EE] text-[#0F6B4C]', 'bg-[#FFF1E0] text-[#D97706]', 
 const menuTones = ['bg-[#E7F6EE] text-[#0F6B4C]', 'bg-[#FFF1E0] text-[#D97706]', 'bg-[#F1EBFF] text-[#6D28D9]'];
 
 export function HeadcountSection() {
+  const { t } = useTranslation();
   const d = DEMO.mess.breakfastDetail;
 
   return (
@@ -19,12 +21,14 @@ export function HeadcountSection() {
       <Container>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.16em] text-orange uppercase">Mess · Headcount</p>
+            <p className="text-[11px] font-semibold tracking-[0.16em] text-orange uppercase">
+              {t('home.headcount.eyebrow')}
+            </p>
             <h2
               id="headcount-heading"
               className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
             >
-              Know how many plates to prepare.
+              {t('home.headcount.title')}
             </h2>
             <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-md)]">
               <div className="flex items-center justify-between gap-3">
@@ -35,14 +39,14 @@ export function HeadcountSection() {
                   </p>
                 </div>
                 <p className="text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">
-                  Today — {d.date}
+                  {t('home.headcount.todayPrefix', { date: d.date })}
                 </p>
               </div>
 
               <div className="mt-5 grid grid-cols-3 gap-2">
-                <Tile n={d.expected} l="Expected" tone="bg-[#E8F1FF] text-[#1D4ED8]" />
-                <Tile n={d.prepare} l="To prepare" tone="bg-[#FFF1E0] text-[#B45309]" />
-                <Tile n={d.noResponse} l="No response" tone="bg-[#FFE8EE] text-[#BE123C]" />
+                <Tile n={d.expected} l={t('home.headcount.expected')} tone="bg-[#E8F1FF] text-[#1D4ED8]" />
+                <Tile n={d.prepare} l={t('home.headcount.toPrepare')} tone="bg-[#FFF1E0] text-[#B45309]" />
+                <Tile n={d.noResponse} l={t('home.headcount.noResponse')} tone="bg-[#FFE8EE] text-[#BE123C]" />
               </div>
 
               <div className="mt-5 space-y-3">

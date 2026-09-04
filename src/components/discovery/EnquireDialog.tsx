@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../common/ActionButton';
 import { Modal } from '../common/Modal';
 import { useUserType } from '../../context/UserTypeContext';
@@ -9,6 +10,7 @@ type EnquireDialogProps = {
 };
 
 export function EnquireDialog({ open, title, onClose }: EnquireDialogProps) {
+  const { t } = useTranslation();
   const { openUserTypeModal } = useUserType();
 
   return (
@@ -23,7 +25,7 @@ export function EnquireDialog({ open, title, onClose }: EnquireDialogProps) {
         {title}
       </h2>
       <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
-        Direct enquiries are not connected yet. When listings go live, you will be able to contact the operator from this page.
+        {t('discovery.enquireBody')}
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <ActionButton
@@ -32,10 +34,10 @@ export function EnquireDialog({ open, title, onClose }: EnquireDialogProps) {
             openUserTypeModal();
           }}
         >
-          Get started
+          {t('nav.getStarted')}
         </ActionButton>
         <ActionButton onClick={onClose} variant="ghost">
-          Close
+          {t('common.close')}
         </ActionButton>
       </div>
     </Modal>

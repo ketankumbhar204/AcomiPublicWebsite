@@ -1,5 +1,6 @@
 import { Check, ClipboardList, UtensilsCrossed } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { SHOTS } from '../../data/shots';
 import { useListingDrawer } from '../../context/ListingDrawerContext';
 import { ButtonLink } from '../common/ButtonLink';
@@ -9,23 +10,13 @@ import { Container } from '../layout/Container';
 export const REGISTER_CTA_CLS =
   'reg-focus inline-flex items-center justify-center gap-2 rounded-lg bg-register px-5 py-3 text-sm font-semibold text-cta-band transition hover:bg-register-hover';
 
-const lines: Array<{ Icon: LucideIcon; text: string; iconBg: string; iconFg: string }> = [
-  {
-    Icon: UtensilsCrossed,
-    text: "Know who's eating.",
-    iconBg: 'bg-[#FFF1E0]',
-    iconFg: 'text-orange',
-  },
-  {
-    Icon: ClipboardList,
-    text: 'Know how many plates.',
-    iconBg: 'bg-[#E7F4EE]',
-    iconFg: 'text-primary',
-  },
-];
-
 export function MessVendorHero() {
+  const { t } = useTranslation();
   const { openListing } = useListingDrawer();
+  const lines: Array<{ Icon: LucideIcon; text: string; iconBg: string; iconFg: string }> = [
+    { Icon: UtensilsCrossed, text: t('features.lines.eating'), iconBg: 'bg-[#FFF1E0]', iconFg: 'text-orange' },
+    { Icon: ClipboardList, text: t('messVendor.hero.knowPlates'), iconBg: 'bg-[#E7F4EE]', iconFg: 'text-primary' },
+  ];
 
   return (
     <section
@@ -36,7 +27,7 @@ export function MessVendorHero() {
         <div className="grid items-center gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
           <div className="max-w-[34rem]">
             <p className="text-[11px] font-semibold tracking-[0.18em] text-orange uppercase">
-              Mess · Tiffin · Meal service
+              {t('messVendor.hero.eyebrow')}
             </p>
             <h1 id="mess-hero-heading" className="mt-3 space-y-2 sm:mt-5 sm:space-y-5">
               {lines.map((line) => (
@@ -53,21 +44,21 @@ export function MessVendorHero() {
               ))}
             </h1>
             <p className="mt-5 max-w-[26rem] text-[15px] leading-relaxed text-text-secondary sm:text-[16px]">
-              Customers, menus, headcount and meal dues — one place.
+              {t('messVendor.hero.body')}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <button type="button" onClick={() => openListing('mess')} className={REGISTER_CTA_CLS}>
-                List your mess
+                {t('listing.listMess')}
               </button>
               <ButtonLink href="/how-it-works" variant="ghost" external={false}>
-                See how it works
+                {t('hero.seeHowItWorks')}
               </ButtonLink>
             </div>
             <p className="mt-4 flex items-center gap-2 text-xs text-muted">
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#E7F4EE] text-primary">
                 <Check className="h-3 w-3" strokeWidth={2.4} aria-hidden />
               </span>
-              Built for Indian mess, tiffin and meal-service operators.
+              {t('messVendor.hero.builtFor')}
             </p>
           </div>
 
@@ -80,7 +71,7 @@ export function MessVendorHero() {
               <PhoneMock
                 src={SHOTS.mess.src}
                 alt={SHOTS.mess.alt}
-                caption="MESS · Know who's eating"
+                caption={t('messVendor.hero.captionMess')}
                 size="hero"
                 tilt={-6}
                 priority
@@ -90,7 +81,7 @@ export function MessVendorHero() {
               <PhoneMock
                 src={SHOTS.messPayments.src}
                 alt={SHOTS.messPayments.alt}
-                caption="Meal dues at a glance"
+                caption={t('messVendor.hero.captionDues')}
                 size="hero"
                 tilt={6}
                 priority

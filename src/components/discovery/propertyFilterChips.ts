@@ -1,16 +1,16 @@
-import { getPropertyTypeOption } from '../../constants/propertyRegistration';
+import type { TFunction } from 'i18next';
 import {
   PROPERTY_PRICE_PRESETS,
   RATING_PRESETS,
   DEFAULT_PROPERTY_QUERY,
 } from '../../data/listings/defaults';
-import { amenityLabel } from '../../data/listings/query';
 import type { PropertyQuery } from '../../data/listings/types';
 import type { ActiveFilter } from './ActiveFilterChips';
 
 export function propertyFilterChips(
   query: PropertyQuery,
   onChange: (next: PropertyQuery) => void,
+  t: TFunction,
 ): ActiveFilter[] {
   const chips: ActiveFilter[] = query.localities.map((locality) => ({
     id: `loc-${locality}`,
@@ -22,7 +22,7 @@ export function propertyFilterChips(
   query.types.forEach((type) => {
     chips.push({
       id: `type-${type}`,
-      label: getPropertyTypeOption(type).title,
+      label: t(`discovery.propertyTypes.${type}`),
       onRemove: () => onChange({ ...query, types: query.types.filter((item) => item !== type) }),
     });
   });
@@ -33,7 +33,13 @@ export function propertyFilterChips(
   if (price) {
     chips.push({
       id: 'price',
-      label: price.label,
+      label: t(`discovery.pricePresets.${({
+        any: 'any',
+        'under-8': 'under8',
+        '8-12': '8to12',
+        '12-18': '12to18',
+        '18-plus': '18plus',
+      } as const)[price.id]}`),
       onRemove: () =>
         onChange({ ...query, minPrice: DEFAULT_PROPERTY_QUERY.minPrice, maxPrice: DEFAULT_PROPERTY_QUERY.maxPrice }),
     });
@@ -43,7 +49,7 @@ export function propertyFilterChips(
   if (rating) {
     chips.push({
       id: 'rating',
-      label: rating.label,
+      label: t(`discovery.ratingPresets.${rating.id}`),
       onRemove: () => onChange({ ...query, minRating: null }),
     });
   }
@@ -51,7 +57,7 @@ export function propertyFilterChips(
   query.amenities.forEach((code) => {
     chips.push({
       id: `amenity-${code}`,
-      label: amenityLabel(code),
+      label: t(`discovery.amenity.${code}`),
       onRemove: () => onChange({ ...query, amenities: query.amenities.filter((item) => item !== code) }),
     });
   });

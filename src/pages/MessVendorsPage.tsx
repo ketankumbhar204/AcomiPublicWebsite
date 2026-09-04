@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MessVendorFinalCta } from '../components/messVendor/MessVendorFinalCta';
 import { MessVendorHeadcountSection } from '../components/messVendor/MessVendorHeadcountSection';
 import { MessVendorHero } from '../components/messVendor/MessVendorHero';
@@ -14,14 +15,15 @@ import { MessVendorWhatsAppSection } from '../components/messVendor/MessVendorWh
 import { applySeo } from '../lib/seo';
 
 export function MessVendorsPage() {
+  const { t } = useTranslation();
+
   useEffect(() => {
     applySeo({
-      title: 'ACOMI for mess vendors — headcount, menus and meal dues',
-      description:
-        'Operations software for mess, tiffin and meal-service operators. Track customers, menus, headcount and meal dues — on web and Android.',
+      title: t('messVendor.seo.title'),
+      description: t('messVendor.seo.description'),
       path: '/mess-vendors',
     });
-  }, []);
+  }, [t]);
 
   return (
     <>

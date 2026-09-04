@@ -1,4 +1,5 @@
 import { UtensilsCrossed } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { SHOTS } from '../../data/shots';
 import { IconBadge } from '../common/IconBadge';
@@ -20,6 +21,7 @@ const menuTones = [
 ];
 
 export function MessVendorHeadcountSection() {
+  const { t } = useTranslation();
   const d = DEMO.mess.breakfastDetail;
 
   return (
@@ -31,16 +33,16 @@ export function MessVendorHeadcountSection() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] text-orange uppercase">
-              Headcount
+              {t('labels.headcount')}
             </p>
             <h2
               id="mess-headcount-heading"
               className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
             >
-              Know how many plates to cook.
+              {t('messVendor.headcount.title')}
             </h2>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-              Breakfast, lunch and dinner. Expected, to prepare, and no response.
+              {t('messVendor.headcount.body')}
             </p>
 
             <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-md)]">
@@ -48,18 +50,18 @@ export function MessVendorHeadcountSection() {
                 <div className="flex items-center gap-2">
                   <IconBadge icon={UtensilsCrossed} tone="amber" />
                   <p className="text-sm font-semibold text-navy">
-                    {DEMO.mess.name} · {DEMO.mess.customers} customers
+                    {DEMO.mess.name} · {t('messVendor.headcount.customersCount', { count: DEMO.mess.customers })}
                   </p>
                 </div>
                 <p className="text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">
-                  Today — {d.date}
+                  {t('home.headcount.todayPrefix', { date: d.date })}
                 </p>
               </div>
 
               <div className="mt-5 grid grid-cols-3 gap-2">
-                <Tile n={d.expected} l="Expected" tone="bg-[#E8F1FF] text-[#1D4ED8]" />
-                <Tile n={d.prepare} l="To prepare" tone="bg-[#FFF1E0] text-[#B45309]" />
-                <Tile n={d.noResponse} l="No response" tone="bg-[#FFE8EE] text-[#BE123C]" />
+                <Tile n={d.expected} l={t('status.expected')} tone="bg-[#E8F1FF] text-[#1D4ED8]" />
+                <Tile n={d.prepare} l={t('status.toPrepare')} tone="bg-[#FFF1E0] text-[#B45309]" />
+                <Tile n={d.noResponse} l={t('status.noResponse')} tone="bg-[#FFE8EE] text-[#BE123C]" />
               </div>
 
               <div className="mt-5 space-y-3">

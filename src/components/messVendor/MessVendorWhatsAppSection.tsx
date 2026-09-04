@@ -1,5 +1,6 @@
 import { ArrowRight, ClipboardList, Smartphone, UtensilsCrossed, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { DemoLabel } from '../common/DemoLabel';
 import { WaActions, WaBody, WaBubble, WaButton, WhatsAppChat } from '../home/WhatsAppChat';
@@ -7,42 +8,41 @@ import { Container } from '../layout/Container';
 
 const mealEmoji = ['🍳', '🍛', '🥘'];
 
-const customerFlow: Array<{ Icon: LucideIcon; label: string }> = [
-  { Icon: UtensilsCrossed, label: 'Poll' },
-  { Icon: Smartphone, label: 'WhatsApp' },
-  { Icon: Users, label: 'Customer' },
-  { Icon: ClipboardList, label: '78 / 86' },
-];
-
 export function MessVendorWhatsAppSection() {
+  const { t } = useTranslation();
   const mealPay = DEMO.share.mealPayment;
   const poll = DEMO.share.pollCustomer;
+  const customerFlow: Array<{ Icon: LucideIcon; label: string }> = [
+    { Icon: UtensilsCrossed, label: t('home.whatsapp.flow.mess.poll') },
+    { Icon: Smartphone, label: t('home.whatsapp.flow.mess.whatsapp') },
+    { Icon: Users, label: t('home.whatsapp.flow.mess.customer') },
+    { Icon: ClipboardList, label: t('home.whatsapp.flow.mess.headcount') },
+  ];
 
   return (
     <section className="bg-white py-12 sm:py-14" aria-labelledby="mess-whatsapp-heading">
       <Container>
         <p className="text-[11px] font-semibold tracking-[0.16em] text-[#128C7E] uppercase">
-          WhatsApp updates
+          {t('home.whatsapp.eyebrow')}
         </p>
         <h2
           id="mess-whatsapp-heading"
           className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          Keep your customers updated on WhatsApp.
+          {t('messVendor.whatsapp.title')}
         </h2>
         <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-          Menus, meal polls and pending meal dues — as text you share where your customers already
-          are.
+          {t('messVendor.whatsapp.subtitle')}
         </p>
 
         <div className="mt-8 flex gap-4 overflow-x-auto pb-2">
-          <WhatsAppChat time="8:05 AM" caption="Select your meal">
+          <WhatsAppChat time="8:05 AM" caption={t('home.whatsapp.captions.selectMeal')}>
             <WaBubble>
               <WaBody>
-                <p className="font-semibold">🍽 Meal poll is open</p>
+                <p className="font-semibold">{t('home.whatsapp.bubbles.pollOpen')}</p>
                 <p className="text-[12px] text-[#667781]">{DEMO.mess.name}</p>
-                <p className="mt-1.5">Hi {poll.name},</p>
-                <p className="mt-1 text-[12px]">Select your meals for today before 10:00 AM.</p>
+                <p className="mt-1.5">{t('home.whatsapp.bubbles.hiName', { name: poll.name })}</p>
+                <p className="mt-1 text-[12px]">{t('home.whatsapp.bubbles.selectMealsBefore')}</p>
                 <ul className="mt-2.5 overflow-hidden rounded-md border border-[#e9edef]">
                   {DEMO.share.menu.map((m, i) => (
                     <li
@@ -69,19 +69,21 @@ export function MessVendorWhatsAppSection() {
                 </ul>
               </WaBody>
               <WaActions>
-                <WaButton>Breakfast</WaButton>
+                <WaButton>{t('meals.breakfast')}</WaButton>
                 <span className="w-px bg-[#e9edef]" aria-hidden />
-                <WaButton>Lunch</WaButton>
+                <WaButton>{t('meals.lunch')}</WaButton>
                 <span className="w-px bg-[#e9edef]" aria-hidden />
-                <WaButton>Dinner</WaButton>
+                <WaButton>{t('meals.dinner')}</WaButton>
               </WaActions>
             </WaBubble>
           </WhatsAppChat>
 
-          <WhatsAppChat time="8:24 AM" caption="Today's menu">
+          <WhatsAppChat time="8:24 AM" caption={t('home.whatsapp.captions.todaysMenu')}>
             <WaBubble>
               <WaBody>
-                <p className="font-semibold">🍽 Today&apos;s Menu — {DEMO.mess.name}</p>
+                <p className="font-semibold">
+                  {t('home.whatsapp.bubbles.todaysMenu', { name: DEMO.mess.name })}
+                </p>
                 <p className="mt-0.5 text-[12px] text-[#667781]">22 Aug 2026 (Thursday)</p>
                 <ul className="mt-2 space-y-1.5">
                   {DEMO.share.menu.map((m, i) => (
@@ -94,44 +96,51 @@ export function MessVendorWhatsAppSection() {
                   ))}
                 </ul>
                 <p className="mt-2.5 rounded-md bg-[#E7F6EE] px-2 py-1.5 text-[12px] font-semibold text-[#0F6B4C]">
-                  👥 Expected meals {DEMO.mess.meals[0].prepare} / {DEMO.mess.customers}
+                  {t('home.whatsapp.bubbles.expectedMeals', {
+                    prepare: DEMO.mess.meals[0].prepare,
+                    customers: DEMO.mess.customers,
+                  })}
                 </p>
               </WaBody>
               <WaActions>
-                <WaButton>View Menu</WaButton>
+                <WaButton>{t('labels.viewMenu')}</WaButton>
                 <span className="w-px bg-[#e9edef]" aria-hidden />
-                <WaButton>Select meal</WaButton>
+                <WaButton>{t('labels.selectMeal')}</WaButton>
               </WaActions>
             </WaBubble>
           </WhatsAppChat>
 
-          <WhatsAppChat time="9:40 AM" caption="Meal payment pending">
+          <WhatsAppChat time="9:40 AM" caption={t('home.whatsapp.captions.mealPaymentPending')}>
             <WaBubble>
               <WaBody>
-                <p className="font-semibold">💰 Meal payment pending</p>
+                <p className="font-semibold">{t('home.whatsapp.bubbles.mealPaymentPending')}</p>
                 <p className="text-[12px] text-[#667781]">{mealPay.place}</p>
-                <p className="mt-1.5">Hi {mealPay.name},</p>
-                <p className="mt-1 text-[12px]">Meal payment for {mealPay.month} is pending.</p>
+                <p className="mt-1.5">{t('home.whatsapp.bubbles.hiName', { name: mealPay.name })}</p>
+                <p className="mt-1 text-[12px]">
+                  {t('home.whatsapp.bubbles.mealPaymentForMonth', { month: mealPay.month })}
+                </p>
                 <dl className="mt-2 divide-y divide-[#e9edef] overflow-hidden rounded-md border border-[#e9edef] text-[12px]">
-                  <Row k="Plan" v="Monthly meals" />
-                  <Row k="Month" v={mealPay.month} />
-                  <Row k="Due date" v={mealPay.due} />
+                  <Row k={t('home.whatsapp.bubbles.plan')} v={t('home.whatsapp.bubbles.monthlyMeals')} />
+                  <Row k={t('home.whatsapp.bubbles.month')} v={mealPay.month} />
+                  <Row k={t('home.whatsapp.bubbles.dueDate')} v={mealPay.due} />
                 </dl>
                 <p className="mt-2 rounded-md bg-[#FFE8EE] px-2 py-1.5 text-[12px] font-semibold text-[#BE123C]">
-                  Amount pending {mealPay.amount}
+                  {t('home.whatsapp.bubbles.amountPending', { amount: mealPay.amount })}
                 </p>
               </WaBody>
               <WaActions>
-                <WaButton>View in ACOMI</WaButton>
+                <WaButton>{t('labels.viewInAcomi')}</WaButton>
                 <span className="w-px bg-[#e9edef]" aria-hidden />
-                <WaButton>Share receipt</WaButton>
+                <WaButton>{t('labels.shareReceipt')}</WaButton>
               </WaActions>
             </WaBubble>
           </WhatsAppChat>
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-2 rounded-2xl border border-black/5 bg-[#F7F8FA] px-4 py-3">
-          <span className="mr-1 text-[11px] font-semibold tracking-[0.12em] text-muted">CUSTOMER</span>
+          <span className="mr-1 text-[11px] font-semibold tracking-[0.12em] text-muted">
+            {t('home.whatsapp.flow.customer')}
+          </span>
           {customerFlow.map((s, i) => (
             <span key={s.label} className="inline-flex items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-xl bg-white px-2.5 py-1.5 text-xs font-semibold text-navy">
@@ -145,7 +154,7 @@ export function MessVendorWhatsAppSection() {
           ))}
         </div>
         <DemoLabel className="mt-4">
-          {DEMO_LABEL} · Shareable text, not automatic WhatsApp sending
+          {DEMO_LABEL} · {t('home.whatsapp.bubbles.shareableNote')}
         </DemoLabel>
       </Container>
     </section>

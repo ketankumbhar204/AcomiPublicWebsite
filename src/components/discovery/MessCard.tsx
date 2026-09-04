@@ -1,4 +1,5 @@
 import { Heart, MapPin, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { formatInr } from '../../data/listings/query';
 import type { MessListing } from '../../data/listings/types';
 import { ListingImage } from './ListingImage';
@@ -12,6 +13,7 @@ type MessCardProps = {
 };
 
 export function MessCard({ listing, selected = false, saved = false, onSelect, onToggleSave }: MessCardProps) {
+  const { t } = useTranslation();
   const cover = listing.listingMetadata.images[0];
   const meals = listing.listingMetadata.mealsServed;
 
@@ -29,7 +31,7 @@ export function MessCard({ listing, selected = false, saved = false, onSelect, o
           type="button"
           onClick={onToggleSave}
           aria-pressed={saved}
-          aria-label={saved ? `Remove ${listing.name} from saved` : `Save ${listing.name}`}
+          aria-label={t(saved ? 'discovery.unsave' : 'discovery.save', { name: listing.name })}
           className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-navy shadow-sm"
         >
           <Heart aria-hidden className={`h-4 w-4 ${saved ? 'fill-coral text-coral' : ''}`} />
@@ -47,14 +49,16 @@ export function MessCard({ listing, selected = false, saved = false, onSelect, o
         </p>
         <p className="mt-3 text-[16px] font-semibold text-navy">
           {formatInr(listing.monthlyPrice)}
-          <span className="ml-1 text-[12px] font-medium text-muted">/ month</span>
+          <span className="ml-1 text-[12px] font-medium text-muted">{t('discovery.perMonth')}</span>
         </p>
         <p className="mt-1 text-[13px] font-medium text-navy">
           {formatInr(listing.mealPrice)}
-          <span className="ml-1 text-[12px] font-medium text-muted">/ meal</span>
+          <span className="ml-1 text-[12px] font-medium text-muted">{t('discovery.perMeal')}</span>
         </p>
         {meals.length > 0 ? (
-          <p className="mt-3 text-[12px] text-muted">{meals.join(' + ')}</p>
+          <p className="mt-3 text-[12px] text-muted">
+            {meals.map((meal) => t(`meals.${meal.toLowerCase()}`)).join(' + ')}
+          </p>
         ) : null}
       </button>
     </article>

@@ -11,27 +11,30 @@ import {
   Users,
   UtensilsCrossed,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Container } from '../layout/Container';
 
-const lodging = [
-  { label: 'Building', Icon: Building2 },
-  { label: 'Floor', Icon: Layers },
-  { label: 'Room', Icon: LayoutGrid },
-  { label: 'Bed', Icon: BedDouble },
-  { label: 'Member', Icon: UserRound },
-  { label: 'Payment', Icon: CreditCard },
-];
-
-const meals = [
-  { label: 'Customer', Icon: Users },
-  { label: 'Menu', Icon: UtensilsCrossed },
-  { label: 'Poll', Icon: ClipboardList },
-  { label: 'Participation', Icon: UserRound },
-  { label: 'Headcount', Icon: Users },
-  { label: 'Kitchen', Icon: ChefHat },
-];
-
 export function TwoModesSection() {
+  const { t } = useTranslation();
+
+  const lodging = [
+    { label: t('home.twoModes.steps.building'), Icon: Building2 },
+    { label: t('home.twoModes.steps.floor'), Icon: Layers },
+    { label: t('home.twoModes.steps.room'), Icon: LayoutGrid },
+    { label: t('home.twoModes.steps.bed'), Icon: BedDouble },
+    { label: t('home.twoModes.steps.member'), Icon: UserRound },
+    { label: t('home.twoModes.steps.payment'), Icon: CreditCard },
+  ];
+
+  const meals = [
+    { label: t('home.twoModes.steps.customer'), Icon: Users },
+    { label: t('home.twoModes.steps.menu'), Icon: UtensilsCrossed },
+    { label: t('home.twoModes.steps.poll'), Icon: ClipboardList },
+    { label: t('home.twoModes.steps.participation'), Icon: UserRound },
+    { label: t('home.twoModes.steps.headcount'), Icon: Users },
+    { label: t('home.twoModes.steps.kitchen'), Icon: ChefHat },
+  ];
+
   return (
     <section className="bg-white py-12 sm:py-14" aria-labelledby="modes-heading">
       <Container>
@@ -39,23 +42,23 @@ export function TwoModesSection() {
           id="modes-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
         >
-          One platform. Two operations.
+          {t('home.twoModes.title')}
         </h2>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
           <article className="rounded-[24px] border border-black/5 bg-[#FFF8F1] p-6 shadow-[var(--shadow-sm)]">
             <p className="text-[11px] font-semibold tracking-[0.14em] text-orange uppercase">
-              Mess · Food operations
+              {t('home.twoModes.mealsEyebrow')}
             </p>
-            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Meals</h3>
+            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">{t('home.twoModes.mealsTitle')}</h3>
             <Workflow steps={meals} accent="orange" />
           </article>
 
           <article className="rounded-[24px] border border-black/5 bg-mint p-6 shadow-[var(--shadow-sm)]">
             <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
-              PG · Hostel · Co-living · Rental
+              {t('home.twoModes.lodgingEyebrow')}
             </p>
-            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Accommodation</h3>
+            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">{t('home.twoModes.lodgingTitle')}</h3>
             <Workflow steps={lodging} accent="teal" />
           </article>
         </div>

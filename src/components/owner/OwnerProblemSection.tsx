@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { DemoLabel } from '../common/DemoLabel';
 import { Container } from '../layout/Container';
 
 export function OwnerProblemSection() {
+  const { t } = useTranslation();
   const b = DEMO.lodging.beds;
 
   return (
@@ -14,11 +16,10 @@ export function OwnerProblemSection() {
               id="owner-problem-heading"
               className="max-w-xl text-[1.7rem] leading-[1.15] font-semibold tracking-tight text-navy sm:text-[2.1rem]"
             >
-              Still in notebooks, spreadsheets and WhatsApp.
+              {t('home.problem.title')}
             </h2>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-text-secondary">
-              Which beds are free? Who has paid? Which complaints are open? Across one property or
-              several?
+              {t('owner.problem.body')}
             </p>
           </div>
 
@@ -27,11 +28,11 @@ export function OwnerProblemSection() {
               <p className="text-[11px] font-semibold tracking-[0.16em] text-primary uppercase">
                 {DEMO.lodging.type}
               </p>
-              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Who&apos;s staying?</h3>
+              <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">{t('home.problem.whosStaying')}</h3>
               <div className="mt-5 grid grid-cols-3 gap-2">
-                <Stat n={b.occupied} l="Occupied" tone="bg-[#E7F6EE] text-[#0F6B4C]" />
-                <Stat n={b.vacant} l="Vacant" tone="bg-[#E8F1FF] text-[#2563EB]" />
-                <Stat n={b.reserved} l="Reserved" tone="bg-[#FFF1E0] text-[#D97706]" />
+                <Stat n={b.occupied} l={t('status.occupied')} tone="bg-[#E7F6EE] text-[#0F6B4C]" />
+                <Stat n={b.vacant} l={t('status.vacant')} tone="bg-[#E8F1FF] text-[#2563EB]" />
+                <Stat n={b.reserved} l={t('status.reserved')} tone="bg-[#FFF1E0] text-[#D97706]" />
               </div>
               <ul className="mt-5 space-y-2">
                 {DEMO.lodging.members.map((m) => (

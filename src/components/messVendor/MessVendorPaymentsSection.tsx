@@ -1,4 +1,5 @@
 import { IndianRupee } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { SHOTS } from '../../data/shots';
 import { DemoLabel } from '../common/DemoLabel';
@@ -7,11 +8,15 @@ import { PhoneMock } from '../common/PhoneMock';
 import { ProgressBar } from '../product/MetricCard';
 import { Container } from '../layout/Container';
 
-const steps = ['Proof', 'Review', 'Approve / Reject / Request update'];
-
 export function MessVendorPaymentsSection() {
+  const { t } = useTranslation();
   const d = DEMO.dues;
   const meal = DEMO.share.mealPayment;
+  const steps = [
+    t('home.whatsapp.flow.pg.proof'),
+    t('status.review'),
+    t('owner.payments.stepApprove'),
+  ];
 
   return (
     <section className="bg-white py-12 sm:py-14" aria-labelledby="mess-payments-heading">
@@ -19,17 +24,16 @@ export function MessVendorPaymentsSection() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] text-blue uppercase">
-              Meal dues
+              {t('messVendor.payments.eyebrow')}
             </p>
             <h2
               id="mess-payments-heading"
               className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
             >
-              Know what&apos;s due.
+              {t('home.payments.title')}
             </h2>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-              ACOMI records payments made outside the product and helps operators review proofs. It
-              is not a payment gateway and does not collect UPI or cards.
+              {t('owner.payments.body')}
             </p>
 
             <ol className="mt-5 flex flex-wrap items-center gap-2 text-xs font-semibold text-navy">
@@ -49,25 +53,25 @@ export function MessVendorPaymentsSection() {
               <div className="grid grid-cols-2 gap-3">
                 <PayTile
                   iconTone="blue"
-                  label="Expected"
+                  label={t('status.expected')}
                   value={d.expected}
                   tone="bg-[#E8F1FF] text-[#1D4ED8]"
                 />
                 <PayTile
                   iconTone="teal"
-                  label="Collected"
+                  label={t('status.collected')}
                   value={d.collected}
                   tone="bg-[#E7F6EE] text-[#0F6B4C]"
                 />
                 <PayTile
                   iconTone="violet"
-                  label="Under review"
+                  label={t('status.underReview')}
                   value={d.underReview}
                   tone="bg-[#F1EBFF] text-[#6D28D9]"
                 />
                 <PayTile
                   iconTone="amber"
-                  label="Pending"
+                  label={t('status.pending')}
                   value={d.pending}
                   tone="bg-[#FFF1E0] text-[#B45309]"
                 />
@@ -86,7 +90,7 @@ export function MessVendorPaymentsSection() {
                 </p>
                 <p className="mt-1 text-sm font-semibold text-navy">{meal.name}</p>
                 <p className="mt-1 text-sm font-semibold tabular-nums text-orange">
-                  Meal payment pending {meal.amount}
+                  {t('messVendor.payments.mealPendingAmount', { amount: meal.amount })}
                 </p>
               </div>
             </div>

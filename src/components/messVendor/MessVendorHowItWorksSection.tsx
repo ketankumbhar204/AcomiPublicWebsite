@@ -1,5 +1,6 @@
 import { ArrowRight, CalendarDays, ClipboardList, UserPlus, Warehouse } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { IconBadge } from '../common/IconBadge';
 import { Container } from '../layout/Container';
 
@@ -11,46 +12,16 @@ type Step = {
   tone: 'teal' | 'blue' | 'violet' | 'amber';
 };
 
-const steps: Step[] = [
-  {
-    n: '01',
-    title: 'Create your mess',
-    line: 'Mess, tiffin or meal service.',
-    Icon: Warehouse,
-    tone: 'amber',
-  },
-  {
-    n: '02',
-    title: 'Set the menu',
-    line: 'Breakfast, lunch and dinner.',
-    Icon: ClipboardList,
-    tone: 'blue',
-  },
-  {
-    n: '03',
-    title: 'Add your customers',
-    line: 'Add a customer record, or invite a mobile number.',
-    Icon: UserPlus,
-    tone: 'violet',
-  },
-  {
-    n: '04',
-    title: 'Run the day',
-    line: 'Participation, headcount and dues.',
-    Icon: CalendarDays,
-    tone: 'teal',
-  },
-];
-
-const messFlow = [
-  'Create Mess',
-  'Add customers',
-  'Create menu',
-  'Collect participation',
-  'See headcount',
-];
-
 export function MessVendorHowItWorksSection() {
+  const { t } = useTranslation();
+  const steps: Step[] = [
+    { n: '01', title: t('messVendor.howItWorks.steps.create.title'), line: t('messVendor.howItWorks.steps.create.line'), Icon: Warehouse, tone: 'amber' },
+    { n: '02', title: t('messVendor.howItWorks.steps.setUp.title'), line: t('messVendor.howItWorks.steps.setUp.line'), Icon: ClipboardList, tone: 'blue' },
+    { n: '03', title: t('messVendor.howItWorks.steps.addPeople.title'), line: t('messVendor.howItWorks.steps.addPeople.line'), Icon: UserPlus, tone: 'violet' },
+    { n: '04', title: t('messVendor.howItWorks.steps.runDay.title'), line: t('messVendor.howItWorks.steps.runDay.line'), Icon: CalendarDays, tone: 'teal' },
+  ];
+  const messFlow = Array.from({ length: 5 }, (_, i) => t(`home.howItWorks.flow.mess.${i}`));
+
   return (
     <section
       className="border-t border-border bg-[#F7F8FA] py-12 sm:py-14"
@@ -61,7 +32,7 @@ export function MessVendorHowItWorksSection() {
           id="mess-hiw-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          How it works
+          {t('home.howItWorks.title')}
         </h2>
         <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s) => (

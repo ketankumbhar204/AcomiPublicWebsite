@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { SHOTS } from '../../data/shots';
 import { DemoLabel } from '../common/DemoLabel';
@@ -9,6 +10,7 @@ const mealColors = ['bg-[#128C7E]', 'bg-[#D97706]', 'bg-[#7C3AED]'];
 const locTones = ['bg-[#E7F6EE] text-[#0F6B4C]', 'bg-[#FFF1E0] text-[#D97706]', 'bg-[#E8F1FF] text-[#2563EB]'];
 
 export function ProblemSection() {
+  const { t } = useTranslation();
   const b = DEMO.lodging.beds;
   const d = DEMO.mess.breakfastDetail;
 
@@ -19,17 +21,17 @@ export function ProblemSection() {
           id="problem-heading"
           className="max-w-2xl text-[1.7rem] leading-[1.15] font-semibold tracking-tight text-navy sm:text-[2.1rem]"
         >
-          Still in notebooks, spreadsheets and WhatsApp.
+          {t('home.problem.title')}
         </h2>
 
         <div className="mt-8 grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
           <article className="rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <p className="text-[11px] font-semibold tracking-[0.16em] text-primary uppercase">PG</p>
-            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">Who&apos;s staying?</h3>
+            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">{t('home.problem.whosStaying')}</h3>
             <div className="mt-5 grid grid-cols-3 gap-2">
-              <Stat n={b.occupied} l="Occupied" tone="bg-[#E7F6EE] text-[#0F6B4C]" />
-              <Stat n={b.vacant} l="Vacant" tone="bg-[#E8F1FF] text-[#2563EB]" />
-              <Stat n={b.reserved} l="Reserved" tone="bg-[#FFF1E0] text-[#D97706]" />
+              <Stat n={b.occupied} l={t('status.occupied')} tone="bg-[#E7F6EE] text-[#0F6B4C]" />
+              <Stat n={b.vacant} l={t('status.vacant')} tone="bg-[#E8F1FF] text-[#2563EB]" />
+              <Stat n={b.reserved} l={t('status.reserved')} tone="bg-[#FFF1E0] text-[#D97706]" />
             </div>
             <ul className="mt-5 space-y-2">
               {DEMO.lodging.members.map((m) => (
@@ -53,7 +55,7 @@ export function ProblemSection() {
           </div>
           <article className="rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)] lg:order-2">
             <p className="text-[11px] font-semibold tracking-[0.16em] text-orange uppercase">MESS</p>
-            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">How many plates?</h3>
+            <h3 className="mt-2 text-[1.35rem] font-semibold text-navy">{t('home.problem.howManyPlates')}</h3>
             <ul className="mt-5 space-y-3">
               {DEMO.mess.meals.map((m, i) => (
                 <li key={m.name}>

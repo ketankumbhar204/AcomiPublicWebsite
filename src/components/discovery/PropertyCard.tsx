@@ -1,8 +1,8 @@
 import { Heart, MapPin, Star } from 'lucide-react';
-import { amenityLabel } from '../../data/listings/query';
+import { useTranslation } from 'react-i18next';
 import { formatInr } from '../../data/listings/query';
 import type { PropertyListing } from '../../data/listings/types';
-import { amenityIcon, getPropertyTypeOption, propertyAvailabilityLabel } from './listingIcons';
+import { amenityIcon, propertyAvailabilityLabel } from './listingIcons';
 import { ListingImage } from './ListingImage';
 
 type PropertyCardProps = {
@@ -14,7 +14,7 @@ type PropertyCardProps = {
 };
 
 export function PropertyCard({ listing, selected = false, saved = false, onSelect, onToggleSave }: PropertyCardProps) {
-  const type = getPropertyTypeOption(listing.type);
+  const { t } = useTranslation();
   const cover = listing.listingMetadata.images[0];
   const shownAmenities = listing.amenityCodes.slice(0, 4);
 
@@ -29,13 +29,13 @@ export function PropertyCard({ listing, selected = false, saved = false, onSelec
           <ListingImage src={cover} alt="" className="h-full w-full" />
         </button>
         <span className="absolute top-3 left-3 rounded-md bg-white/95 px-2 py-1 text-[11px] font-semibold tracking-wide text-navy uppercase">
-          {type.title}
+          {t(`discovery.propertyTypes.${listing.type}`)}
         </span>
         <button
           type="button"
           onClick={onToggleSave}
           aria-pressed={saved}
-          aria-label={saved ? `Remove ${listing.name} from saved` : `Save ${listing.name}`}
+          aria-label={t(saved ? 'discovery.unsave' : 'discovery.save', { name: listing.name })}
           className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-navy shadow-sm"
         >
           <Heart aria-hidden className={`h-4 w-4 ${saved ? 'fill-coral text-coral' : ''}`} />
@@ -53,9 +53,13 @@ export function PropertyCard({ listing, selected = false, saved = false, onSelec
         </p>
         <p className="mt-3 text-[16px] font-semibold text-navy">
           {formatInr(listing.startingPrice)}
-          <span className="ml-1 text-[12px] font-medium text-muted">{type.priceSuffix}</span>
+          <span className="ml-1 text-[12px] font-medium text-muted">
+            {t(`discovery.priceSuffix.${listing.type}`)}
+          </span>
         </p>
-        <p className="mt-1 text-[13px] text-text-secondary">{propertyAvailabilityLabel(listing)}</p>
+        <p className="mt-1 text-[13px] text-text-secondary">
+          {propertyAvailabilityLabel(listing, t)}
+        </p>
         {shownAmenities.length > 0 ? (
           <ul className="mt-3 flex flex-wrap gap-2">
             {shownAmenities.map((code) => {
@@ -63,7 +67,7 @@ export function PropertyCard({ listing, selected = false, saved = false, onSelec
               return (
                 <li key={code} className="inline-flex items-center gap-1 text-[11px] text-muted">
                   <Icon aria-hidden className="h-3.5 w-3.5" />
-                  <span>{amenityLabel(code)}</span>
+                  <span>{t(`discovery.amenity.${code}`)}</span>
                 </li>
               );
             })}

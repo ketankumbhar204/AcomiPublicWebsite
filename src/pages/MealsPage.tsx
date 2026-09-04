@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../components/common/ActionButton';
 import { ActiveFilterChips } from '../components/discovery/ActiveFilterChips';
 import { DiscoveryPageShell } from '../components/discovery/DiscoveryPageShell';
@@ -21,6 +22,7 @@ import { applySeo } from '../lib/seo';
 const PAGE_SIZE = 12;
 
 export function MealsPage() {
+  const { t } = useTranslation();
   const listings = getMessListings();
   const localities = uniqueLocalities(listings);
   const [query, setQuery] = useState<MessQuery>(DEFAULT_MESS_QUERY);
@@ -33,18 +35,18 @@ export function MealsPage() {
 
   useEffect(() => {
     applySeo({
-      title: 'Find meals — ACOMI',
-      description: 'Browse messes, tiffin and meal services in Pune.',
+      title: t('mealsPage.seo.title'),
+      description: t('mealsPage.seo.description'),
       path: '/meals',
     });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     setPage(1);
   }, [query]);
 
   const results = useMemo(() => filterMesses(listings, query), [listings, query]);
-  const chips = messFilterChips(query, setQuery);
+  const chips = messFilterChips(query, setQuery, t);
   const filtered = messQueryIsFiltered(query) || query.query.trim().length > 0;
   const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
   const shown = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -72,15 +74,15 @@ export function MealsPage() {
   return (
     <>
       <DiscoveryPageShell
-        eyebrow="Find meals"
-        title="Find meals near you"
-        description="Mess, tiffin and meal services across Pune."
+        eyebrow={t('mealsPage.eyebrow')}
+        title={t('mealsPage.title')}
+        description={t('mealsPage.description')}
         search={
           <DiscoverySearchBar
             searchId="meals-search"
-            searchLabel="Search meals"
+            searchLabel={t('mealsPage.searchLabel')}
             searchValue={query.query}
-            searchPlaceholder="Search by city, area or mess name"
+            searchPlaceholder={t('mealsPage.searchPlaceholder')}
             onSearchChange={(value) => setQuery({ ...query, query: value })}
             city="Pune"
             sortId="meals-sort"
@@ -90,7 +92,7 @@ export function MealsPage() {
         }
         filters={
           <>
-            <h2 className="text-sm font-semibold text-navy">Filters</h2>
+            <h2 className="text-sm font-semibold text-navy">{t('discovery.filters')}</h2>
             <div className="mt-4">
               <MessFilters query={query} localities={localities} onChange={setQuery} />
             </div>
@@ -100,11 +102,13 @@ export function MealsPage() {
           <>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-text-secondary">
-                {results.length} {results.length === 1 ? 'mess found' : 'messes found'}
+                {t(results.length === 1 ? 'mealsPage.foundOne' : 'mealsPage.foundMany', {
+                  count: results.length,
+                })}
               </p>
               <ActionButton onClick={() => setSheetOpen(true)} variant="ghost" className="lg:hidden">
                 <SlidersHorizontal aria-hidden className="h-4 w-4" />
-                Filters
+                {t('discovery.filters')}
               </ActionButton>
             </div>
             <div className="mt-3">
@@ -116,8 +120,8 @@ export function MealsPage() {
           results.length === 0 ? (
             <div className="mt-6">
               <ListingEmpty
-                title="No messes found"
-                description="Try another area or price range."
+                title={t('mealsPage.emptyTitle')}
+                description={t('mealsPage.emptyDescription')}
                 onClear={filtered ? clearFilters : () => setQuery(DEFAULT_MESS_QUERY)}
               />
             </div>
@@ -143,7 +147,7 @@ export function MealsPage() {
 
       <FilterSheet
         open={sheetOpen}
-        title="Filters"
+        title={t('discovery.filters')}
         labelledBy="meals-filters-title"
         value={query}
         onClose={() => setSheetOpen(false)}
@@ -158,7 +162,7 @@ export function MealsPage() {
       <ListingDetailDrawer
         open={detailOpen && selected != null}
         titleId="meals-detail-title"
-        title={selected?.name ?? 'Mess details'}
+        title={selected?.name ?? t('mealsPage.detailFallback')}
         onClose={() => setDetailOpen(false)}
       >
         {selected ? <MessDetailPanel listing={selected} onEnquire={() => setEnquireOpen(true)} /> : null}
@@ -166,7 +170,7 @@ export function MealsPage() {
 
       <EnquireDialog
         open={enquireOpen}
-        title={selected ? `Enquire about ${selected.name}` : 'Enquire'}
+        title={selected ? t('discovery.enquireAbout', { name: selected.name }) : t('discovery.enquire')}
         onClose={() => setEnquireOpen(false)}
       />
     </>

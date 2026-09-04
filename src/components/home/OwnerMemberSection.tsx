@@ -11,26 +11,29 @@ import {
   WalletCards,
   Warehouse,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Container } from '../layout/Container';
 
-const owner = [
-  { label: 'Create spaces', Icon: Warehouse },
-  { label: 'Configure operations', Icon: Settings2 },
-  { label: 'Add people', Icon: UserPlus },
-  { label: 'Manage occupancy', Icon: BedDouble },
-  { label: 'Manage meals', Icon: UtensilsCrossed },
-  { label: 'Review payments', Icon: WalletCards },
-];
-
-const member = [
-  { label: 'Join by invitation', Icon: Mail },
-  { label: 'View relevant information', Icon: Eye },
-  { label: 'Respond to meal polls', Icon: ClipboardList },
-  { label: 'Submit payment proof', Icon: Receipt },
-  { label: 'Raise complaints', Icon: CircleAlert },
-];
-
 export function OwnerMemberSection() {
+  const { t } = useTranslation();
+
+  const owner = [
+    { label: t('home.access.owner.createSpaces'), Icon: Warehouse },
+    { label: t('home.access.owner.configureOperations'), Icon: Settings2 },
+    { label: t('home.access.owner.addPeople'), Icon: UserPlus },
+    { label: t('home.access.owner.manageOccupancy'), Icon: BedDouble },
+    { label: t('home.access.owner.manageMeals'), Icon: UtensilsCrossed },
+    { label: t('home.access.owner.reviewPayments'), Icon: WalletCards },
+  ];
+
+  const member = [
+    { label: t('home.access.member.joinByInvitation'), Icon: Mail },
+    { label: t('home.access.member.viewRelevant'), Icon: Eye },
+    { label: t('home.access.member.respondToPolls'), Icon: ClipboardList },
+    { label: t('home.access.member.submitProof'), Icon: Receipt },
+    { label: t('home.access.member.raiseComplaints'), Icon: CircleAlert },
+  ];
+
   return (
     <section className="bg-white py-12 sm:py-14" aria-labelledby="access-heading">
       <Container>
@@ -38,11 +41,11 @@ export function OwnerMemberSection() {
           id="access-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
-          Access
+          {t('home.access.title')}
         </h2>
         <div className="mt-8 grid gap-4 lg:grid-cols-2">
-          <RoleCard title="Owner / operator" items={owner} tone="bg-mint" icon="text-primary" />
-          <RoleCard title="Member" items={member} tone="bg-[#F4F8FF]" icon="text-blue" />
+          <RoleCard title={t('home.access.ownerTitle')} items={owner} tone="bg-mint" icon="text-primary" />
+          <RoleCard title={t('home.access.memberTitle')} items={member} tone="bg-[#F4F8FF]" icon="text-blue" />
         </div>
       </Container>
     </section>

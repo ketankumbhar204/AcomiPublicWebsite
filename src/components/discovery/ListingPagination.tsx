@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 type ListingPaginationProps = {
   page: number;
   pageCount: number;
@@ -5,12 +7,14 @@ type ListingPaginationProps = {
 };
 
 export function ListingPagination({ page, pageCount, onPageChange }: ListingPaginationProps) {
+  const { t } = useTranslation();
+
   if (pageCount <= 1) {
     return null;
   }
 
   return (
-    <nav aria-label="Listing pages" className="mt-8 flex flex-wrap justify-center gap-1.5">
+    <nav aria-label={t('discovery.pagesNav')} className="mt-8 flex flex-wrap justify-center gap-1.5">
       {Array.from({ length: pageCount }, (_, index) => {
         const next = index + 1;
         const current = next === page;

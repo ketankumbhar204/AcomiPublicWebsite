@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { CheckCircle2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { PageHero } from '../components/common/PageHero';
 import { CtaButton } from '../components/registration/RegistrationButtons';
@@ -7,20 +8,18 @@ import { useListingDrawer } from '../context/ListingDrawerContext';
 import { useUserType } from '../context/UserTypeContext';
 import { applySeo } from '../lib/seo';
 
-const DESCRIPTION =
-  'PG, hostel, rental or co-living. Share your property details and our team will take it forward.';
-
 export function RegisterSpacePage() {
+  const { t } = useTranslation();
   const { isModalOpen } = useUserType();
   const { openListing } = useListingDrawer();
 
   useEffect(() => {
     applySeo({
-      title: 'Register your property — ACOMI',
-      description: DESCRIPTION,
+      title: t('registerSpace.seo.title'),
+      description: t('registerSpace.seo.description'),
       path: '/register-space',
     });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -30,19 +29,19 @@ export function RegisterSpacePage() {
 
   return (
     <PageHero
-      eyebrow="Property registration"
-      title="List your property in 3 simple steps"
-      description={DESCRIPTION}
+      eyebrow={t('registerSpace.eyebrow')}
+      title={t('registerSpace.title')}
+      description={t('registerSpace.description')}
     >
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <CtaButton onClick={() => openListing('property')}>List your property</CtaButton>
+        <CtaButton onClick={() => openListing('property')}>{t('listing.listProperty')}</CtaButton>
         <ButtonLink href="/" variant="ghost" external={false}>
-          Back to home
+          {t('registerSpace.backHome')}
         </ButtonLink>
       </div>
       <p className="mt-4 flex items-center gap-1.5 text-[13px] text-text-secondary">
         <CheckCircle2 aria-hidden className="h-4 w-4 text-register" />
-        It&rsquo;s free to register your property.
+        {t('registerSpace.freeNote')}
       </p>
     </PageHero>
   );

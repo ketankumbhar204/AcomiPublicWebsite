@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { APP } from '../../constants/links';
 import { useListingDrawer } from '../../context/ListingDrawerContext';
 import { ButtonLink } from '../common/ButtonLink';
@@ -5,6 +6,7 @@ import { Container } from '../layout/Container';
 import { REGISTER_CTA_CLS } from './OwnerHero';
 
 export function OwnerFinalCta() {
+  const { t } = useTranslation();
   const { openListing } = useListingDrawer();
 
   return (
@@ -14,17 +16,17 @@ export function OwnerFinalCta() {
           id="owner-cta-heading"
           className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-white sm:text-[2.4rem]"
         >
-          Run your property from one place.
+          {t('owner.finalCta.title')}
         </h2>
         <p className="mt-3 text-[15px] text-white/75">
-          Occupancy, members, payments and issues — together.
+          {t('owner.finalCta.subtitle')}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button type="button" onClick={() => openListing('property')} className={REGISTER_CTA_CLS}>
-            List your property
+            {t('listing.listProperty')}
           </button>
           <ButtonLink href={APP.login} variant="ghostDark">
-            Sign in
+            {t('nav.signIn')}
           </ButtonLink>
         </div>
       </Container>

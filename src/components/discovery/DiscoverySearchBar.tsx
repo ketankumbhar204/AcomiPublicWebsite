@@ -1,4 +1,5 @@
 import { MapPin, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { SORT_OPTIONS } from '../../data/listings/defaults';
 import type { PropertySort } from '../../data/listings/types';
 import { FIELD_INPUT_BASE } from '../form/Field';
@@ -26,6 +27,8 @@ export function DiscoverySearchBar({
   sortValue,
   onSortChange,
 }: DiscoverySearchBarProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-black/5 bg-white p-2 shadow-[var(--shadow-sm)] sm:flex-row sm:items-center">
       <div className="relative min-w-0 flex-1">
@@ -52,7 +55,7 @@ export function DiscoverySearchBar({
       </p>
       <div className="sm:w-48">
         <label htmlFor={sortId} className="sr-only">
-          Sort listings
+          {t('discovery.sortLabel')}
         </label>
         <select
           id={sortId}
@@ -62,7 +65,7 @@ export function DiscoverySearchBar({
         >
           {SORT_OPTIONS.map((option) => (
             <option key={option.id} value={option.id}>
-              {option.label}
+              {t(`discovery.sort.${option.id}`)}
             </option>
           ))}
         </select>

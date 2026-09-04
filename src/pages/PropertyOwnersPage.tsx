@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { OwnerFinalCta } from '../components/owner/OwnerFinalCta';
 import { OwnerHero } from '../components/owner/OwnerHero';
 import { OwnerHowItWorksSection } from '../components/owner/OwnerHowItWorksSection';
@@ -14,14 +15,15 @@ import { OwnerWhatsAppSection } from '../components/owner/OwnerWhatsAppSection';
 import { applySeo } from '../lib/seo';
 
 export function PropertyOwnersPage() {
+  const { t } = useTranslation();
+
   useEffect(() => {
     applySeo({
-      title: 'ACOMI for property owners — occupancy, members and dues',
-      description:
-        'Operations software for PG, hostel, co-living and rental owners. Track occupancy, members, rent dues and complaints — on web and Android.',
+      title: t('owner.seo.title'),
+      description: t('owner.seo.description'),
       path: '/property-owners',
     });
-  }, []);
+  }, [t]);
 
   return (
     <>

@@ -9,8 +9,8 @@ export const APP = {
 export const SITE = 'https://www.acomi.in';
 
 export const NAV_LINKS = [
-  { to: '/features', label: 'Features' },
-  { to: '/how-it-works', label: 'How it works' },
-  { to: '/who-its-for', label: "Who it's for" },
-  { to: '/platforms', label: 'Platforms' },
+  { to: '/features', labelKey: 'nav.features' },
+  { to: '/how-it-works', labelKey: 'nav.howItWorks' },
+  { to: '/who-its-for', labelKey: 'nav.whoItsFor' },
+  { to: '/platforms', labelKey: 'nav.platforms' },
 ] as const;

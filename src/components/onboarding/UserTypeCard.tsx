@@ -1,4 +1,5 @@
 import { ArrowRight, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { UserType, UserTypeOption } from '../../constants/userTypes';
 
 type UserTypeCardProps = {
@@ -8,6 +9,10 @@ type UserTypeCardProps = {
 };
 
 export function UserTypeCard({ option, selected, onSelect }: UserTypeCardProps) {
+  const { t } = useTranslation();
+  const title = t(`userTypes.${option.id}.title`);
+  const description = t(`userTypes.${option.id}.description`);
+
   return (
     <button
       type="button"
@@ -23,14 +28,14 @@ export function UserTypeCard({ option, selected, onSelect }: UserTypeCardProps) 
 
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className={`text-[13px] leading-snug font-semibold sm:text-sm ${option.accent}`}>
-          {option.title}
+          {title}
         </span>
         <span className="text-[11px] leading-snug text-text-secondary sm:text-xs">
-          {option.description}
+          {description}
         </span>
         {selected ? (
           <span className={`text-[11px] font-semibold tracking-wide ${option.accent}`}>
-            Current selection
+            {t('userTypeModal.currentSelection')}
           </span>
         ) : null}
       </span>

@@ -1,4 +1,5 @@
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { getUserTypeOption } from '../../constants/userTypes';
 import { useUserType } from '../../context/UserTypeContext';
 
@@ -14,6 +15,7 @@ type UserTypeSwitcherProps = {
  * UserTypeModal, which stays the single place a user type can be chosen.
  */
 export function UserTypeSwitcher({ variant = 'bar', onOpen }: UserTypeSwitcherProps) {
+  const { t } = useTranslation();
   const { userType, openUserTypeModal } = useUserType();
 
   if (!userType) {
@@ -21,7 +23,8 @@ export function UserTypeSwitcher({ variant = 'bar', onOpen }: UserTypeSwitcherPr
   }
 
   const option = getUserTypeOption(userType);
-  const label = `Using ACOMI as ${option.shortLabel}. Change how you use ACOMI.`;
+  const shortLabel = t(`userTypes.${option.id}.shortLabel`);
+  const label = t('userTypeModal.usingAsA11y', { role: shortLabel });
 
   function handleClick() {
     onOpen?.();
@@ -42,8 +45,10 @@ export function UserTypeSwitcher({ variant = 'bar', onOpen }: UserTypeSwitcherPr
           <option.Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </span>
         <span className="flex min-w-0 flex-1 flex-col">
-          <span className="text-[11px] tracking-[0.12em] text-muted uppercase">Using ACOMI as</span>
-          <span className="truncate text-sm font-semibold text-text">{option.shortLabel}</span>
+          <span className="text-[11px] tracking-[0.12em] text-muted uppercase">
+            {t('userTypeModal.usingAs')}
+          </span>
+          <span className="truncate text-sm font-semibold text-text">{shortLabel}</span>
         </span>
         <ChevronDown className="h-4 w-4 shrink-0 text-muted" aria-hidden />
       </button>
@@ -58,8 +63,8 @@ export function UserTypeSwitcher({ variant = 'bar', onOpen }: UserTypeSwitcherPr
       className="inline-flex items-center gap-2 rounded-full border border-border bg-mint px-3 py-1.5 text-sm font-medium text-text transition hover:bg-soft"
     >
       <option.Icon className={`h-4 w-4 shrink-0 ${option.accent}`} strokeWidth={1.8} aria-hidden />
-      <span className="hidden text-text-secondary xl:inline">Using ACOMI as:</span>
-      <span>{option.shortLabel}</span>
+      <span className="hidden text-text-secondary xl:inline">{t('userTypeModal.usingAs')}</span>
+      <span>{shortLabel}</span>
       <ChevronDown className="h-4 w-4 shrink-0 text-muted" aria-hidden />
     </button>
   );

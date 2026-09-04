@@ -1,6 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { PROPERTY_TYPE_OPTIONS } from '../../constants/propertyRegistration';
 import { amenitiesInUse, RATING_PRESETS } from '../../data/listings/defaults';
-import { amenityLabel } from '../../data/listings/query';
 import type { PropertyListing, PropertyListingType, PropertyQuery } from '../../data/listings/types';
 import { FilterCheck } from './FilterCheck';
 import { FilterGroup } from './FilterGroup';
@@ -18,11 +18,12 @@ function toggleValue<T>(list: T[], value: T): T[] {
 }
 
 export function PropertyFilters({ query, listings, localities, onChange }: PropertyFiltersProps) {
+  const { t } = useTranslation();
   const amenityCodes = amenitiesInUse(listings);
 
   return (
     <div className="space-y-6">
-      <FilterGroup legend="Location" layout="stack">
+      <FilterGroup legend={t('discovery.location')} layout="stack">
         {localities.map((locality) => (
           <FilterCheck
             key={locality}
@@ -34,7 +35,7 @@ export function PropertyFilters({ query, listings, localities, onChange }: Prope
         ))}
       </FilterGroup>
 
-      <FilterGroup legend="Property type" layout="stack">
+      <FilterGroup legend={t('discovery.filterGroups.propertyType')} layout="stack">
         {PROPERTY_TYPE_OPTIONS.map((option) => (
           <FilterCheck
             key={option.id}
@@ -46,12 +47,12 @@ export function PropertyFilters({ query, listings, localities, onChange }: Prope
               })
             }
           >
-            {option.title}
+            {t(`discovery.propertyTypes.${option.id}`)}
           </FilterCheck>
         ))}
       </FilterGroup>
 
-      <FilterGroup legend="Price range (per month)">
+      <FilterGroup legend={t('discovery.filterGroups.priceRangeMonth')}>
         <PriceRangeFilter
           id="property-price"
           minBound={2000}
@@ -64,7 +65,7 @@ export function PropertyFilters({ query, listings, localities, onChange }: Prope
         />
       </FilterGroup>
 
-      <FilterGroup legend="Rating" layout="stack">
+      <FilterGroup legend={t('discovery.rating')} layout="stack">
         {RATING_PRESETS.filter((preset) => preset.value != null).map((preset) => (
           <FilterCheck
             key={preset.id}
@@ -73,20 +74,20 @@ export function PropertyFilters({ query, listings, localities, onChange }: Prope
               onChange({ ...query, minRating: query.minRating === preset.value ? null : preset.value })
             }
           >
-            {preset.label}
+            {t(`discovery.ratingPresets.${preset.id}`)}
           </FilterCheck>
         ))}
       </FilterGroup>
 
       {amenityCodes.length > 0 ? (
-        <FilterGroup legend="Amenities" layout="stack">
+        <FilterGroup legend={t('discovery.amenities')} layout="stack">
           {amenityCodes.map((code) => (
             <FilterCheck
               key={code}
               checked={query.amenities.includes(code)}
               onChange={() => onChange({ ...query, amenities: toggleValue(query.amenities, code) })}
             >
-              {amenityLabel(code)}
+              {t(`discovery.amenity.${code}`)}
             </FilterCheck>
           ))}
         </FilterGroup>
