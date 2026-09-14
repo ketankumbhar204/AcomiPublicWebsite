@@ -1,10 +1,12 @@
-export { getMessListing, getMessListings, getPropertyListing, getPropertyListings } from './repository';
+export { getDiscoverSpaceDetail, loadDiscoverDetails } from './repository';
 export {
   amenityLabel,
   filterMesses,
   filterProperties,
   formatInr,
+  formatListingAddress,
   listingMapUrl,
+  uniqueCities,
   uniqueLocalities,
 } from './query';
 export type {

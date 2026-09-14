@@ -5,9 +5,10 @@ type ListingEmptyProps = {
   title: string;
   description: string;
   onClear: () => void;
+  actionLabel?: string;
 };
 
-export function ListingEmpty({ title, description, onClear }: ListingEmptyProps) {
+export function ListingEmpty({ title, description, onClear, actionLabel }: ListingEmptyProps) {
   const { t } = useTranslation();
 
   return (
@@ -16,7 +17,7 @@ export function ListingEmpty({ title, description, onClear }: ListingEmptyProps)
       <p className="mt-2 text-[15px] text-text-secondary">{description}</p>
       <div className="mt-6 flex justify-center">
         <ActionButton onClick={onClear} variant="ghost">
-          {t('discovery.clearFilters')}
+          {actionLabel ?? t('discovery.clearFilters')}
         </ActionButton>
       </div>
     </div>

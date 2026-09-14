@@ -3,10 +3,12 @@ import type { ButtonVariant } from './ButtonLink';
 import { BUTTON_BASE, BUTTON_VARIANTS } from './ButtonLink';
 
 type ActionButtonProps = {
-  onClick: () => void;
+  onClick?: () => void;
   children: ReactNode;
   variant?: ButtonVariant;
   className?: string;
+  type?: 'button' | 'submit';
+  disabled?: boolean;
 };
 
 /**
@@ -17,12 +19,15 @@ export function ActionButton({
   children,
   variant = 'primary',
   className = '',
+  type = 'button',
+  disabled = false,
 }: ActionButtonProps) {
   return (
     <button
-      type="button"
+      type={type}
+      disabled={disabled}
       onClick={onClick}
-      className={`${BUTTON_BASE} ${BUTTON_VARIANTS[variant]} ${className}`}
+      className={`${BUTTON_BASE} ${BUTTON_VARIANTS[variant]} ${className} disabled:opacity-60`}
     >
       {children}
     </button>

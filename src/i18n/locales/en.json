@@ -12,7 +12,18 @@
     "primary": "Primary",
     "pricing": "Pricing",
     "about": "About",
-    "home": "Home"
+    "home": "Home",
+    "explore": "Explore",
+    "places": "Places",
+    "meals": "Meals",
+    "createAccount": "Create account",
+    "dashboard": "Dashboard",
+    "account": "Account",
+    "signOut": "Sign out",
+    "notifications": "Notifications",
+    "myEnquiries": "My Enquiries",
+    "accountMenu": "Account menu",
+    "accountMenuHint": "Manage your ACOMI account"
   },
   "language": {
     "title": "Language",
@@ -24,6 +35,111 @@
       "kn": "ಕನ್ನಡ",
       "te": "తెలుగు",
       "ta": "தமிழ்"
+    }
+  },
+  "auth": {
+    "createAccount": "Create account",
+    "continueBrowsing": "Continue browsing",
+    "loginTitle": "Sign in to ACOMI",
+    "registerTitle": "Create your ACOMI account",
+    "loginBody": "Use the same mobile number and password as the ACOMI app. Customers stay on this website. Owners and staff are taken to the ACOMI workspace.",
+    "workspaceOpening": "Welcome back. Opening your ACOMI workspace…",
+    "workspaceOpeningHint": "You will be taken to the operations app in a moment.",
+    "workspaceLookupFailed": "We signed you in, but could not confirm your workspace role. Please try again.",
+    "workspaceRetry": "Try again",
+    "otpTitle": "Enter the verification code",
+    "otpBody": "We sent a 6-digit code to your mobile number.",
+    "otpLabel": "Verification code",
+    "nameLabel": "Full name",
+    "mobileLabel": "Mobile number",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm password",
+    "usePassword": "Use password",
+    "useOtp": "Use OTP",
+    "verifyOtp": "Verify code",
+    "back": "Back",
+    "pleaseWait": "Please wait…",
+    "needAccount": "New to ACOMI? Create account",
+    "haveAccount": "Already have an account? Sign in",
+    "invalidCredentials": "Mobile number or password is incorrect.",
+    "mobileRegistered": "This mobile number already has an account. Sign in instead.",
+    "genericError": "Something went wrong. Please try again.",
+    "mobileInvalid": "Enter a valid 10-digit Indian mobile number.",
+    "passwordInvalid": "Password must be between 8 and 72 characters.",
+    "passwordMismatch": "Passwords do not match.",
+    "nameRequired": "Enter your full name.",
+    "otpInvalid": "Enter the 6-digit verification code.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Updates about your contact enquiries. Owner contact details are sent by email only.",
+    "empty": "No notifications yet.",
+    "viewAll": "View all",
+    "unread": "Unread",
+    "markAsRead": "Mark as read"
+  },
+  "enquiries": {
+    "title": "My Enquiries",
+    "subtitle": "Contact requests you sent to ACOMI. Owner details are shared by email when they can be shared.",
+    "empty": "You have not requested contact details yet.",
+    "emptyFilter": "No enquiries match this filter.",
+    "requestedOn": "Requested {{date}}",
+    "requestedOnLabel": "Requested on",
+    "respondedOnLabel": "Email sent on",
+    "sentToLabel": "Sent to",
+    "respondedOnHint": "Search your inbox for the ACOMI email from this date.",
+    "pendingHint": "Your enquiry is being reviewed by ACOMI.",
+    "sharedHint": "ACOMI has shared the contact details with you. Please check your email.",
+    "rejectedHint": "Your enquiry was reviewed by ACOMI but could not be fulfilled.",
+    "expiredHint": "This enquiry has expired.",
+    "helpTitle": "Need help?",
+    "helpBody": "If you haven't received an email, please check your spam folder or contact our",
+    "helpSupport": "support team",
+    "sortBy": "Sort by",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "filterAll": "All",
+    "filterShared": "Contact Shared",
+    "filterPending": "Pending",
+    "filterExpired": "Expired",
+    "filterRejected": "Rejected",
+    "showing": "Showing {{count}} enquiries",
+    "openEnquiry": "View enquiry for {{name}}",
+    "detail": {
+      "SHARED": {
+        "title": "Check your email",
+        "body": "The owner contact details for {{name}} have been sent to your email. Please check your inbox and spam folder for this enquiry."
+      },
+      "EXPIRED": {
+        "title": "This enquiry has expired",
+        "body": "Your enquiry for {{name}} is no longer active, so contact details cannot be shared from this request. Send a new enquiry if you still want details for this place."
+      },
+      "PENDING": {
+        "title": "Enquiry under review",
+        "body": "ACOMI is reviewing your enquiry for {{name}}. If the listing is eligible, the contact details will be emailed to you."
+      },
+      "REJECTED": {
+        "title": "Unable to share details",
+        "body": "This enquiry for {{name}} could not be fulfilled. Contact details were not shared for this request."
+      },
+      "enquireAgain": "Send enquiry again"
+    },
+    "mealsIncluded": "Meals Included",
+    "placeType": {
+      "PG": "PG",
+      "HOSTEL": "Hostel",
+      "RENTAL": "Apartment",
+      "CO_LIVING": "Co-living",
+      "MESS": "Mess"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "SHARED": "Contact details shared",
+      "REJECTED": "Unable to fulfil",
+      "EXPIRED": "Expired",
+      "CANCELLED": "Cancelled"
     }
   },
   "hero": {
@@ -805,12 +921,43 @@
     "whatsIncluded": "What's included",
     "sampleRatings": "Ratings shown here are sample listing data.",
     "sampleScores": "Listing scores are sample preview data, not live reviews.",
+    "priceOnRequest": "Price on request",
+    "sharing": "Sharing",
+    "retry": "Try again",
     "perMonth": "/ month",
     "perMeal": "/ meal",
     "mealsAvailable": "Meals available",
     "enquireAbout": "Enquire about {{name}}",
     "enquire": "Enquire",
     "enquireBody": "Direct enquiries are not connected yet. When listings go live, you will be able to contact the operator from this page.",
+    "enquireSignInTitle": "Sign in to enquire",
+    "enquireSignInBody": "Sign in to request contact details for this listing. If the listing is eligible, ACOMI will email the details to you.",
+    "enquireSignInCta": "Sign in / Create account",
+    "enquireCancel": "Cancel",
+    "enquireRequestTitle": "Request contact details",
+    "enquireRequestBody": "ACOMI will email the listing contact details when the listing is eligible. Owner contact information is never shown on this page.",
+    "enquireSend": "Submit enquiry",
+    "enquireSentTitle": "Enquiry sent",
+    "enquireSentBody": "Your enquiry has been submitted. If the listing is eligible, we will email the contact details shortly. You can also check My Enquiries.",
+    "enquireAlreadySharedTitle": "Already in your inbox",
+    "enquireAlreadySharedBody": "Owner contact details for this place were emailed earlier.",
+    "enquireAlreadySharedBodyNoDate": "Owner contact details for this place were emailed earlier.",
+    "enquireAlreadyNoNewEmail": "A new email was not sent.",
+    "enquireAlreadyPendingTitle": "Enquiry already open",
+    "enquireAlreadyPendingBody": "You already have an open enquiry for this place.",
+    "enquireAlreadyPendingHint": "A new email was not sent. We'll email the details when they can be shared.",
+    "enquireOwnTitle": "This is your Space",
+    "enquireOwnBody": "You cannot enquire about a Space you own. Owner contact information stays hidden.",
+    "enquirePrivacy": "Owner mobile numbers and email are never shown here. Contact details are shared only by email.",
+    "enquireEmailLabel": "Email for updates",
+    "enquireSavedEmails": "Saved emails",
+    "enquireUseDifferentEmail": "Use a different email",
+    "enquireEmailInvalid": "Enter a valid email address.",
+    "enquireListingUnavailable": "This listing is not available to enquire on yet.",
+    "enquireSubmitError": "We could not submit your enquiry. Please try again.",
+    "enquireSubmitting": "Sending your enquiry…",
+    "enquireSubmittingHint": "Please wait. Contact details are being prepared and this can take a few seconds.",
+    "enquireDone": "Done",
     "pagesNav": "Listing pages",
     "save": "Save {{name}}",
     "unsave": "Remove {{name}} from saved",
@@ -890,34 +1037,42 @@
   "places": {
     "seo": {
       "title": "Find a place — ACOMI",
-      "description": "Browse PGs, hostels, rentals and co-living in Pune."
+      "description": "Browse live PGs, hostels, rentals and co-living listed on ACOMI."
     },
     "eyebrow": "Find a place",
     "title": "Find your new place",
-    "description": "PGs, Hostels, Rentals & Co-living spaces across Pune.",
+    "description": "PGs, Hostels, Rentals & Co-living spaces listed on ACOMI.",
     "searchLabel": "Search properties",
     "searchPlaceholder": "Search by city, area or property name",
     "foundOne": "{{count}} place found",
     "foundMany": "{{count}} places found",
     "emptyTitle": "No properties found",
     "emptyDescription": "Try another area, property type or price range.",
-    "detailFallback": "Place details"
+    "detailFallback": "Place details",
+    "loading": "Loading places…",
+    "loadErrorTitle": "Could not load places",
+    "loadErrorDescription": "Check that the ACOMI backend is running, then try again.",
+    "regionFallback": "India"
   },
   "mealsPage": {
     "seo": {
       "title": "Find meals — ACOMI",
-      "description": "Browse messes, tiffin and meal services in Pune."
+      "description": "Browse live messes, tiffin and meal services listed on ACOMI."
     },
     "eyebrow": "Find meals",
     "title": "Find meals near you",
-    "description": "Mess, tiffin and meal services across Pune.",
+    "description": "Mess, tiffin and meal services listed on ACOMI.",
     "searchLabel": "Search meals",
     "searchPlaceholder": "Search by city, area or mess name",
     "foundOne": "{{count}} mess found",
     "foundMany": "{{count}} messes found",
     "emptyTitle": "No messes found",
     "emptyDescription": "Try another area or price range.",
-    "detailFallback": "Mess details"
+    "detailFallback": "Mess details",
+    "loading": "Loading meals…",
+    "loadErrorTitle": "Could not load meals",
+    "loadErrorDescription": "Check that the ACOMI backend is running, then try again.",
+    "regionFallback": "India"
   },
   "propertyDetail": {
     "seoNotFound": {
@@ -925,7 +1080,7 @@
       "description": "That property listing is not available."
     },
     "notFoundTitle": "Place not found",
-    "notFoundBody": "This listing is not in the current preview set.",
+    "notFoundBody": "This listing is not available or is no longer discoverable.",
     "back": "Back to places",
     "breadcrumb": "Places"
   },
@@ -935,7 +1090,7 @@
       "description": "That meal listing is not available."
     },
     "notFoundTitle": "Mess not found",
-    "notFoundBody": "This listing is not in the current preview set.",
+    "notFoundBody": "This listing is not available or is no longer discoverable.",
     "back": "Back to meals",
     "breadcrumb": "Meals"
   },

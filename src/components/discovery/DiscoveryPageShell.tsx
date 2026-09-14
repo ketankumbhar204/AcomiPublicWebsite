@@ -20,20 +20,29 @@ export function DiscoveryPageShell({
   results,
 }: DiscoveryPageShellProps) {
   return (
-    <section className="bg-[#F4F7F8] py-5 sm:py-6">
+    <section className="bg-[#F4F7F8] py-3 sm:py-4">
       <div className="w-full px-3 sm:px-4">
-        <p className="text-[11px] font-semibold tracking-[0.18em] text-primary uppercase">{eyebrow}</p>
-        <h1 className="mt-2 text-[1.85rem] font-semibold tracking-tight text-navy sm:text-[2.2rem]">{title}</h1>
-        <p className="mt-2 text-[14px] text-text-secondary sm:text-[15px]">{description}</p>
+        <header className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+          <p className="text-[10px] font-semibold tracking-[0.16em] text-primary uppercase">
+            {eyebrow}
+          </p>
+          <h1 className="text-base font-semibold tracking-tight text-navy sm:text-lg">{title}</h1>
+          <span className="hidden text-text-muted sm:inline" aria-hidden>
+            ·
+          </span>
+          <p className="w-full text-[12px] text-text-secondary sm:w-auto sm:text-[13px]">
+            {description}
+          </p>
+        </header>
 
-        <div className="mt-5 grid grid-cols-1 items-start gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
-          <aside className="hidden min-h-[calc(100dvh-8rem)] rounded-2xl border border-[#8fd4b0] bg-[#d6f3e4] p-4 lg:block">
+        <div className="mt-3 grid grid-cols-1 items-start gap-3 lg:grid-cols-[240px_minmax(0,1fr)]">
+          <aside className="hidden min-h-[calc(100dvh-7rem)] rounded-2xl border border-border bg-white p-4 lg:block">
             {filters}
           </aside>
 
           <div className="min-w-0">
             {search}
-            <div className="mt-4 min-w-0">
+            <div className="mt-3 min-w-0">
               {toolbar}
               {results}
             </div>

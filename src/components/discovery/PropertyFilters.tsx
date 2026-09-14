@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { PROPERTY_TYPE_OPTIONS } from '../../constants/propertyRegistration';
-import { amenitiesInUse, RATING_PRESETS } from '../../data/listings/defaults';
+import { amenitiesInUse } from '../../data/listings/defaults';
 import type { PropertyListing, PropertyListingType, PropertyQuery } from '../../data/listings/types';
 import { FilterCheck } from './FilterCheck';
 import { FilterGroup } from './FilterGroup';
@@ -23,6 +23,7 @@ export function PropertyFilters({ query, listings, localities, onChange }: Prope
 
   return (
     <div className="space-y-6">
+      {localities.length > 0 ? (
       <FilterGroup legend={t('discovery.location')} layout="stack">
         {localities.map((locality) => (
           <FilterCheck
@@ -34,6 +35,7 @@ export function PropertyFilters({ query, listings, localities, onChange }: Prope
           </FilterCheck>
         ))}
       </FilterGroup>
+      ) : null}
 
       <FilterGroup legend={t('discovery.filterGroups.propertyType')} layout="stack">
         {PROPERTY_TYPE_OPTIONS.map((option) => (
@@ -63,20 +65,6 @@ export function PropertyFilters({ query, listings, localities, onChange }: Prope
           format={(value) => `₹${value.toLocaleString('en-IN')}`}
           onChange={(minPrice, maxPrice) => onChange({ ...query, minPrice, maxPrice })}
         />
-      </FilterGroup>
-
-      <FilterGroup legend={t('discovery.rating')} layout="stack">
-        {RATING_PRESETS.filter((preset) => preset.value != null).map((preset) => (
-          <FilterCheck
-            key={preset.id}
-            checked={query.minRating === preset.value}
-            onChange={() =>
-              onChange({ ...query, minRating: query.minRating === preset.value ? null : preset.value })
-            }
-          >
-            {t(`discovery.ratingPresets.${preset.id}`)}
-          </FilterCheck>
-        ))}
       </FilterGroup>
 
       {amenityCodes.length > 0 ? (

@@ -1,9 +1,10 @@
-import { Heart, MapPin, Star } from 'lucide-react';
+import { Heart, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { formatInr } from '../../data/listings/query';
+import { formatListingAddress } from '../../data/listings/query';
 import type { PropertyListing } from '../../data/listings/types';
 import { amenityIcon, propertyAvailabilityLabel } from './listingIcons';
 import { ListingImage } from './ListingImage';
+import { ListingPrice } from './ListingPrice';
 
 type PropertyCardProps = {
   listing: PropertyListing;
@@ -17,6 +18,10 @@ export function PropertyCard({ listing, selected = false, saved = false, onSelec
   const { t } = useTranslation();
   const cover = listing.listingMetadata.images[0];
   const shownAmenities = listing.amenityCodes.slice(0, 4);
+  const availability = propertyAvailabilityLabel(listing, t);
+  const place = listing.locality && listing.city && listing.locality !== listing.city
+    ? `${listing.locality}, ${listing.city}`
+    : formatListingAddress(listing) || listing.name;
 
   return (
     <article
@@ -40,26 +45,21 @@ export function PropertyCard({ listing, selected = false, saved = false, onSelec
         >
           <Heart aria-hidden className={`h-4 w-4 ${saved ? 'fill-coral text-coral' : ''}`} />
         </button>
-        <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-register px-2 py-1 text-[12px] font-semibold text-white">
-          <Star aria-hidden className="h-3.5 w-3.5 fill-white" />
-          {listing.listingMetadata.rating.toFixed(1)}
-        </span>
       </div>
       <button type="button" onClick={onSelect} className="flex w-full flex-col p-4 text-left">
         <h2 className="text-[16px] font-semibold tracking-tight text-navy">{listing.name}</h2>
         <p className="mt-1 flex items-center gap-1.5 text-[13px] text-text-secondary">
           <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-muted" />
-          {listing.locality}, {listing.city}
+          {place}
         </p>
         <p className="mt-3 text-[16px] font-semibold text-navy">
-          {formatInr(listing.startingPrice)}
-          <span className="ml-1 text-[12px] font-medium text-muted">
-            {t(`discovery.priceSuffix.${listing.type}`)}
-          </span>
+          <ListingPrice
+            amount={listing.startingPrice}
+            suffix={t(`discovery.priceSuffix.${listing.type}`)}
+            fallback={t('discovery.priceOnRequest')}
+          />
         </p>
-        <p className="mt-1 text-[13px] text-text-secondary">
-          {propertyAvailabilityLabel(listing, t)}
-        </p>
+        {availability ? <p className="mt-1 text-[13px] text-text-secondary">{availability}</p> : null}
         {shownAmenities.length > 0 ? (
           <ul className="mt-3 flex flex-wrap gap-2">
             {shownAmenities.map((code) => {

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:auth": "node scripts/check-public-auth.mjs && node scripts/test-post-login-destination.mjs",
+    "test:auth-flows": "node scripts/test-public-auth-flows.mjs"
   },
   "dependencies": {
     "i18next": "^26.4.2",

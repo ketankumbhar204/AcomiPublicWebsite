@@ -4,7 +4,7 @@ import { OtpInput } from '../form/OtpInput';
 import type { ListingKind } from '../../constants/listing';
 import { LISTING_COPY } from '../../constants/listing';
 import { getPropertyTypeOption } from '../../constants/propertyRegistration';
-import { digitsOnly, formatCountdown, formatRupees } from '../../lib/indianMobile';
+import { formatCountdown, formatRupees, normalizeMobile } from '../../lib/indianMobile';
 import { CtaButton } from './RegistrationButtons';
 import type { FieldErrors, RegistrationForm } from './registrationForm';
 
@@ -95,7 +95,7 @@ export function StepVerify({
               <input
                 id="mobileNumber"
                 value={form.mobileNumber}
-                onChange={(event) => onChange('mobileNumber', digitsOnly(event.target.value, 10))}
+                onChange={(event) => onChange('mobileNumber', normalizeMobile(event.target.value))}
                 disabled={locked}
                 inputMode="numeric"
                 autoComplete="tel-national"

@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { RATING_PRESETS } from '../../data/listings/defaults';
 import type { MessQuery } from '../../data/listings/types';
 import { FilterCheck } from './FilterCheck';
 import { FilterGroup } from './FilterGroup';
@@ -20,6 +19,7 @@ export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
 
   return (
     <div className="space-y-6">
+      {localities.length > 0 ? (
       <FilterGroup legend={t('discovery.location')} layout="stack">
         {localities.map((locality) => (
           <FilterCheck
@@ -31,6 +31,7 @@ export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
           </FilterCheck>
         ))}
       </FilterGroup>
+      ) : null}
 
       <FilterGroup legend={t('discovery.filterGroups.monthlyPrice')}>
         <PriceRangeFilter
@@ -56,20 +57,6 @@ export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
           format={(value) => `₹${value}`}
           onChange={(minMeal, maxMeal) => onChange({ ...query, minMeal, maxMeal })}
         />
-      </FilterGroup>
-
-      <FilterGroup legend={t('discovery.rating')} layout="stack">
-        {RATING_PRESETS.filter((preset) => preset.value != null).map((preset) => (
-          <FilterCheck
-            key={preset.id}
-            checked={query.minRating === preset.value}
-            onChange={() =>
-              onChange({ ...query, minRating: query.minRating === preset.value ? null : preset.value })
-            }
-          >
-            {t(`discovery.ratingPresets.${preset.id}`)}
-          </FilterCheck>
-        ))}
       </FilterGroup>
     </div>
   );

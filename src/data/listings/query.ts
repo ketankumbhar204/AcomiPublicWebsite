@@ -39,13 +39,13 @@ export function filterProperties(
     if (query.localities.length > 0 && !query.localities.includes(item.locality)) {
       return false;
     }
-    if (query.minPrice != null && item.startingPrice < query.minPrice) {
+    if (query.minPrice != null && (item.startingPrice == null || item.startingPrice < query.minPrice)) {
       return false;
     }
-    if (query.maxPrice != null && item.startingPrice > query.maxPrice) {
+    if (query.maxPrice != null && (item.startingPrice == null || item.startingPrice > query.maxPrice)) {
       return false;
     }
-    if (query.minRating != null && item.listingMetadata.rating < query.minRating) {
+    if (query.minRating != null && (item.listingMetadata.rating == null || item.listingMetadata.rating < query.minRating)) {
       return false;
     }
     if (query.amenities.length > 0 && !query.amenities.every((code) => item.amenityCodes.includes(code))) {
@@ -66,19 +66,19 @@ export function filterMesses(listings: readonly MessListing[], query: MessQuery)
     if (query.localities.length > 0 && !query.localities.includes(item.locality)) {
       return false;
     }
-    if (query.minMonthly != null && item.monthlyPrice < query.minMonthly) {
+    if (query.minMonthly != null && (item.monthlyPrice == null || item.monthlyPrice < query.minMonthly)) {
       return false;
     }
-    if (query.maxMonthly != null && item.monthlyPrice > query.maxMonthly) {
+    if (query.maxMonthly != null && (item.monthlyPrice == null || item.monthlyPrice > query.maxMonthly)) {
       return false;
     }
-    if (query.minMeal != null && item.mealPrice < query.minMeal) {
+    if (query.minMeal != null && (item.mealPrice == null || item.mealPrice < query.minMeal)) {
       return false;
     }
-    if (query.maxMeal != null && item.mealPrice > query.maxMeal) {
+    if (query.maxMeal != null && (item.mealPrice == null || item.mealPrice > query.maxMeal)) {
       return false;
     }
-    if (query.minRating != null && item.listingMetadata.rating < query.minRating) {
+    if (query.minRating != null && (item.listingMetadata.rating == null || item.listingMetadata.rating < query.minRating)) {
       return false;
     }
     return true;
@@ -90,8 +90,8 @@ export function filterMesses(listings: readonly MessListing[], query: MessQuery)
 function sortList<T>(
   items: T[],
   sort: PropertyQuery['sort'],
-  priceOf: (item: T) => number,
-  metaOf: (item: T) => { featuredRank: number; rating: number; listedAt: string },
+  priceOf: (item: T) => number | null,
+  metaOf: (item: T) => { featuredRank?: number; rating?: number; listedAt?: string },
 ): T[] {
   const next = [...items];
   next.sort((a, b) => {
@@ -99,22 +99,26 @@ function sortList<T>(
     const mb = metaOf(b);
     switch (sort) {
       case 'price-asc':
-        return priceOf(a) - priceOf(b);
+        return (priceOf(a) ?? Number.POSITIVE_INFINITY) - (priceOf(b) ?? Number.POSITIVE_INFINITY);
       case 'price-desc':
-        return priceOf(b) - priceOf(a);
+        return (priceOf(b) ?? Number.NEGATIVE_INFINITY) - (priceOf(a) ?? Number.NEGATIVE_INFINITY);
       case 'rating-desc':
-        return mb.rating - ma.rating;
+        return (mb.rating ?? 0) - (ma.rating ?? 0);
       case 'newest':
-        return mb.listedAt.localeCompare(ma.listedAt);
+        return (mb.listedAt ?? '').localeCompare(ma.listedAt ?? '');
       default:
-        return ma.featuredRank - mb.featuredRank;
+        return (ma.featuredRank ?? 0) - (mb.featuredRank ?? 0);
     }
   });
   return next;
 }
 
 export function uniqueLocalities(items: readonly { locality: string }[]): string[] {
-  return [...new Set(items.map((item) => item.locality))].sort();
+  return [...new Set(items.map((item) => item.locality).filter(Boolean))].sort();
+}
+
+export function uniqueCities(items: readonly { city: string }[]): string[] {
+  return [...new Set(items.map((item) => item.city).filter(Boolean))].sort();
 }
 
 export function formatInr(amount: number): string {
@@ -123,6 +127,30 @@ export function formatInr(amount: number): string {
     currency: 'INR',
     maximumFractionDigits: 0,
   }).format(amount);
+}
+
+export function formatListingAddress(listing: {
+  addressLine: string;
+  locality: string;
+  city: string;
+  state: string;
+  pincode: string;
+}): string {
+  const parts: string[] = [];
+  const push = (value: string) => {
+    const next = value.trim();
+    if (!next) return;
+    if (parts.some((part) => part.toLowerCase() === next.toLowerCase())) return;
+    parts.push(next);
+  };
+  push(listing.addressLine);
+  push(listing.locality);
+  push(listing.city);
+  push(listing.state);
+  if (listing.pincode.trim()) {
+    parts.push(listing.pincode.trim());
+  }
+  return parts.join(', ');
 }
 
 export function listingMapUrl(listing: {
@@ -136,6 +164,6 @@ export function listingMapUrl(listing: {
   if (listing.mapUrl) {
     return listing.mapUrl;
   }
-  const query = `${listing.addressLine}, ${listing.locality}, ${listing.city}, ${listing.state} ${listing.pincode}`;
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+  const query = formatListingAddress(listing);
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query || 'India')}`;
 }

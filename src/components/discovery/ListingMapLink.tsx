@@ -1,6 +1,6 @@
 import { ExternalLink, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { listingMapUrl } from '../../data/listings/query';
+import { formatListingAddress, listingMapUrl } from '../../data/listings/query';
 
 type ListingMapLinkProps = {
   listing: {
@@ -36,7 +36,7 @@ export function ListingMapLink({ listing, compact = false }: ListingMapLinkProps
   return (
     <div>
       <p className="text-[15px] text-text-secondary">
-        {listing.addressLine}, {listing.locality}, {listing.city}, {listing.state} {listing.pincode}
+        {formatListingAddress(listing)}
       </p>
       <a
         href={href}

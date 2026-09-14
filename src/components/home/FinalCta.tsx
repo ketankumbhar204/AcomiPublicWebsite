@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { APP } from '../../constants/links';
+import { SignInCta } from '../auth/SignInCta';
 import { useUserType } from '../../context/UserTypeContext';
 import { ActionButton } from '../common/ActionButton';
-import { ButtonLink } from '../common/ButtonLink';
 import { Container } from '../layout/Container';
 
 export function FinalCta() {
@@ -23,9 +22,7 @@ export function FinalCta() {
           <ActionButton onClick={openUserTypeModal} variant="onDark">
             {t('hero.getStartedFree')}
           </ActionButton>
-          <ButtonLink href={APP.login} variant="ghostDark">
-            {t('nav.signIn')}
-          </ButtonLink>
+          <SignInCta variant="ghostDark" />
         </div>
       </Container>
     </section>

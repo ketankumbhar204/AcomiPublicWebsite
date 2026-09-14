@@ -16,6 +16,8 @@ import { MessVendorsPage } from './pages/MessVendorsPage';
 import { PropertyOwnersPage } from './pages/PropertyOwnersPage';
 import { RegisterSpacePage } from './pages/RegisterSpacePage';
 import { WhoItsForPage } from './pages/WhoItsForPage';
+import { NotificationsPage } from './pages/NotificationsPage';
+import { MyEnquiriesPage } from './pages/MyEnquiriesPage';
 
 export default function App() {
   return (
@@ -37,6 +39,8 @@ export default function App() {
           <Route path="/places/:id" element={<PropertyDetailPage />} />
           <Route path="/meals" element={<MealsPage />} />
           <Route path="/meals/:id" element={<MessDetailPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/my-enquiries" element={<MyEnquiriesPage />} />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Route>

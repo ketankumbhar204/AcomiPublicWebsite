@@ -1,10 +1,14 @@
 import { Building2, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { useListingDrawer } from '../../context/ListingDrawerContext';
 import { useListingPreview } from '../../context/ListingPreviewContext';
 
 const BASE =
   'reg-focus inline-flex items-center gap-2 rounded-l-full rounded-r-none py-2.5 pr-3.5 pl-3.5 text-[12px] font-semibold shadow-[var(--shadow-md)] sm:pr-4 sm:text-[13px]';
+
+/** Routes where floating list-property CTAs should stay hidden. */
+const HIDDEN_ON = new Set(['/places', '/meals']);
 
 /**
  * Site-wide listing CTAs, pinned to the right edge below the navbar.
@@ -12,10 +16,11 @@ const BASE =
  */
 export function PersistentListingActions() {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
   const { openListing } = useListingDrawer();
   const { previewOpen } = useListingPreview();
 
-  if (previewOpen) {
+  if (previewOpen || HIDDEN_ON.has(pathname)) {
     return null;
   }
 

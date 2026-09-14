@@ -3,6 +3,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ListingDrawerProvider } from '../../context/ListingDrawerContext';
 import { ListingPreviewProvider } from '../../context/ListingPreviewContext';
 import { UserTypeProvider } from '../../context/UserTypeContext';
+import { AuthProvider } from '../../auth/AuthProvider';
+import { AuthModal } from '../auth/AuthModal';
 import { PersistentListingActions } from '../common/PersistentListingActions';
 import { Footer } from './Footer';
 import { Navbar } from './Navbar';
@@ -27,21 +29,24 @@ function RouteScroll() {
 
 export function Layout() {
   return (
-    <UserTypeProvider>
-      <ListingDrawerProvider>
-        <ListingPreviewProvider>
-          <div className="min-h-dvh bg-background text-text antialiased">
-            <SkipLink />
-            <Navbar />
-            <PersistentListingActions />
-            <RouteScroll />
-            <main id="main" className="pt-16">
-              <Outlet />
-            </main>
-            <Footer />
-          </div>
-        </ListingPreviewProvider>
-      </ListingDrawerProvider>
-    </UserTypeProvider>
+    <AuthProvider>
+      <UserTypeProvider>
+        <ListingDrawerProvider>
+          <ListingPreviewProvider>
+            <div className="min-h-dvh bg-background text-text antialiased">
+              <SkipLink />
+              <Navbar />
+              <PersistentListingActions />
+              <RouteScroll />
+              <main id="main" className="pt-16">
+                <Outlet />
+              </main>
+              <Footer />
+              <AuthModal />
+            </div>
+          </ListingPreviewProvider>
+        </ListingDrawerProvider>
+      </UserTypeProvider>
+    </AuthProvider>
   );
 }

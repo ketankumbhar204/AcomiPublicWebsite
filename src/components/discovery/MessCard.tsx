@@ -1,8 +1,9 @@
-import { Heart, MapPin, Star } from 'lucide-react';
+import { Heart, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { formatInr } from '../../data/listings/query';
+import { formatListingAddress } from '../../data/listings/query';
 import type { MessListing } from '../../data/listings/types';
 import { ListingImage } from './ListingImage';
+import { ListingPrice } from './ListingPrice';
 
 type MessCardProps = {
   listing: MessListing;
@@ -16,6 +17,9 @@ export function MessCard({ listing, selected = false, saved = false, onSelect, o
   const { t } = useTranslation();
   const cover = listing.listingMetadata.images[0];
   const meals = listing.listingMetadata.mealsServed;
+  const place = listing.locality && listing.city && listing.locality !== listing.city
+    ? `${listing.locality}, ${listing.city}`
+    : formatListingAddress(listing) || listing.name;
 
   return (
     <article
@@ -36,25 +40,21 @@ export function MessCard({ listing, selected = false, saved = false, onSelect, o
         >
           <Heart aria-hidden className={`h-4 w-4 ${saved ? 'fill-coral text-coral' : ''}`} />
         </button>
-        <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-register px-2 py-1 text-[12px] font-semibold text-white">
-          <Star aria-hidden className="h-3.5 w-3.5 fill-white" />
-          {listing.listingMetadata.rating.toFixed(1)}
-        </span>
       </div>
       <button type="button" onClick={onSelect} className="flex w-full flex-col p-4 text-left">
         <h2 className="text-[16px] font-semibold tracking-tight text-navy">{listing.name}</h2>
         <p className="mt-1 flex items-center gap-1.5 text-[13px] text-text-secondary">
           <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-muted" />
-          {listing.locality}, {listing.city}
+          {place}
         </p>
         <p className="mt-3 text-[16px] font-semibold text-navy">
-          {formatInr(listing.monthlyPrice)}
-          <span className="ml-1 text-[12px] font-medium text-muted">{t('discovery.perMonth')}</span>
+          <ListingPrice amount={listing.monthlyPrice} suffix={t('discovery.perMonth')} fallback={t('discovery.priceOnRequest')} />
         </p>
-        <p className="mt-1 text-[13px] font-medium text-navy">
-          {formatInr(listing.mealPrice)}
-          <span className="ml-1 text-[12px] font-medium text-muted">{t('discovery.perMeal')}</span>
-        </p>
+        {listing.mealPrice != null ? (
+          <p className="mt-1 text-[13px] font-medium text-navy">
+            <ListingPrice amount={listing.mealPrice} suffix={t('discovery.perMeal')} fallback={t('discovery.priceOnRequest')} />
+          </p>
+        ) : null}
         {meals.length > 0 ? (
           <p className="mt-3 text-[12px] text-muted">
             {meals.map((meal) => t(`meals.${meal.toLowerCase()}`)).join(' + ')}

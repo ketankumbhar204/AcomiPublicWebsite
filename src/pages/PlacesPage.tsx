@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../components/common/ActionButton';
@@ -7,6 +7,7 @@ import { DiscoveryPageShell } from '../components/discovery/DiscoveryPageShell';
 import { DiscoverySearchBar } from '../components/discovery/DiscoverySearchBar';
 import { EnquireDialog } from '../components/discovery/EnquireDialog';
 import { FilterSheet } from '../components/discovery/FilterSheet';
+import { ListingCardSkeleton } from '../components/discovery/ListingCardSkeleton';
 import { ListingDetailDrawer } from '../components/discovery/ListingDetailDrawer';
 import { ListingEmpty } from '../components/discovery/ListingEmpty';
 import { ListingPagination } from '../components/discovery/ListingPagination';
@@ -18,16 +19,19 @@ import {
   DEFAULT_PROPERTY_QUERY,
   propertyQueryIsFiltered,
 } from '../data/listings/defaults';
-import { filterProperties, getPropertyListings, uniqueLocalities } from '../data/listings';
+import { filterProperties, uniqueCities, uniqueLocalities } from '../data/listings';
+import { usePropertyListings } from '../data/listings/useDiscoverListings';
 import type { PropertyQuery } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
+import { readEnquireIntent } from '../auth/enquireIntent';
 
 const PAGE_SIZE = 12;
 
 export function PlacesPage() {
   const { t } = useTranslation();
-  const listings = getPropertyListings();
+  const { listings, status, reload } = usePropertyListings();
   const localities = uniqueLocalities(listings);
+  const cities = uniqueCities(listings);
   const [query, setQuery] = useState<PropertyQuery>(DEFAULT_PROPERTY_QUERY);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -35,6 +39,7 @@ export function PlacesPage() {
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [enquireOpen, setEnquireOpen] = useState(false);
+  const restoredEnquire = useRef(false);
 
   useEffect(() => {
     applySeo({
@@ -48,19 +53,31 @@ export function PlacesPage() {
     setPage(1);
   }, [query]);
 
+  useEffect(() => {
+    if (restoredEnquire.current || status !== 'ready') return;
+    const intent = readEnquireIntent();
+    if (!intent || intent.listingKind !== 'places') return;
+    if (!listings.some((item) => item.id === intent.listingId)) return;
+    restoredEnquire.current = true;
+    setSelectedId(intent.listingId);
+    setDetailOpen(true);
+    setEnquireOpen(true);
+  }, [listings, status]);
+
   const results = useMemo(() => filterProperties(listings, query), [listings, query]);
   const chips = propertyFilterChips(query, setQuery, t);
   const filtered = propertyQueryIsFiltered(query) || query.query.trim().length > 0;
   const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
   const shown = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const selected = results.find((item) => item.id === selectedId) ?? null;
+  const selected = listings.find((item) => item.id === selectedId) ?? null;
+  const cityLabel = cities.length === 1 ? cities[0] : cities.length > 1 ? cities.slice(0, 2).join(', ') : t('places.regionFallback');
 
   useEffect(() => {
-    if (selectedId && !results.some((item) => item.id === selectedId)) {
+    if (selectedId && !listings.some((item) => item.id === selectedId)) {
       setSelectedId(null);
       setDetailOpen(false);
     }
-  }, [results, selectedId]);
+  }, [listings, selectedId]);
 
   const clearFilters = () =>
     setQuery({ ...DEFAULT_PROPERTY_QUERY, query: query.query, sort: query.sort });
@@ -87,7 +104,7 @@ export function PlacesPage() {
             searchValue={query.query}
             searchPlaceholder={t('places.searchPlaceholder')}
             onSearchChange={(value) => setQuery({ ...query, query: value })}
-            city="Pune"
+            city={cityLabel}
             sortId="places-sort"
             sortValue={query.sort}
             onSortChange={(sort) => setQuery({ ...query, sort })}
@@ -110,9 +127,11 @@ export function PlacesPage() {
           <>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-text-secondary">
-                {t(results.length === 1 ? 'places.foundOne' : 'places.foundMany', {
-                  count: results.length,
-                })}
+                {status === 'loading'
+                  ? t('places.loading')
+                  : t(results.length === 1 ? 'places.foundOne' : 'places.foundMany', {
+                      count: results.length,
+                    })}
               </p>
               <ActionButton onClick={() => setSheetOpen(true)} variant="ghost" className="lg:hidden">
                 <SlidersHorizontal aria-hidden className="h-4 w-4" />
@@ -125,7 +144,18 @@ export function PlacesPage() {
           </>
         }
         results={
-          results.length === 0 ? (
+          status === 'loading' ? (
+            <ListingCardSkeleton />
+          ) : status === 'error' ? (
+            <div className="mt-6">
+              <ListingEmpty
+                title={t('places.loadErrorTitle')}
+                description={t('places.loadErrorDescription')}
+                actionLabel={t('discovery.retry')}
+                onClear={reload}
+              />
+            </div>
+          ) : results.length === 0 ? (
             <div className="mt-6">
               <ListingEmpty
                 title={t('places.emptyTitle')}
@@ -183,7 +213,9 @@ export function PlacesPage() {
 
       <EnquireDialog
         open={enquireOpen}
-        title={selected ? t('discovery.enquireAbout', { name: selected.name }) : t('discovery.enquire')}
+        listingId={selected?.id ?? ''}
+        listingName={selected?.name ?? ''}
+        listingKind="places"
         onClose={() => setEnquireOpen(false)}
       />
     </>

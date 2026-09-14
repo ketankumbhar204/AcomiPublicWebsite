@@ -33,8 +33,11 @@ export function amenityIcon(code: string): LucideIcon {
   return AMENITY_ICONS[code] ?? Wifi;
 }
 
-export function propertyAvailabilityLabel(listing: PropertyListing, t: TFunction): string {
+export function propertyAvailabilityLabel(listing: PropertyListing, t: TFunction): string | null {
   const available = listing.listingMetadata.availableCount;
+  if (available == null) {
+    return null;
+  }
   if (listing.type === 'RENTAL') {
     return available > 0 ? t('discovery.availableNow') : t('discovery.currentlyOccupied');
   }

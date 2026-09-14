@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { SignInCta } from '../auth/SignInCta';
 import { APP } from '../../constants/links';
 import { useUserType } from '../../context/UserTypeContext';
 import { BrandMark } from '../common/BrandMark';
@@ -76,9 +77,7 @@ export function Footer() {
                 </button>
               </li>
               <li>
-                <a href={APP.login} className="text-text-secondary transition hover:text-primary">
-                  {t('nav.signIn')}
-                </a>
+                <SignInCta />
               </li>
               <li>
                 <a href={APP.web} className="text-text-secondary transition hover:text-primary">

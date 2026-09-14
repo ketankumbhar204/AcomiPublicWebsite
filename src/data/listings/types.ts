@@ -3,33 +3,32 @@ import type { PropertyType } from '../../api/types';
 /**
  * Field mapping
  *
- * Registration → listing (customer-facing)
- * propertyType / mess          → type
- * propertyName / messName      → name
+ * Discover API → listing (customer-facing)
+ * spaceId                      → id
+ * type                         → type
+ * name                         → name
  * description                  → description
- * addressLine                  → addressLine
- * city / state / pincode      → city / state / pincode
+ * addressLine / address        → addressLine
+ * city / state / pincode       → city / state / pincode
  * (locality parsed from address for display)
  * mapUrl                       → mapUrl
- * startingPrice / monthlyPrice  → startingPrice / monthlyPrice
+ * startingPrice / monthlyPrice → startingPrice / monthlyPrice
  * mealPrice                    → mealPrice (mess only)
- * capacityEstimate             → capacityEstimate
- * amenities[]                  → amenityCodes (property only)
  *
  * Never shown: ownerName, mobileNumber, internal registration reference.
  *
- * listingMetadata is mock customer-discovery data that the registration
- * form does not collect today (ratings, photos, availability, featured rank).
+ * listingMetadata.images uses a type cover until listing photos exist.
+ * Ratings, availability, and capacity are omitted — the API does not provide them.
  */
 
 export type PropertyListingType = Exclude<PropertyType, 'MESS'>;
 
 export type ListingMetadata = {
-  rating: number;
-  reviewCount: number;
+  rating?: number;
+  reviewCount?: number;
   images: string[];
-  featuredRank: number;
-  listedAt: string;
+  featuredRank?: number;
+  listedAt?: string;
 };
 
 export type PropertyListing = {
@@ -43,10 +42,11 @@ export type PropertyListing = {
   state: string;
   pincode: string;
   mapUrl?: string;
-  startingPrice: number;
-  capacityEstimate: number;
+  startingPrice: number | null;
+  capacityEstimate: number | null;
   amenityCodes: string[];
-  listingMetadata: ListingMetadata & { availableCount: number };
+  sharingNotes?: string;
+  listingMetadata: ListingMetadata & { availableCount?: number | null };
 };
 
 export type MessListing = {
@@ -59,11 +59,10 @@ export type MessListing = {
   state: string;
   pincode: string;
   mapUrl?: string;
-  monthlyPrice: number;
-  mealPrice: number;
-  capacityEstimate: number;
+  monthlyPrice: number | null;
+  mealPrice: number | null;
+  capacityEstimate: number | null;
   listingMetadata: ListingMetadata & {
-    /** Future listing metadata — not collected on the mess form today. */
     mealsServed: string[];
   };
 };

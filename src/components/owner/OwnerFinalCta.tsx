@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { APP } from '../../constants/links';
+import { SignInCta } from '../auth/SignInCta';
 import { useListingDrawer } from '../../context/ListingDrawerContext';
-import { ButtonLink } from '../common/ButtonLink';
 import { Container } from '../layout/Container';
 import { REGISTER_CTA_CLS } from './OwnerHero';
 
@@ -25,9 +24,7 @@ export function OwnerFinalCta() {
           <button type="button" onClick={() => openListing('property')} className={REGISTER_CTA_CLS}>
             {t('listing.listProperty')}
           </button>
-          <ButtonLink href={APP.login} variant="ghostDark">
-            {t('nav.signIn')}
-          </ButtonLink>
+          <SignInCta variant="ghostDark" />
         </div>
       </Container>
     </section>

@@ -56,7 +56,6 @@ export const SORT_OPTIONS = [
   { id: 'recommended', label: 'Recommended' },
   { id: 'price-asc', label: 'Price: Low to High' },
   { id: 'price-desc', label: 'Price: High to Low' },
-  { id: 'rating-desc', label: 'Rating: High to Low' },
   { id: 'newest', label: 'Newly added' },
 ] as const;
 
