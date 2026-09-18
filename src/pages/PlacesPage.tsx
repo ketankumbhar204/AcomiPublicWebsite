@@ -23,7 +23,7 @@ import { filterProperties, uniqueCities, uniqueLocalities } from '../data/listin
 import { usePropertyListings } from '../data/listings/useDiscoverListings';
 import type { PropertyQuery } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
-import { readEnquireIntent } from '../auth/enquireIntent';
+import { takeEnquireResumeIntent } from '../auth/enquireIntent';
 
 const PAGE_SIZE = 12;
 
@@ -55,8 +55,8 @@ export function PlacesPage() {
 
   useEffect(() => {
     if (restoredEnquire.current || status !== 'ready') return;
-    const intent = readEnquireIntent();
-    if (!intent || intent.listingKind !== 'places') return;
+    const intent = takeEnquireResumeIntent('places');
+    if (!intent) return;
     if (!listings.some((item) => item.id === intent.listingId)) return;
     restoredEnquire.current = true;
     setSelectedId(intent.listingId);

@@ -1,6 +1,7 @@
 import { CalendarDays, Clock, Hourglass, Mail, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { SpaceEnquiryResponse } from '../../auth/types';
+import { contactWasEmailed } from '../../auth/enquiryContactDelivery';
 import { ActionButton } from '../common/ActionButton';
 import { Modal } from '../common/Modal';
 
@@ -35,6 +36,7 @@ export function EnquiryStatusDialog({ enquiry, onClose, onEnquireAgain }: Enquir
   const canEnquireAgain = status === 'EXPIRED';
   const respondedOn = formatDateTime(enquiry?.sharedAt, i18n.language);
   const sentTo = enquiry?.requesterEmail?.trim() || null;
+  const emailed = contactWasEmailed(enquiry);
 
   return (
     <Modal
@@ -73,17 +75,21 @@ export function EnquiryStatusDialog({ enquiry, onClose, onEnquireAgain }: Enquir
       </div>
 
       <h2 id="enquiry-status-title" className="mt-4 text-xl font-semibold tracking-tight text-navy">
-        {t(`enquiries.detail.${status}.title`)}
+        {status === 'SHARED' && !emailed
+          ? t('enquiries.detail.SHARED.inAppTitle')
+          : t(`enquiries.detail.${status}.title`)}
       </h2>
       <p id="enquiry-status-body" className="mt-2 text-[15px] leading-relaxed text-text-secondary">
-        {t(`enquiries.detail.${status}.body`, { name })}
+        {status === 'SHARED' && !emailed
+          ? t('enquiries.detail.SHARED.inAppBody', { name })
+          : t(`enquiries.detail.${status}.body`, { name })}
       </p>
 
       {name ? (
         <p className="mt-4 rounded-xl bg-soft px-3 py-2 text-[13px] font-medium text-navy">{name}</p>
       ) : null}
 
-      {status === 'SHARED' && respondedOn ? (
+      {status === 'SHARED' && emailed && respondedOn ? (
         <div className="mt-3 rounded-xl border border-primary/15 bg-[#E7F6EE] px-3 py-3">
           <p className="flex items-center gap-2 text-[13px] text-navy">
             <CalendarDays aria-hidden className="h-4 w-4 shrink-0 text-primary" />

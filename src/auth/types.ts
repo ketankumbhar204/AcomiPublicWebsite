@@ -83,7 +83,24 @@ export type SpaceEnquiryResponse = {
   requestedAt?: string;
   expiresAt?: string;
   sharedAt?: string | null;
+  clientChannel?: 'WEB' | 'ANDROID' | null;
+  contactDelivery?: 'EMAIL' | 'IN_APP' | null;
+  contactEmailSentAt?: string | null;
+  contactEmailSent?: boolean;
+  ownerContact?: {
+    ownerName?: string | null;
+    mobileNumber?: string | null;
+    alternateMobileNumber?: string | null;
+    additionalMobileNumber?: string | null;
+    email?: string | null;
+    available: boolean;
+  } | null;
   reusedExisting?: boolean;
+  alreadyDelivered?: boolean;
+  deliveryChannel?: 'APP' | 'EMAIL' | null;
+  deliveredAt?: string | null;
+  appDeliveredAt?: string | null;
+  emailDeliveredAt?: string | null;
 };
 
 export type UserNotification = {

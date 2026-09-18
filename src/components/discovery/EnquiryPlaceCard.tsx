@@ -1,6 +1,7 @@
 import { Building2, CalendarDays, Clock, Hourglass, Mail, MapPin, Star, Users, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { SpaceEnquiryResponse } from '../../auth/types';
+import { contactWasEmailed } from '../../auth/enquiryContactDelivery';
 import { discoverDefaultImageUrl } from '../../data/listings/discoverDefaultImages';
 import { ListingImage } from './ListingImage';
 
@@ -67,7 +68,7 @@ export function EnquiryPlaceCard({ enquiry, active = false, onOpen }: EnquiryPla
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-3">
           <h2 className="truncate text-[16px] font-semibold tracking-tight text-navy">{enquiry.spaceName}</h2>
-          <StatusBadge status={status} />
+          <StatusBadge status={status} emailed={contactWasEmailed(enquiry)} />
         </div>
 
         {enquiry.locationLabel ? (
@@ -109,7 +110,7 @@ export function EnquiryPlaceCard({ enquiry, active = false, onOpen }: EnquiryPla
             </span>
           </p>
         ) : null}
-        {status === 'SHARED' && responded ? (
+        {status === 'SHARED' && contactWasEmailed(enquiry) && responded ? (
           <p className="mt-1 flex items-center gap-1.5 text-[12px] text-text-secondary">
             <Mail aria-hidden className="h-3.5 w-3.5 text-primary" />
             <span>
@@ -123,12 +124,12 @@ export function EnquiryPlaceCard({ enquiry, active = false, onOpen }: EnquiryPla
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, emailed }: { status: string; emailed?: boolean }) {
   const { t } = useTranslation();
   if (status === 'SHARED') {
     return (
       <span
-        title={t('enquiries.sharedHint')}
+        title={emailed ? t('enquiries.sharedHint') : t('enquiries.sharedInAppHint')}
         className="shrink-0 rounded-full bg-[#E7F6EE] px-2.5 py-1 text-[11px] font-semibold text-primary"
       >
         {t('enquiries.status.SHARED')}

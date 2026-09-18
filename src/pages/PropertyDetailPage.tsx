@@ -14,7 +14,7 @@ import { formatListingAddress } from '../data/listings';
 import { toPropertyListing } from '../data/listings/mapDiscoverListing';
 import type { PropertyListing } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
-import { readEnquireIntent } from '../auth/enquireIntent';
+import { takeEnquireResumeIntentForListing } from '../auth/enquireIntent';
 
 export function PropertyDetailPage() {
   const { t } = useTranslation();
@@ -45,8 +45,9 @@ export function PropertyDetailPage() {
   }, [id]);
 
   useEffect(() => {
-    const intent = readEnquireIntent();
-    if (intent?.listingId === listing?.id) {
+    if (!listing?.id) return;
+    const intent = takeEnquireResumeIntentForListing(listing.id);
+    if (intent) {
       setEnquireOpen(true);
     }
   }, [listing?.id]);

@@ -10,12 +10,14 @@ export type ApiEnvelope<T> = {
 export class PublicApiError extends Error {
   readonly status: number;
   readonly errorCode?: string;
+  readonly data?: unknown;
 
-  constructor(message: string, status: number, errorCode?: string) {
+  constructor(message: string, status: number, errorCode?: string, data?: unknown) {
     super(message);
     this.name = 'PublicApiError';
     this.status = status;
     this.errorCode = errorCode;
+    this.data = data;
   }
 }
 
@@ -44,6 +46,7 @@ export function setPublicUnauthorizedHandler(handler: (() => void) | null): void
 export async function publicApi<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const headers: Record<string, string> = {
     Accept: 'application/json',
+    'X-ACOMI-CLIENT': 'WEB',
   };
   if (options.body !== undefined) {
     headers['Content-Type'] = 'application/json';
@@ -79,6 +82,7 @@ export async function publicApi<T>(path: string, options: RequestOptions = {}): 
       envelope?.message || 'Request failed',
       response.status,
       envelope?.errorCode,
+      envelope?.data,
     );
   }
 
@@ -92,6 +96,7 @@ export async function publicApi<T>(path: string, options: RequestOptions = {}): 
 export async function publicApiVoid(path: string, options: RequestOptions = {}): Promise<void> {
   const headers: Record<string, string> = {
     Accept: 'application/json',
+    'X-ACOMI-CLIENT': 'WEB',
   };
   if (options.body !== undefined) {
     headers['Content-Type'] = 'application/json';

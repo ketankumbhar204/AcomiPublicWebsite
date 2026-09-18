@@ -14,7 +14,7 @@ import { formatListingAddress } from '../data/listings';
 import { toMessListing } from '../data/listings/mapDiscoverListing';
 import type { MessListing } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
-import { readEnquireIntent } from '../auth/enquireIntent';
+import { takeEnquireResumeIntentForListing } from '../auth/enquireIntent';
 
 export function MessDetailPage() {
   const { t } = useTranslation();
@@ -45,8 +45,9 @@ export function MessDetailPage() {
   }, [id]);
 
   useEffect(() => {
-    const intent = readEnquireIntent();
-    if (intent?.listingId === listing?.id) {
+    if (!listing?.id) return;
+    const intent = takeEnquireResumeIntentForListing(listing.id);
+    if (intent) {
       setEnquireOpen(true);
     }
   }, [listing?.id]);

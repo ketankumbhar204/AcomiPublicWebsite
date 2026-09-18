@@ -6,6 +6,8 @@ type Paged<T> = {
   content: T[];
 };
 
+export type EnquiryDeliveryChannel = 'APP' | 'EMAIL';
+
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -41,10 +43,23 @@ export async function resolveDiscoverSpace(
 
 export async function createSpaceEnquiry(
   spaceId: string,
-  email?: string,
+  options?: { email?: string; deliveryChannel?: EnquiryDeliveryChannel },
 ): Promise<SpaceEnquiryResponse> {
+  const body: { email?: string; deliveryChannel?: EnquiryDeliveryChannel } = {};
+  if (options?.email) body.email = options.email;
+  if (options?.deliveryChannel) body.deliveryChannel = options.deliveryChannel;
   return publicApi<SpaceEnquiryResponse>(`/spaces/${spaceId}/enquiries`, {
     method: 'POST',
-    body: email ? { email } : {},
+    body,
+  });
+}
+
+export async function deliverEnquiryContactEmail(
+  enquiryId: string,
+  email: string,
+): Promise<SpaceEnquiryResponse> {
+  return publicApi<SpaceEnquiryResponse>(`/enquiries/${enquiryId}/email-contact`, {
+    method: 'POST',
+    body: { email },
   });
 }

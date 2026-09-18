@@ -5,6 +5,8 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE_URL?: string;
   /** Origin of the authenticated ACOMI web app (login / find-a-place). */
   readonly VITE_APP_ORIGIN?: string;
+  /** Official Google Play listing for ACOMI Android (override when finalized). */
+  readonly VITE_ANDROID_PLAY_STORE_URL?: string;
 }
 
 interface ImportMeta {

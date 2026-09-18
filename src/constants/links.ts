@@ -13,6 +13,11 @@ export const APP = {
   deleteAccount: `${APP_ORIGIN}/delete-account`,
 } as const;
 
+export {
+  ACOMI_PLAY_STORE_URL,
+  openAcomiAndroidApp,
+} from '../lib/openAcomiAndroidApp';
+
 export type EnquireListingKind = 'places' | 'mess';
 
 export const SITE = 'https://www.acomi.in';

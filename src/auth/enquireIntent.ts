@@ -7,6 +7,8 @@ export type EnquireIntent = {
   listingName: string;
   listingKind: EnquireListingKind;
   path: string;
+  /** Only intents saved for post-login resume may reopen the enquire dialog. */
+  resumeAfterAuth?: boolean;
 };
 
 export function saveEnquireIntent(intent: EnquireIntent): void {
@@ -35,6 +37,41 @@ export function clearEnquireIntent(): void {
   } catch {
     // ignore
   }
+}
+
+/**
+ * Accept a post-login enquire resume for this listing kind, then clear storage.
+ * Stale intents (no resumeAfterAuth) are cleared so a plain refresh never reopens the dialog.
+ */
+export function takeEnquireResumeIntent(
+  listingKind: EnquireListingKind,
+): EnquireIntent | null {
+  const intent = readEnquireIntent();
+  if (!intent) return null;
+  if (!intent.resumeAfterAuth) {
+    clearEnquireIntent();
+    return null;
+  }
+  if (intent.listingKind !== listingKind) {
+    return null;
+  }
+  clearEnquireIntent();
+  return intent;
+}
+
+/** Same as takeEnquireResumeIntent, but matched to a specific listing id (detail pages). */
+export function takeEnquireResumeIntentForListing(listingId: string): EnquireIntent | null {
+  const intent = readEnquireIntent();
+  if (!intent) return null;
+  if (!intent.resumeAfterAuth) {
+    clearEnquireIntent();
+    return null;
+  }
+  if (intent.listingId !== listingId) {
+    return null;
+  }
+  clearEnquireIntent();
+  return intent;
 }
 
 export function intentContainsSecrets(raw: string): boolean {

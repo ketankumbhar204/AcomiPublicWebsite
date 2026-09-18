@@ -20,7 +20,7 @@ import { filterMesses, uniqueCities, uniqueLocalities } from '../data/listings';
 import { useMessListings } from '../data/listings/useDiscoverListings';
 import type { MessQuery } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
-import { readEnquireIntent } from '../auth/enquireIntent';
+import { takeEnquireResumeIntent } from '../auth/enquireIntent';
 
 const PAGE_SIZE = 12;
 
@@ -52,8 +52,8 @@ export function MealsPage() {
 
   useEffect(() => {
     if (restoredEnquire.current || status !== 'ready') return;
-    const intent = readEnquireIntent();
-    if (!intent || intent.listingKind !== 'mess') return;
+    const intent = takeEnquireResumeIntent('mess');
+    if (!intent) return;
     if (!listings.some((item) => item.id === intent.listingId)) return;
     restoredEnquire.current = true;
     setSelectedId(intent.listingId);

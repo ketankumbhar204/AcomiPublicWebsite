@@ -168,6 +168,25 @@ body.modal-open header {
   }
 }
 
+@keyframes enquire-check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.enquire-check-pop {
+  animation: enquire-check-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .drawer-panel {
   animation: drawer-panel-in 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -289,6 +308,7 @@ body.modal-open header {
   .count-in,
   .bar-fill,
   .phone-device,
+  .enquire-check-pop,
   .modal-backdrop,
   .modal-panel,
   .drawer-panel,

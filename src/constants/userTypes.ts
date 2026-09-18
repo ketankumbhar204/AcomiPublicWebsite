@@ -2,10 +2,10 @@ import { Building2, Home, Soup, UtensilsCrossed } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export const USER_TYPES = [
-  'PROPERTY_OWNER',
-  'MESS_VENDOR',
   'ACCOMMODATION_SEEKER',
   'MEAL_SEEKER',
+  'PROPERTY_OWNER',
+  'MESS_VENDOR',
 ] as const;
 
 export type UserType = (typeof USER_TYPES)[number];
@@ -19,8 +19,8 @@ export type UserTypeOption = {
   Icon: LucideIcon;
   /** Destination for this user type. Each type stays on its own route. */
   to: string;
-  /** Pastel panel tint, matching the existing site card tints. */
-  surface: string;
+  /** Soft tint behind the square icon well. */
+  iconWell: string;
   /** Domain accent used for the icon glyph and the title. */
   accent: string;
   /** Solid domain colour for the circular action indicator. */
@@ -33,39 +33,13 @@ export type UserTypeOption = {
 
 export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   {
-    id: 'PROPERTY_OWNER',
-    title: 'I manage a property',
-    description: 'PG • Hostel • Rental • Co-living',
-    shortLabel: 'Property owner',
-    Icon: Building2,
-    to: '/property-owners',
-    surface: 'bg-mint',
-    accent: 'text-primary',
-    action: 'bg-register',
-    border: 'border-primary',
-    ring: '[--focus-ring:var(--color-primary)]',
-  },
-  {
-    id: 'MESS_VENDOR',
-    title: 'I run a mess / food service',
-    description: 'Mess • Tiffin • Meal service',
-    shortLabel: 'Mess vendor',
-    Icon: UtensilsCrossed,
-    to: '/mess-vendors',
-    surface: 'bg-[#FFF8F1]',
-    accent: 'text-orange',
-    action: 'bg-orange',
-    border: 'border-orange',
-    ring: '[--focus-ring:var(--color-orange)]',
-  },
-  {
     id: 'ACCOMMODATION_SEEKER',
-    title: "I'm looking for a place",
-    description: 'Find PGs • Hostels • Rentals • Co-living',
+    title: 'Find a rental property',
+    description: 'PG • Hostel • Rental • Co-living',
     shortLabel: 'Looking for a place',
     Icon: Home,
     to: '/places',
-    surface: 'bg-[#F4F8FF]',
+    iconWell: 'bg-[#E8F1FF]',
     accent: 'text-blue',
     action: 'bg-blue',
     border: 'border-blue',
@@ -73,16 +47,42 @@ export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   },
   {
     id: 'MEAL_SEEKER',
-    title: "I'm looking for meals",
-    description: 'Find messes • Tiffin • Meal plans',
+    title: 'Find a meal service',
+    description: 'Mess • Tiffin • Meal plans',
     shortLabel: 'Looking for meals',
     Icon: Soup,
     to: '/meals',
-    surface: 'bg-[#F7F4FF]',
+    iconWell: 'bg-[#F0EBFF]',
     accent: 'text-purple',
     action: 'bg-purple',
     border: 'border-purple',
     ring: '[--focus-ring:var(--color-purple)]',
+  },
+  {
+    id: 'PROPERTY_OWNER',
+    title: 'I own a property',
+    description: 'PG • Hostel • Rental • Co-living',
+    shortLabel: 'Property owner',
+    Icon: Building2,
+    to: '/property-owners',
+    iconWell: 'bg-[#E7F4EE]',
+    accent: 'text-primary',
+    action: 'bg-register',
+    border: 'border-primary',
+    ring: '[--focus-ring:var(--color-primary)]',
+  },
+  {
+    id: 'MESS_VENDOR',
+    title: 'I run a food service',
+    description: 'Mess • Tiffin • Meal service',
+    shortLabel: 'Mess vendor',
+    Icon: UtensilsCrossed,
+    to: '/mess-vendors',
+    iconWell: 'bg-[#FFF0E5]',
+    accent: 'text-orange',
+    action: 'bg-orange',
+    border: 'border-orange',
+    ring: '[--focus-ring:var(--color-orange)]',
   },
 ];
 
