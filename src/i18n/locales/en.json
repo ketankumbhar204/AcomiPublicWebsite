@@ -74,15 +74,29 @@
   },
   "notifications": {
     "title": "Notifications",
-    "subtitle": "Updates about your contact enquiries. Owner contact details are sent by email only.",
+    "subtitle": "Updates about your contact enquiries. Open a notification to continue in the ACOMI app.",
     "empty": "No notifications yet.",
     "viewAll": "View all",
     "unread": "Unread",
     "markAsRead": "Mark as read"
   },
+  "accountProfile": {
+    "title": "Your account",
+    "subtitle": "Profile details for this ACOMI account.",
+    "name": "Name",
+    "mobile": "Mobile",
+    "email": "Email",
+    "noEmail": "No email on file",
+    "close": "Close"
+  },
   "enquiries": {
     "title": "My Enquiries",
     "subtitle": "Contact requests you sent to ACOMI. Owner details are shared by email when they can be shared.",
+    "appOnlyTitle": "View enquiries in the ACOMI app",
+    "appOnlyBody": "Enquiry details and owner contacts are available in the ACOMI Android app — not on this website.",
+    "appOnlyFromNotificationTitle": "Continue in the ACOMI app",
+    "appOnlyFromNotificationBody": "Open the ACOMI app to view this enquiry and any shared contact details.",
+    "appOnlyBrowse": "Continue browsing places",
     "empty": "You have not requested contact details yet.",
     "emptyFilter": "No enquiries match this filter.",
     "requestedOn": "Requested {{date}}",

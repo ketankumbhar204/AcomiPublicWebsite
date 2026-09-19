@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
 import { isSafeEnquiryId, listMyNotifications, markMyNotificationRead } from '../auth/inboxApi';
 import type { UserNotification } from '../auth/types';
 import { RequireAuth } from '../components/auth/RequireAuth';
 import { Container } from '../components/layout/Container';
+import { DownloadAcomiAppModal } from '../components/layout/DownloadAcomiAppModal';
 import { formatRelativeTime } from '../lib/relativeTime';
 import { applySeo } from '../lib/seo';
 
@@ -18,9 +18,12 @@ export function NotificationsPage() {
 
 function NotificationsView() {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
   const [items, setItems] = useState<UserNotification[]>([]);
   const [loading, setLoading] = useState(true);
+  const [appPrompt, setAppPrompt] = useState<{ open: boolean; enquiryId: string | null }>({
+    open: false,
+    enquiryId: null,
+  });
 
   useEffect(() => {
     applySeo({
@@ -52,11 +55,11 @@ function NotificationsView() {
           current.map((row) => (row.notificationId === item.notificationId ? { ...row, read: true } : row)),
         );
       } catch {
-        // Continue to My Enquiries.
+        // Still open the app prompt.
       }
     }
     const enquiryId = isSafeEnquiryId(item.enquiryId) ? item.enquiryId : null;
-    navigate(enquiryId ? `/my-enquiries?id=${enquiryId}` : '/my-enquiries');
+    setAppPrompt({ open: true, enquiryId });
   }
 
   return (
@@ -88,9 +91,14 @@ function NotificationsView() {
           ))}
         </ul>
       )}
-      <Link to="/my-enquiries" className="mt-8 inline-block text-sm font-semibold text-primary">
-        {t('nav.myEnquiries')}
-      </Link>
+
+      <DownloadAcomiAppModal
+        open={appPrompt.open}
+        enquiryId={appPrompt.enquiryId}
+        onClose={() => setAppPrompt({ open: false, enquiryId: null })}
+        title={t('enquiries.appOnlyFromNotificationTitle')}
+        body={t('enquiries.appOnlyFromNotificationBody')}
+      />
     </Container>
   );
 }

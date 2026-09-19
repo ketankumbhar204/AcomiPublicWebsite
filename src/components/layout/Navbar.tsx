@@ -12,6 +12,7 @@ import { UserTypeSwitcher } from '../onboarding/UserTypeSwitcher';
 import { AccountMenu } from './AccountMenu';
 import { Container } from './Container';
 import { ExploreMenu } from './ExploreMenu';
+import { NotificationBell } from './NotificationBell';
 
 export function Navbar() {
   const { t } = useTranslation();
@@ -63,7 +64,10 @@ export function Navbar() {
           ) : null}
 
           {isAuthenticated ? (
-            <AccountMenu onNavigate={() => setOpen(false)} />
+            <>
+              <NotificationBell />
+              <AccountMenu onNavigate={() => setOpen(false)} />
+            </>
           ) : (
             <>
               <LanguageSelect />
