@@ -22,9 +22,9 @@ export function OccupancyCard() {
           <p className="text-sm font-semibold text-navy">{t('home.visual.occupancySub')}</p>
         </div>
       </div>
-      <div className="mt-5 flex items-center gap-5">
+      <div className="mt-5 flex flex-col items-center gap-4">
         <OccupancyDonut occupied={b.occupied} total={b.total} />
-        <div className="grid flex-1 grid-cols-3 gap-2">
+        <div className="grid w-full grid-cols-3 gap-2">
           <Mini n={b.occupied} l={t('status.occupied')} tone="bg-[#E7F6EE] text-[#0F6B4C]" />
           <Mini n={b.vacant} l={t('status.vacant')} tone="bg-[#E8F1FF] text-[#2563EB]" />
           <Mini n={b.reserved} l={t('status.reserved')} tone="bg-[#FFF1E0] text-[#D97706]" />
@@ -66,9 +66,9 @@ export function MealHeadcountCard() {
       </ul>
       <div className="mt-4 grid grid-cols-3 gap-2">
         {d.locations.map((loc, i) => (
-          <div key={loc.name} className={`rounded-xl px-2 py-2 text-center ${locTones[i]}`}>
-            <p className="text-sm font-semibold tabular-nums">{loc.plates}</p>
-            <p className="text-[10px] opacity-80">{loc.name}</p>
+          <div key={loc.name} className={`min-w-0 rounded-xl px-1.5 py-2 text-center ${locTones[i]}`}>
+            <p className="text-sm font-semibold tabular-nums leading-none">{loc.plates}</p>
+            <p className="mt-1 text-[10px] leading-tight break-words opacity-80">{loc.name}</p>
           </div>
         ))}
       </div>
@@ -170,17 +170,17 @@ function OccupancyDonut({ occupied, total }: { occupied: number; total: number }
 
 function Mini({ n, l, tone }: { n: number; l: string; tone: string }) {
   return (
-    <div className={`rounded-xl px-2 py-2 text-center ${tone}`}>
-      <p className="text-lg font-semibold tabular-nums">{n}</p>
-      <p className="text-[10px] opacity-80">{l}</p>
+    <div className={`min-w-0 rounded-xl px-1.5 py-2 text-center ${tone}`}>
+      <p className="text-lg font-semibold tabular-nums leading-none">{n}</p>
+      <p className="mt-1 text-[10px] leading-tight break-words opacity-80">{l}</p>
     </div>
   );
 }
 
 function PayTile({ label, value, tone }: { label: string; value: string; tone: string }) {
   return (
-    <div className={`rounded-xl px-3 py-2.5 ${tone}`}>
-      <p className="text-[10px] font-medium opacity-80">{label}</p>
+    <div className={`min-w-0 rounded-xl px-3 py-2.5 ${tone}`}>
+      <p className="text-[10px] leading-tight font-medium break-words opacity-80">{label}</p>
       <p className="mt-0.5 text-sm font-semibold tabular-nums">{value}</p>
     </div>
   );

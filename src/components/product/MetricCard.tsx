@@ -19,14 +19,14 @@ type MetricCardProps = {
 export function MetricCard({ label, value, icon: Icon, tone = 'teal' }: MetricCardProps) {
   const t = tones[tone];
   return (
-    <div className={`rounded-2xl border border-black/5 p-4 shadow-[0_8px_24px_rgba(11,28,22,0.04)] ${t.wrap}`}>
+    <div className={`min-w-0 rounded-2xl border border-black/5 p-4 shadow-[0_8px_24px_rgba(11,28,22,0.04)] ${t.wrap}`}>
       {Icon ? (
         <span className={`mb-3 inline-flex h-8 w-8 items-center justify-center rounded-lg ${t.icon}`}>
           <Icon className="h-4 w-4" strokeWidth={2} />
         </span>
       ) : null}
       <p className={`text-2xl font-semibold tracking-tight tabular-nums ${t.value}`}>{value}</p>
-      <p className="mt-1 text-xs font-medium text-muted">{label}</p>
+      <p className="mt-1 text-xs leading-tight font-medium break-words text-muted">{label}</p>
     </div>
   );
 }
