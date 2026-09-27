@@ -155,12 +155,19 @@ export function formatListingAddress(listing: {
 
 export function listingMapUrl(listing: {
   mapUrl?: string;
+  latitude?: number | string | null;
+  longitude?: number | string | null;
   addressLine: string;
   locality: string;
   city: string;
   state: string;
   pincode: string;
 }): string {
+  const lat = listing.latitude == null || listing.latitude === '' ? null : Number(listing.latitude);
+  const lng = listing.longitude == null || listing.longitude === '' ? null : Number(listing.longitude);
+  if (Number.isFinite(lat) && Number.isFinite(lng) && lat != null && lng != null) {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
+  }
   if (listing.mapUrl) {
     return listing.mapUrl;
   }

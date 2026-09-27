@@ -9,6 +9,7 @@ type ActionButtonProps = {
   className?: string;
   type?: 'button' | 'submit';
   disabled?: boolean;
+  'aria-label'?: string;
 };
 
 /**
@@ -21,12 +22,14 @@ export function ActionButton({
   className = '',
   type = 'button',
   disabled = false,
+  'aria-label': ariaLabel,
 }: ActionButtonProps) {
   return (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
+      aria-label={ariaLabel}
       className={`${BUTTON_BASE} ${BUTTON_VARIANTS[variant]} ${className} disabled:opacity-60`}
     >
       {children}

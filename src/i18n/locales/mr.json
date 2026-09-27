@@ -909,6 +909,17 @@
     "sortLabel": "सूची क्रमवारी लावा",
     "openMaps": "गुगल मॅप्स मध्ये उघडा",
     "contactEnquire": "संपर्क / चौकशी करा",
+    "representativeImage": "प्रतिनिधिक प्रतिमा",
+    "representativeImageAria": "{{category}} लिस्टिंगसाठी प्रतिनिधिक प्रतिमा",
+    "representativeCategory": {
+      "PG": "PG",
+      "HOSTEL": "हॉस्टेल",
+      "CO_LIVING": "को-लिव्हिंग",
+      "RENTAL": "भाडेतत्त्वावरील",
+      "SERVICED": "सर्व्हिस अपार्टमेंट",
+      "MESS": "मेस",
+      "GENERIC": "निवास"
+    },
     "openFullPage": "पूर्ण पृष्ठ उघडा",
     "location": "स्थान",
     "amenities": "सुविधा",
@@ -1053,12 +1064,19 @@
     "title": "तुमच्या जवळचे जेवण शोधा",
     "description": "संपूर्ण पुण्यात मेस, टिफिन आणि जेवण सेवा.",
     "searchLabel": "जेवण शोधा",
-    "searchPlaceholder": "शहर, क्षेत्र किंवा मेस नावाने शोधा",
+    "searchPlaceholder": "मेस किंवा जेवणाच्या नावाने शोधा",
+    "selectLocation": "स्थान निवडा",
+    "clearLocation": "स्थान काढा",
     "foundOne": "{{count}} मेस सापडला",
     "foundMany": "{{count}} मेस सापडले",
-    "emptyTitle": "कोणताही मेस सापडला नाही",
-    "emptyDescription": "दुसरे क्षेत्र किंवा किंमत श्रेणी वापरून पहा.",
-    "detailFallback": "मेसचे तपशील"
+    "emptyTitle": "जेवण सापडले नाही",
+    "emptyDescription": "दुसरे स्थान वापरून पहा किंवा शोध बदला.",
+    "emptyInLocation": "{{location}} मध्ये जेवण सापडले नाही",
+    "emptyInLocationDescription": "दुसरे स्थान वापरून पहा किंवा फिल्टर बदला.",
+    "detailFallback": "मेसचे तपशील",
+    "loading": "जेवण लोड होत आहेत…",
+    "loadingMore": "आणखी जेवण लोड होत आहेत…",
+    "filtersHint": "जेवण शोधण्यासाठी स्थान निवडा आणि शोध वापरा. निकाल सर्व्हरवर फिल्टर होतात."
   },
   "propertyDetail": {
     "seoNotFound": {

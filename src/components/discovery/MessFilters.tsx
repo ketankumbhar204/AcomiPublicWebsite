@@ -1,63 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import type { MessQuery } from '../../data/listings/types';
-import { FilterCheck } from './FilterCheck';
-import { FilterGroup } from './FilterGroup';
-import { PriceRangeFilter } from './PriceRangeFilter';
 
-type MessFiltersProps = {
-  query: MessQuery;
-  localities: string[];
-  onChange: (next: MessQuery) => void;
-};
-
-function toggleValue(list: string[], value: string): string[] {
-  return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
-}
-
-export function MessFilters({ query, localities, onChange }: MessFiltersProps) {
+export function MessFilters() {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-6">
-      {localities.length > 0 ? (
-      <FilterGroup legend={t('discovery.location')} layout="stack">
-        {localities.map((locality) => (
-          <FilterCheck
-            key={locality}
-            checked={query.localities.includes(locality)}
-            onChange={() => onChange({ ...query, localities: toggleValue(query.localities, locality) })}
-          >
-            {locality}
-          </FilterCheck>
-        ))}
-      </FilterGroup>
-      ) : null}
-
-      <FilterGroup legend={t('discovery.filterGroups.monthlyPrice')}>
-        <PriceRangeFilter
-          id="mess-monthly"
-          minBound={1000}
-          maxBound={6000}
-          minValue={query.minMonthly}
-          maxValue={query.maxMonthly}
-          step={100}
-          format={(value) => `₹${value.toLocaleString('en-IN')}`}
-          onChange={(minMonthly, maxMonthly) => onChange({ ...query, minMonthly, maxMonthly })}
-        />
-      </FilterGroup>
-
-      <FilterGroup legend={t('discovery.filterGroups.perMealPrice')}>
-        <PriceRangeFilter
-          id="mess-meal"
-          minBound={40}
-          maxBound={200}
-          minValue={query.minMeal}
-          maxValue={query.maxMeal}
-          step={5}
-          format={(value) => `₹${value}`}
-          onChange={(minMeal, maxMeal) => onChange({ ...query, minMeal, maxMeal })}
-        />
-      </FilterGroup>
-    </div>
+    <p className="text-[13px] leading-relaxed text-text-secondary">
+      {t('mealsPage.filtersHint')}
+    </p>
   );
 }

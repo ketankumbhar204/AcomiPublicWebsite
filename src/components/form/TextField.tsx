@@ -10,7 +10,7 @@ type TextFieldProps = {
   error?: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
-  inputMode?: 'text' | 'numeric' | 'tel' | 'url';
+  inputMode?: 'text' | 'numeric' | 'decimal' | 'tel' | 'url';
   maxLength?: number;
   autoComplete?: string;
 };

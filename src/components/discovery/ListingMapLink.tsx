@@ -1,10 +1,12 @@
 import { ExternalLink, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { formatListingAddress, listingMapUrl } from '../../data/listings/query';
+import { formatListingAddress } from '../../data/listings/query';
 
 type ListingMapLinkProps = {
   listing: {
     mapUrl?: string;
+    latitude?: number | string | null;
+    longitude?: number | string | null;
     addressLine: string;
     locality: string;
     city: string;
@@ -16,7 +18,10 @@ type ListingMapLinkProps = {
 
 export function ListingMapLink({ listing, compact = false }: ListingMapLinkProps) {
   const { t } = useTranslation();
-  const href = listingMapUrl(listing);
+  const href = listing.mapUrl?.trim();
+  if (!href) {
+    return null;
+  }
 
   if (compact) {
     return (

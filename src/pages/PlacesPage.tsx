@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
+import { locationsApi } from '../api/locationsApi';
 import { ActionButton } from '../components/common/ActionButton';
 import { ActiveFilterChips } from '../components/discovery/ActiveFilterChips';
 import { DiscoveryPageShell } from '../components/discovery/DiscoveryPageShell';
@@ -10,36 +12,88 @@ import { FilterSheet } from '../components/discovery/FilterSheet';
 import { ListingCardSkeleton } from '../components/discovery/ListingCardSkeleton';
 import { ListingDetailDrawer } from '../components/discovery/ListingDetailDrawer';
 import { ListingEmpty } from '../components/discovery/ListingEmpty';
-import { ListingPagination } from '../components/discovery/ListingPagination';
+import { ListingInfiniteSentinel } from '../components/discovery/ListingInfiniteSentinel';
 import { PropertyCard } from '../components/discovery/PropertyCard';
 import { PropertyDetailPanel } from '../components/discovery/PropertyDetailPanel';
 import { PropertyFilters } from '../components/discovery/PropertyFilters';
 import { propertyFilterChips } from '../components/discovery/propertyFilterChips';
+import { LocationSelectModal, type SelectedLocation } from '../components/onboarding/LocationSelectModal';
 import {
   DEFAULT_PROPERTY_QUERY,
   propertyQueryIsFiltered,
 } from '../data/listings/defaults';
-import { filterProperties, uniqueCities, uniqueLocalities } from '../data/listings';
-import { usePropertyListings } from '../data/listings/useDiscoverListings';
+import {
+  buildPlacesSearchParams,
+  formatPlacesLocationLabel,
+  parsePlacesUrlState,
+  toPlacesSelectedLocation,
+  type PlacesSelectedLocation,
+} from '../data/listings/placesLocation';
+import { usePagedPropertyListings } from '../data/listings/usePagedPropertyListings';
 import type { PropertyQuery } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
-import { takeEnquireResumeIntent } from '../auth/enquireIntent';
-
-const PAGE_SIZE = 12;
+import { readEnquireIntent, takeEnquireResumeIntent } from '../auth/enquireIntent';
+import { useAutoOpenLocationSelect } from '../data/listings/useAutoOpenLocationSelect';
 
 export function PlacesPage() {
   const { t } = useTranslation();
-  const { listings, status, reload } = usePropertyListings();
-  const localities = uniqueLocalities(listings);
-  const cities = uniqueCities(listings);
-  const [query, setQuery] = useState<PropertyQuery>(DEFAULT_PROPERTY_QUERY);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const parsed = useMemo(() => parsePlacesUrlState(searchParams), [searchParams]);
+  const selectedLocation = parsed.selectedLocation;
+  const [query, setQuery] = useState<PropertyQuery>(() => ({
+    ...DEFAULT_PROPERTY_QUERY,
+    query: parsed.query,
+  }));
+  const [debouncedSearch, setDebouncedSearch] = useState(parsed.query);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(query.query), 300);
+    return () => window.clearTimeout(timer);
+  }, [query.query]);
+  const discoverFilters = useMemo(
+    () => ({
+      location: selectedLocation?.location,
+      search: debouncedSearch,
+      types: query.types,
+      minRent: query.minPrice,
+      maxRent: query.maxPrice,
+      amenities: query.amenities,
+      sort: query.sort,
+    }),
+    [
+      debouncedSearch,
+      query.amenities,
+      query.maxPrice,
+      query.minPrice,
+      query.sort,
+      query.types,
+      selectedLocation?.location,
+    ],
+  );
+  const { listings, status, reload, loadingMore, loadMoreError, hasMore, totalElements, loadMore } =
+    usePagedPropertyListings(discoverFilters);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const enquireResume = readEnquireIntent();
+  const skipLocationPrompt = Boolean(
+    enquireResume?.resumeAfterAuth && enquireResume.listingKind === 'places',
+  );
+  const [locationOpen, setLocationOpen] = useAutoOpenLocationSelect(
+    Boolean(selectedLocation?.location),
+    skipLocationPrompt,
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [savedIds, setSavedIds] = useState<string[]>([]);
-  const [page, setPage] = useState(1);
   const [enquireOpen, setEnquireOpen] = useState(false);
   const restoredEnquire = useRef(false);
+
+  const writePlacesUrl = useCallback(
+    (nextLocation: PlacesSelectedLocation | null, nextQuery: string) => {
+      setSearchParams(buildPlacesSearchParams({ selectedLocation: nextLocation, query: nextQuery }), {
+        replace: true,
+      });
+    },
+    [setSearchParams],
+  );
 
   useEffect(() => {
     applySeo({
@@ -50,8 +104,54 @@ export function PlacesPage() {
   }, [t]);
 
   useEffect(() => {
-    setPage(1);
-  }, [query]);
+    if (parsed.legacyLocationInQ) {
+      writePlacesUrl(parsed.selectedLocation, parsed.query);
+    }
+  }, [parsed.legacyLocationInQ, parsed.query, parsed.selectedLocation, setSearchParams]);
+
+  useEffect(() => {
+    setQuery((current) => (current.query === parsed.query ? current : { ...current, query: parsed.query }));
+  }, [parsed.query]);
+
+  useEffect(() => {
+    const selected = parsed.selectedLocation;
+    if (!selected?.location || selected.district) {
+      return;
+    }
+    let active = true;
+    const lookup = selected.pincode || selected.location;
+    locationsApi
+      .search(lookup)
+      .then((results) => {
+        if (!active) return;
+        const match =
+          results.find(
+            (record) =>
+              record.location.toLowerCase() === selected.location.toLowerCase() &&
+              (!selected.pincode || record.pincode === selected.pincode),
+          ) ?? results.find((record) => selected.pincode && record.pincode === selected.pincode);
+        if (!match?.district) return;
+        setSearchParams(
+          (current) => {
+            const currentState = parsePlacesUrlState(current);
+            return buildPlacesSearchParams({
+              selectedLocation: toPlacesSelectedLocation({
+                location: selected.location,
+                pincode: selected.pincode || match.pincode,
+                district: match.district,
+                state: match.state,
+              }),
+              query: currentState.query,
+            });
+          },
+          { replace: true },
+        );
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [parsed.selectedLocation, setSearchParams]);
 
   useEffect(() => {
     if (restoredEnquire.current || status !== 'ready') return;
@@ -64,13 +164,13 @@ export function PlacesPage() {
     setEnquireOpen(true);
   }, [listings, status]);
 
-  const results = useMemo(() => filterProperties(listings, query), [listings, query]);
   const chips = propertyFilterChips(query, setQuery, t);
-  const filtered = propertyQueryIsFiltered(query) || query.query.trim().length > 0;
-  const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
-  const shown = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const filtered =
+    propertyQueryIsFiltered(query) ||
+    query.query.trim().length > 0 ||
+    Boolean(selectedLocation?.location);
   const selected = listings.find((item) => item.id === selectedId) ?? null;
-  const cityLabel = cities.length === 1 ? cities[0] : cities.length > 1 ? cities.slice(0, 2).join(', ') : t('places.regionFallback');
+  const locationLabel = selectedLocation ? formatPlacesLocationLabel(selectedLocation) : '';
 
   useEffect(() => {
     if (selectedId && !listings.some((item) => item.id === selectedId)) {
@@ -81,6 +181,20 @@ export function PlacesPage() {
 
   const clearFilters = () =>
     setQuery({ ...DEFAULT_PROPERTY_QUERY, query: query.query, sort: query.sort });
+
+  const handleSearchChange = (value: string) => {
+    setQuery({ ...query, query: value });
+    writePlacesUrl(selectedLocation, value);
+  };
+
+  const handleLocationConfirm = (next: SelectedLocation) => {
+    setLocationOpen(false);
+    writePlacesUrl(toPlacesSelectedLocation(next), query.query);
+  };
+
+  const handleLocationClear = () => {
+    writePlacesUrl(null, query.query);
+  };
 
   const selectListing = (id: string) => {
     setSelectedId(id);
@@ -103,8 +217,11 @@ export function PlacesPage() {
             searchLabel={t('places.searchLabel')}
             searchValue={query.query}
             searchPlaceholder={t('places.searchPlaceholder')}
-            onSearchChange={(value) => setQuery({ ...query, query: value })}
-            city={cityLabel}
+            onSearchChange={handleSearchChange}
+            locationLabel={locationLabel || null}
+            locationPlaceholder={t('places.selectLocation', { defaultValue: 'Select location' })}
+            onLocationClick={() => setLocationOpen(true)}
+            onLocationClear={locationLabel ? handleLocationClear : undefined}
             sortId="places-sort"
             sortValue={query.sort}
             onSortChange={(sort) => setQuery({ ...query, sort })}
@@ -117,7 +234,7 @@ export function PlacesPage() {
               <PropertyFilters
                 query={query}
                 listings={listings}
-                localities={localities}
+                localities={[]}
                 onChange={setQuery}
               />
             </div>
@@ -129,8 +246,8 @@ export function PlacesPage() {
               <p className="text-sm text-text-secondary">
                 {status === 'loading'
                   ? t('places.loading')
-                  : t(results.length === 1 ? 'places.foundOne' : 'places.foundMany', {
-                      count: results.length,
+                  : t(totalElements === 1 ? 'places.foundOne' : 'places.foundMany', {
+                      count: totalElements,
                     })}
               </p>
               <ActionButton onClick={() => setSheetOpen(true)} variant="ghost" className="lg:hidden">
@@ -155,7 +272,7 @@ export function PlacesPage() {
                 onClear={reload}
               />
             </div>
-          ) : results.length === 0 ? (
+          ) : listings.length === 0 ? (
             <div className="mt-6">
               <ListingEmpty
                 title={t('places.emptyTitle')}
@@ -166,7 +283,7 @@ export function PlacesPage() {
           ) : (
             <>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {shown.map((listing) => (
+                {listings.map((listing) => (
                   <PropertyCard
                     key={listing.id}
                     listing={listing}
@@ -174,12 +291,45 @@ export function PlacesPage() {
                     saved={savedIds.includes(listing.id)}
                     onSelect={() => selectListing(listing.id)}
                     onToggleSave={() => toggleSaved(listing.id)}
+                    onEnquire={() => {
+                      setSelectedId(listing.id);
+                      setEnquireOpen(true);
+                    }}
                   />
                 ))}
               </div>
-              <ListingPagination page={page} pageCount={pageCount} onPageChange={setPage} />
+              {loadingMore ? (
+                <p className="mt-6 text-center text-sm text-text-secondary">{t('places.loadingMore')}</p>
+              ) : null}
+              {loadMoreError ? (
+                <div className="mt-6 flex justify-center">
+                  <ActionButton onClick={loadMore} variant="ghost">
+                    {t('discovery.retry')}
+                  </ActionButton>
+                </div>
+              ) : null}
+              <ListingInfiniteSentinel
+                onVisible={loadMore}
+                disabled={!hasMore || loadingMore || loadMoreError || status !== 'ready'}
+              />
             </>
           )
+        }
+      />
+
+      <LocationSelectModal
+        open={locationOpen}
+        onClose={() => setLocationOpen(false)}
+        onConfirm={handleLocationConfirm}
+        applyOnSelect
+        rankingContext={
+          selectedLocation
+            ? {
+                state: selectedLocation.state,
+                district: selectedLocation.district,
+                taluk: selectedLocation.cityTaluka,
+              }
+            : undefined
         }
       />
 
@@ -196,7 +346,7 @@ export function PlacesPage() {
           <PropertyFilters
             query={draft}
             listings={listings}
-            localities={localities}
+            localities={[]}
             onChange={setDraft}
           />
         )}

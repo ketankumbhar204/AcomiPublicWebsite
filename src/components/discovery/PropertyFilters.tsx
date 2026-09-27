@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { PROPERTY_TYPE_OPTIONS } from '../../constants/propertyRegistration';
-import { amenitiesInUse } from '../../data/listings/defaults';
+import { ALL_AMENITIES, PROPERTY_TYPE_OPTIONS } from '../../constants/propertyRegistration';
 import type { PropertyListing, PropertyListingType, PropertyQuery } from '../../data/listings/types';
 import { FilterCheck } from './FilterCheck';
 import { FilterGroup } from './FilterGroup';
@@ -17,9 +16,10 @@ function toggleValue<T>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 }
 
-export function PropertyFilters({ query, listings, localities, onChange }: PropertyFiltersProps) {
+export function PropertyFilters(props: PropertyFiltersProps) {
+  const { query, localities, onChange } = props;
   const { t } = useTranslation();
-  const amenityCodes = amenitiesInUse(listings);
+  const amenityCodes = ALL_AMENITIES.map((item) => item.code);
 
   return (
     <div className="space-y-6">

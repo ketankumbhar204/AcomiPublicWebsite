@@ -17,7 +17,8 @@ import type { PropertyType } from '../../api/types';
  *
  * Never shown: ownerName, mobileNumber, internal registration reference.
  *
- * listingMetadata.images uses a type cover until listing photos exist.
+ * listingMetadata.images holds verified listing photos only.
+ * Category representative images are resolved at display time and are never stored as listing photos.
  * Ratings, availability, and capacity are omitted — the API does not provide them.
  */
 
@@ -42,9 +43,13 @@ export type PropertyListing = {
   state: string;
   pincode: string;
   mapUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   startingPrice: number | null;
   capacityEstimate: number | null;
   amenityCodes: string[];
+  foodIncludedInRent?: boolean;
+  hasContact?: boolean;
   sharingNotes?: string;
   listingMetadata: ListingMetadata & { availableCount?: number | null };
 };
@@ -59,8 +64,11 @@ export type MessListing = {
   state: string;
   pincode: string;
   mapUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   monthlyPrice: number | null;
   mealPrice: number | null;
+  hasContact?: boolean;
   capacityEstimate: number | null;
   listingMetadata: ListingMetadata & {
     mealsServed: string[];

@@ -42,7 +42,14 @@ export type DiscoverSpaceCard = {
   spaceId: string;
   name: string;
   type: string;
+  /** Future verified listing photo. Never a representative/stock image. */
+  listingImageUrl?: string | null;
+  coverImageUrl?: string | null;
+  imageUrl?: string | null;
   address?: string | null;
+  startingPrice?: number | string | null;
+  mapUrl?: string | null;
+  hasContact?: boolean;
   amenityCodes?: string[];
   amenityLabels?: string[];
   foodIncludedInRent?: boolean;

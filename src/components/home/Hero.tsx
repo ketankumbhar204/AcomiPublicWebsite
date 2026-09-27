@@ -13,9 +13,15 @@ import { HeroPhones } from './HeroPhones';
 export function Hero() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { openUserTypeModal, selectUserType } = useUserType();
+  const { openUserTypeModal, selectUserType, rememberUserType, openLocationSelector } =
+    useUserType();
 
   function handleSelect(id: UserType) {
+    if (id === 'ACCOMMODATION_SEEKER' || id === 'MEAL_SEEKER') {
+      rememberUserType(id);
+      openLocationSelector(id);
+      return;
+    }
     selectUserType(id);
     navigate(getUserTypeOption(id).to);
   }
@@ -26,7 +32,7 @@ export function Hero() {
       aria-labelledby="hero-heading"
     >
       <Container>
-        <div className="grid items-center gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(44rem,0.58fr)_minmax(0,1fr)] lg:gap-12">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.14em] text-muted uppercase sm:text-xs">
               {t('hero.eyebrow', { defaultValue: 'Welcome to ACOMI' })}

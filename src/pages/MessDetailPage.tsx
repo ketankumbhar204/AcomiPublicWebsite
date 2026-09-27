@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { MapPin, MessageCircle } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../components/common/ActionButton';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { EnquireDialog } from '../components/discovery/EnquireDialog';
 import { ListingGallery } from '../components/discovery/ListingGallery';
+import { ListingInfoChips } from '../components/discovery/ListingInfoChips';
 import { ListingMapLink } from '../components/discovery/ListingMapLink';
 import { ListingPrice } from '../components/discovery/ListingPrice';
 import { Container } from '../components/layout/Container';
@@ -114,7 +115,12 @@ export function MessDetailPage() {
         </p>
 
         <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.8fr)]">
-          <ListingGallery images={meta.images} name={listing.name} />
+          <ListingGallery
+            listingId={listing.id}
+            spaceType="MESS"
+            images={meta.images}
+            name={listing.name}
+          />
 
           <div className="rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h1 className="mt-1 text-[1.75rem] font-semibold tracking-tight text-navy">{listing.name}</h1>
@@ -143,9 +149,20 @@ export function MessDetailPage() {
               </p>
             ) : null}
             <div className="mt-6">
-              <ActionButton onClick={() => setEnquireOpen(true)} className="w-full">
-                <MessageCircle aria-hidden className="h-4 w-4" />
-                {t('discovery.contactEnquire')}
+              <h2 className="text-sm font-semibold text-navy">{t('discovery.infoAvailable')}</h2>
+              <div className="mt-2">
+                <ListingInfoChips
+                  listing={{ ...listing, mealsServed: meta.mealsServed }}
+                  variant="detail"
+                  surface="meals"
+                />
+              </div>
+              <ActionButton
+                onClick={() => setEnquireOpen(true)}
+                className="mt-4 w-full"
+                aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
+              >
+                {t('discovery.getContactDetails')}
               </ActionButton>
             </div>
           </div>
@@ -158,7 +175,7 @@ export function MessDetailPage() {
           </div>
         ) : null}
 
-        {address ? (
+        {listing.mapUrl ? (
           <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h2 className="text-lg font-semibold text-navy">{t('discovery.location')}</h2>
             <div className="mt-3">

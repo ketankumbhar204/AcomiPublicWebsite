@@ -1,5 +1,5 @@
-import type { DiscoverSpaceDetail } from '../../auth/types';
-import { discoverDefaultImageUrl } from './discoverDefaultImages';
+import type { DiscoverSpaceCard, DiscoverSpaceDetail } from '../../auth/types';
+import { firstVerifiedListingImageUrl } from './representativeImage';
 import type { MessListing, PropertyListing, PropertyListingType } from './types';
 
 const PROPERTY_TYPES = new Set<PropertyListingType>(['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING']);
@@ -14,7 +14,7 @@ function toNumber(value?: number | string | null): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-function amenityCodesOf(detail: DiscoverSpaceDetail): string[] {
+function amenityCodesOf(detail: DiscoverSpaceCard): string[] {
   const codes = [...(detail.amenityCodes ?? [])];
   if (detail.foodIncludedInRent && !codes.includes('FOOD_INCLUDED')) {
     codes.push('FOOD_INCLUDED');
@@ -22,7 +22,7 @@ function amenityCodesOf(detail: DiscoverSpaceDetail): string[] {
   return codes;
 }
 
-function localityAndCity(detail: DiscoverSpaceDetail): { locality: string; city: string } {
+function localityAndCity(detail: DiscoverSpaceCard & Partial<DiscoverSpaceDetail>): { locality: string; city: string } {
   const city = text(detail.city);
   const line = text(detail.addressLine) || text(detail.address);
   const parts = line.split(',').map((part) => part.trim()).filter(Boolean);
@@ -38,11 +38,16 @@ function localityAndCity(detail: DiscoverSpaceDetail): { locality: string; city:
   };
 }
 
-function listingImages(type: string | undefined): string[] {
-  return [discoverDefaultImageUrl(type)];
+function listingImages(detail: DiscoverSpaceCard): string[] {
+  const url = firstVerifiedListingImageUrl(
+    detail.listingImageUrl,
+    detail.coverImageUrl,
+    detail.imageUrl,
+  );
+  return url ? [url] : [];
 }
 
-export function toPropertyListing(detail: DiscoverSpaceDetail): PropertyListing | null {
+export function toPropertyListing(detail: DiscoverSpaceCard & Partial<DiscoverSpaceDetail>): PropertyListing | null {
   if (!PROPERTY_TYPES.has(detail.type as PropertyListingType)) {
     return null;
   }
@@ -58,17 +63,21 @@ export function toPropertyListing(detail: DiscoverSpaceDetail): PropertyListing 
     state: text(detail.state),
     pincode: text(detail.pincode),
     mapUrl: text(detail.mapUrl) || undefined,
+    latitude: toNumber(detail.latitude),
+    longitude: toNumber(detail.longitude),
     startingPrice: toNumber(detail.startingPrice),
     capacityEstimate: null,
     amenityCodes: amenityCodesOf(detail),
+    foodIncludedInRent: detail.foodIncludedInRent === true,
+    hasContact: detail.hasContact === true,
     sharingNotes: text(detail.sharingNotes) || undefined,
     listingMetadata: {
-      images: listingImages(detail.type),
+      images: listingImages(detail),
     },
   };
 }
 
-export function toMessListing(detail: DiscoverSpaceDetail): MessListing | null {
+export function toMessListing(detail: DiscoverSpaceCard & Partial<DiscoverSpaceDetail>): MessListing | null {
   if (detail.type !== 'MESS') {
     return null;
   }
@@ -83,11 +92,14 @@ export function toMessListing(detail: DiscoverSpaceDetail): MessListing | null {
     state: text(detail.state),
     pincode: text(detail.pincode),
     mapUrl: text(detail.mapUrl) || undefined,
+    latitude: toNumber(detail.latitude),
+    longitude: toNumber(detail.longitude),
     monthlyPrice: toNumber(detail.monthlyPrice),
     mealPrice: toNumber(detail.mealPrice),
+    hasContact: detail.hasContact === true,
     capacityEstimate: null,
     listingMetadata: {
-      images: listingImages(detail.type),
+      images: listingImages(detail),
       mealsServed: [],
     },
   };

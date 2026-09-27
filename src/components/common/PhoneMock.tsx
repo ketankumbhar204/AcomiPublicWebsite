@@ -28,9 +28,9 @@ export function PhoneMock({
   className = '',
 }: PhoneMockProps) {
   return (
-    <figure className={`${widths[size]} ${className}`}>
+    <figure className={`flex flex-col items-center ${className}`}>
       <div
-        className={`phone-device overflow-hidden rounded-[32px] border border-[#c8d4ce] bg-white p-[9px] shadow-[0_4px_10px_rgba(11,28,22,0.06),0_22px_48px_rgba(11,28,22,0.16)] ${
+        className={`phone-device overflow-hidden rounded-[32px] border border-[#c8d4ce] bg-white p-[9px] shadow-[0_4px_10px_rgba(11,28,22,0.06),0_22px_48px_rgba(11,28,22,0.16)] ${widths[size]} ${
           tilt ? 'lg:[transform:rotate(var(--phone-tilt))]' : ''
         }`}
         style={tilt ? ({ '--phone-tilt': `${tilt}deg` } as CSSProperties) : undefined}
@@ -47,7 +47,7 @@ export function PhoneMock({
         />
       </div>
       {caption ? (
-        <figcaption className="mt-4 text-center text-sm font-medium text-text-secondary">
+        <figcaption className="mt-3 whitespace-nowrap text-center text-sm font-medium text-text-secondary">
           {caption}
         </figcaption>
       ) : null}

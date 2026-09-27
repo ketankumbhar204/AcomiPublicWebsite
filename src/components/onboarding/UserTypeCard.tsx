@@ -30,11 +30,11 @@ export function HeroIntentCard({ option, onSelect }: HeroIntentCardProps) {
 
       <span className="min-w-0 flex-1 pr-9">
         <span
-          className={`block text-[15px] leading-[1.3] font-semibold tracking-tight sm:text-[16px] ${option.accent}`}
+          className={`block whitespace-nowrap text-[15px] leading-[1.3] font-semibold tracking-tight sm:text-[16px] ${option.accent}`}
         >
           {title}
         </span>
-        <span className="mt-1 block text-[12px] leading-[1.4] text-text-secondary">
+        <span className="mt-1 block whitespace-nowrap text-[12px] leading-[1.4] text-text-secondary">
           {description}
         </span>
       </span>

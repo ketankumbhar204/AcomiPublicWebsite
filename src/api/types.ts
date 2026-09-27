@@ -39,6 +39,8 @@ export type CreatePropertyRegistrationRequest = {
   state: string;
   pincode: string;
   mapUrl?: string;
+  latitude?: number;
+  longitude?: number;
   startingPrice: number;
   capacityEstimate?: number;
   amenities: AmenityAssignment[];
@@ -61,6 +63,8 @@ export type CreateMessRegistrationRequest = {
   state: string;
   pincode: string;
   mapUrl?: string;
+  latitude?: number;
+  longitude?: number;
   monthlyPrice: number;
   mealPrice: number;
   capacityEstimate?: number;

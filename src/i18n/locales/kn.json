@@ -798,6 +798,17 @@
     "sortLabel": "ಪಟ್ಟಿಗಳನ್ನು ವಿಂಗಡಿಸಿ",
     "openMaps": "ಗೂಗಲ್ ಮ್ಯಾಪ್ಸ್ ನಲ್ಲಿ ತೆರೆಯಿರಿ",
     "contactEnquire": "ಸಂಪರ್ಕಿಸಿ / ವಿಚಾರಿಸಿ",
+    "representativeImage": "ಪ್ರಾತಿನಿಧಿಕ ಚಿತ್ರ",
+    "representativeImageAria": "{{category}} ಪಟ್ಟಿಗೆ ಪ್ರಾತಿನಿಧಿಕ ಚಿತ್ರ",
+    "representativeCategory": {
+      "PG": "PG",
+      "HOSTEL": "ಹಾಸ್ಟೆಲ್",
+      "CO_LIVING": "ಕೋ-ಲಿವಿಂಗ್",
+      "RENTAL": "ಬಾಡಿಗೆ",
+      "SERVICED": "ಸರ್ವಿಸ್ಡ್ ಅಪಾರ್ಟ್ಮೆಂಟ್",
+      "MESS": "ಮೆಸ್",
+      "GENERIC": "ವಸತಿ"
+    },
     "openFullPage": "ಪೂರ್ಣ ಪುಟವನ್ನು ತೆರೆಯಿರಿ",
     "location": "ಸ್ಥಳ",
     "amenities": "ಸೌಕರ್ಯಗಳು",
@@ -918,12 +929,19 @@
     "title": "ನಿಮ್ಮ ಹತ್ತಿರ ಊಟವನ್ನು ಹುಡುಕಿ",
     "description": "ಪುಣೆಯಾದ್ಯಂತ ಮೆಸ್, ಟಿಫಿನ್ ಮತ್ತು ಊಟ ಸೇವೆಗಳು.",
     "searchLabel": "ಊಟ ಹುಡುಕಿ",
-    "searchPlaceholder": "ನಗರ, ಪ್ರದೇಶ ಅಥವಾ ಮೆಸ್ ಹೆಸರಿನ ಮೂಲಕ ಹುಡುಕಿ",
+    "searchPlaceholder": "ಮೆಸ್ ಅಥವಾ ಊಟದ ಹೆಸರಿನಿಂದ ಹುಡುಕಿ",
+    "selectLocation": "ಸ್ಥಳ ಆಯ್ಕೆಮಾಡಿ",
+    "clearLocation": "ಸ್ಥಳ ತೆರವುಗೊಳಿಸಿ",
     "foundOne": "{{count}} ಮೆಸ್ ಕಂಡುಬಂದಿದೆ",
     "foundMany": "{{count}} ಮೆಸ್‌ಗಳು ಕಂಡುಬಂದಿವೆ",
-    "emptyTitle": "ಯಾವುದೇ ಮೆಸ್ ಕಂಡುಬಂದಿಲ್ಲ",
-    "emptyDescription": "ಮತ್ತೊಂದು ಪ್ರದೇಶ ಅಥವಾ ಬೆಲೆ ಶ್ರೇಣಿಯನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
-    "detailFallback": "ಮೆಸ್ ವಿವರಗಳು"
+    "emptyTitle": "ಯಾವುದೇ ಊಟ ಕಂಡುಬಂದಿಲ್ಲ",
+    "emptyDescription": "ಮತ್ತೊಂದು ಸ್ಥಳವನ್ನು ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಹುಡುಕಾಟವನ್ನು ಬದಲಾಯಿಸಿ.",
+    "emptyInLocation": "{{location}} ನಲ್ಲಿ ಯಾವುದೇ ಊಟ ಕಂಡುಬಂದಿಲ್ಲ",
+    "emptyInLocationDescription": "ಮತ್ತೊಂದು ಸ್ಥಳವನ್ನು ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಬದಲಾಯಿಸಿ.",
+    "detailFallback": "ಮೆಸ್ ವಿವರಗಳು",
+    "loading": "ಊಟಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ…",
+    "loadingMore": "ಇನ್ನಷ್ಟು ಊಟಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ…",
+    "filtersHint": "ಊಟ ಹುಡುಕಲು ಸ್ಥಳ ಆಯ್ಕೆ ಮತ್ತು ಹುಡುಕಾಟವನ್ನು ಬಳಸಿ. ಫಲಿತಾಂಶಗಳನ್ನು ಸರ್ವರ್‌ನಲ್ಲಿ ಫಿಲ್ಟರ್ ಮಾಡಲಾಗುತ್ತದೆ."
   },
   "propertyDetail": {
     "seoNotFound": {

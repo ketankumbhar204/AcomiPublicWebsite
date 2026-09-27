@@ -2,8 +2,7 @@ import { Building2, CalendarDays, Clock, Hourglass, Mail, MapPin, Star, Users, U
 import { useTranslation } from 'react-i18next';
 import type { SpaceEnquiryResponse } from '../../auth/types';
 import { contactWasEmailed } from '../../auth/enquiryContactDelivery';
-import { discoverDefaultImageUrl } from '../../data/listings/discoverDefaultImages';
-import { ListingImage } from './ListingImage';
+import { ListingCover } from './ListingCover';
 
 type EnquiryPlaceCardProps = {
   enquiry: SpaceEnquiryResponse;
@@ -55,10 +54,11 @@ export function EnquiryPlaceCard({ enquiry, active = false, onOpen }: EnquiryPla
       }`}
     >
       <div className="relative h-[88px] w-[88px] shrink-0 overflow-hidden rounded-xl sm:h-[104px] sm:w-[112px]">
-        <ListingImage
-          src={discoverDefaultImageUrl(enquiry.spaceType ?? undefined)}
-          alt=""
+        <ListingCover
+          listingId={enquiry.spaceId}
+          spaceType={enquiry.spaceType}
           className="h-full w-full"
+          compact
         />
         <span className="absolute bottom-2 left-2 rounded-full bg-navy/80 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white">
           {typeLabel}

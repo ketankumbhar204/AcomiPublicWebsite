@@ -23,6 +23,8 @@ export type RegistrationForm = {
   state: string;
   pincode: string;
   mapUrl: string;
+  latitude: string;
+  longitude: string;
   startingPrice: string;
   mealPrice: string;
   capacityEstimate: string;
@@ -43,6 +45,8 @@ export const EMPTY_FORM: RegistrationForm = {
   state: '',
   pincode: '',
   mapUrl: '',
+  latitude: '',
+  longitude: '',
   startingPrice: '',
   mealPrice: '',
   capacityEstimate: '',
@@ -104,7 +108,27 @@ export function validateDetailsStep(form: RegistrationForm): FieldErrors {
     errors.mapUrl = 'Enter a link starting with http:// or https://';
   }
 
+  const latRaw = form.latitude.trim();
+  const lngRaw = form.longitude.trim();
+  if (latRaw || lngRaw) {
+    const latitude = Number(latRaw);
+    const longitude = Number(lngRaw);
+    if (!latRaw || !Number.isFinite(latitude) || latitude < -90 || latitude > 90) {
+      errors.latitude = 'Enter a valid latitude between -90 and 90.';
+    }
+    if (!lngRaw || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
+      errors.longitude = 'Enter a valid longitude between -180 and 180.';
+    }
+  }
+
   return errors;
+}
+
+function optionalCoordinate(value: string): number | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  const numeric = Number(trimmed);
+  return Number.isFinite(numeric) ? numeric : undefined;
 }
 
 export function validateMobile(form: RegistrationForm): FieldErrors {
@@ -126,6 +150,8 @@ export function buildRequest(
   }
   const option = getPropertyTypeOption(form.propertyType);
   const mapUrl = form.mapUrl.trim();
+  const latitude = optionalCoordinate(form.latitude);
+  const longitude = optionalCoordinate(form.longitude);
   const capacity = form.capacityEstimate.trim();
   const description = form.description.trim();
 
@@ -141,6 +167,8 @@ export function buildRequest(
     state: form.state.trim(),
     pincode: form.pincode.trim(),
     ...(mapUrl ? { mapUrl } : {}),
+    ...(latitude !== undefined ? { latitude } : {}),
+    ...(longitude !== undefined ? { longitude } : {}),
     startingPrice: Number(form.startingPrice),
     ...(capacity ? { capacityEstimate: Number(capacity) } : {}),
     // The backend ignores amenities for types that do not support them; not sending
@@ -156,6 +184,8 @@ export function buildMessRequest(
   verificationToken: string,
 ): CreateMessRegistrationRequest {
   const mapUrl = form.mapUrl.trim();
+  const latitude = optionalCoordinate(form.latitude);
+  const longitude = optionalCoordinate(form.longitude);
   const capacity = form.capacityEstimate.trim();
   const description = form.description.trim();
 
@@ -170,6 +200,8 @@ export function buildMessRequest(
     state: form.state.trim(),
     pincode: form.pincode.trim(),
     ...(mapUrl ? { mapUrl } : {}),
+    ...(latitude !== undefined ? { latitude } : {}),
+    ...(longitude !== undefined ? { longitude } : {}),
     monthlyPrice: Number(form.startingPrice),
     mealPrice: Number(form.mealPrice),
     ...(capacity ? { capacityEstimate: Number(capacity) } : {}),
@@ -209,6 +241,8 @@ export function readDraft(key: string = REGISTRATION_DRAFT_KEY): Draft {
     form.amenities = Array.isArray(form.amenities)
       ? form.amenities.filter((code) => ALL_AMENITIES.some((amenity) => amenity.code === code))
       : [];
+    form.latitude = typeof form.latitude === 'string' ? form.latitude : '';
+    form.longitude = typeof form.longitude === 'string' ? form.longitude : '';
     const step = parsed.step === 2 || parsed.step === 3 ? parsed.step : 1;
     return { form, step };
   } catch {

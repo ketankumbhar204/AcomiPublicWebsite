@@ -909,6 +909,17 @@
     "sortLabel": "सूचियाँ क्रमबद्ध करें",
     "openMaps": "गूगल मैप्स में खोलें",
     "contactEnquire": "संपर्क करें/पूछताछ करें",
+    "representativeImage": "प्रतिनिधि छवि",
+    "representativeImageAria": "{{category}} लिस्टिंग के लिए प्रतिनिधि छवि",
+    "representativeCategory": {
+      "PG": "PG",
+      "HOSTEL": "हॉस्टेल",
+      "CO_LIVING": "को-लिविंग",
+      "RENTAL": "किराये",
+      "SERVICED": "सर्विस्ड अपार्टमेंट",
+      "MESS": "मेस",
+      "GENERIC": "आवास"
+    },
     "openFullPage": "पूरा पेज खोलें",
     "location": "जगह",
     "amenities": "सुविधाएं",
@@ -1053,12 +1064,19 @@
     "title": "अपने आस-पास भोजन ढूंढें",
     "description": "पूरे पुणे में मेस, टिफ़िन और भोजन सेवाएँ।",
     "searchLabel": "भोजन खोजें",
-    "searchPlaceholder": "शहर, क्षेत्र या मेस के नाम से खोजें",
+    "searchPlaceholder": "मेस या भोजन के नाम से खोजें",
+    "selectLocation": "स्थान चुनें",
+    "clearLocation": "स्थान हटाएँ",
     "foundOne": "{{count}} मेस मिला",
     "foundMany": "{{count}} मेस मिले",
-    "emptyTitle": "कोई मेस नहीं मिला",
-    "emptyDescription": "किसी अन्य क्षेत्र या मूल्य सीमा का प्रयास करें.",
-    "detailFallback": "मेस का विवरण"
+    "emptyTitle": "कोई भोजन नहीं मिला",
+    "emptyDescription": "दूसरा स्थान आज़माएँ या खोज बदलें।",
+    "emptyInLocation": "{{location}} में कोई भोजन नहीं मिला",
+    "emptyInLocationDescription": "दूसरा स्थान आज़माएँ या फ़िल्टर बदलें।",
+    "detailFallback": "मेस का विवरण",
+    "loading": "भोजन लोड हो रहे हैं…",
+    "loadingMore": "और भोजन लोड हो रहे हैं…",
+    "filtersHint": "भोजन खोजने के लिए स्थान चुनें और खोज का उपयोग करें। परिणाम सर्वर पर फ़िल्टर होते हैं।"
   },
   "propertyDetail": {
     "seoNotFound": {

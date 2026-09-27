@@ -7,24 +7,58 @@ export type PagedDiscover<T> = {
   size: number;
   totalElements: number;
   totalPages: number;
+  first?: boolean;
+  last?: boolean;
 };
 
 export type DiscoverSpacesParams = {
   search?: string;
+  location?: string;
   type?: string;
+  types?: string[];
+  minRent?: number | null;
+  maxRent?: number | null;
+  amenities?: string[];
   page?: number;
   size?: number;
   sort?: string;
 };
 
+export const DISCOVER_PAGE_SIZE = 20;
+
 export async function discoverSpaces(
   params: DiscoverSpacesParams = {},
 ): Promise<PagedDiscover<DiscoverSpaceCard>> {
-  const { search, type, page = 0, size = 50, sort = 'newest' } = params;
+  const {
+    search,
+    location,
+    type,
+    types,
+    minRent,
+    maxRent,
+    amenities,
+    page = 0,
+    size = DISCOVER_PAGE_SIZE,
+    sort = 'newest',
+  } = params;
   const query = new URLSearchParams();
-  const trimmed = search?.trim();
-  if (trimmed) query.set('search', trimmed);
+  const trimmedSearch = search?.trim();
+  const trimmedLocation = location?.trim();
+  if (trimmedSearch) query.set('search', trimmedSearch);
+  if (trimmedLocation) query.set('location', trimmedLocation);
   if (type) query.set('type', type);
+  for (const nextType of types ?? []) {
+    if (nextType.trim()) {
+      query.append('types', nextType.trim());
+    }
+  }
+  if (minRent != null) query.set('minRent', String(minRent));
+  if (maxRent != null) query.set('maxRent', String(maxRent));
+  for (const code of amenities ?? []) {
+    if (code.trim()) {
+      query.append('amenities', code.trim());
+    }
+  }
   query.set('page', String(page));
   query.set('size', String(size));
   query.set('sort', sort);
@@ -41,12 +75,14 @@ const CACHE_MS = 30_000;
 let inflight: Promise<DiscoverSpaceDetail[]> | null = null;
 let cached: { at: number; details: DiscoverSpaceDetail[] } | null = null;
 
-async function fetchAllDetails(): Promise<DiscoverSpaceDetail[]> {
-  const first = await discoverSpaces({ page: 0, size: PAGE_SIZE, sort: 'newest' });
+async function fetchAllDetails(
+  params: Pick<DiscoverSpacesParams, 'search' | 'location'> = {},
+): Promise<DiscoverSpaceDetail[]> {
+  const first = await discoverSpaces({ ...params, page: 0, size: PAGE_SIZE, sort: 'newest' });
   const cards = [...first.content];
   const totalPages = Math.max(first.totalPages ?? 1, 1);
   for (let page = 1; page < totalPages; page += 1) {
-    const next = await discoverSpaces({ page, size: PAGE_SIZE, sort: 'newest' });
+    const next = await discoverSpaces({ ...params, page, size: PAGE_SIZE, sort: 'newest' });
     cards.push(...next.content);
   }
   return Promise.all(
@@ -54,20 +90,37 @@ async function fetchAllDetails(): Promise<DiscoverSpaceDetail[]> {
   );
 }
 
-/** Loads every discoverable space detail (paginated list, then per-space detail for prices/address). */
-export async function loadDiscoverDetails(): Promise<DiscoverSpaceDetail[]> {
-  if (cached && Date.now() - cached.at < CACHE_MS) {
+function hasDiscoverFilter(params: Pick<DiscoverSpacesParams, 'search' | 'location'>): boolean {
+  return Boolean(params.location?.trim() || params.search?.trim());
+}
+
+/** Loads discoverable space details (paginated list, then per-space detail for prices/address). */
+export async function loadDiscoverDetails(
+  params: Pick<DiscoverSpacesParams, 'search' | 'location'> = {},
+): Promise<DiscoverSpaceDetail[]> {
+  const location = params.location?.trim() ?? '';
+  const search = params.search?.trim() ?? '';
+  const filtered = hasDiscoverFilter({ location, search });
+  if (!filtered && cached && Date.now() - cached.at < CACHE_MS) {
     return cached.details;
   }
-  if (!inflight) {
-    inflight = fetchAllDetails()
-      .then((details) => {
-        cached = { at: Date.now(), details };
-        return details;
-      })
-      .finally(() => {
-        inflight = null;
-      });
+  if (!filtered && inflight) {
+    return inflight;
   }
-  return inflight;
+  const request = fetchAllDetails({
+    location: location || undefined,
+    search: search || undefined,
+  }).then((details) => {
+    if (!filtered) {
+      cached = { at: Date.now(), details };
+    }
+    return details;
+  });
+  if (!filtered) {
+    inflight = request.finally(() => {
+      inflight = null;
+    });
+    return inflight;
+  }
+  return request;
 }

@@ -5,17 +5,18 @@ import type { MessListing, PropertyListing } from './types';
 
 export type DiscoverLoadStatus = 'loading' | 'ready' | 'error';
 
-export function usePropertyListings() {
+export function usePropertyListings(filters: { location?: string } = {}) {
   const [listings, setListings] = useState<PropertyListing[]>([]);
   const [status, setStatus] = useState<DiscoverLoadStatus>('loading');
   const [reloadKey, setReloadKey] = useState(0);
+  const location = filters.location?.trim() ?? '';
 
   const reload = useCallback(() => setReloadKey((key) => key + 1), []);
 
   useEffect(() => {
     let cancelled = false;
     setStatus('loading');
-    void loadDiscoverDetails()
+    void loadDiscoverDetails(location ? { location } : {})
       .then((details) => {
         if (cancelled) return;
         setListings(details.map(toPropertyListing).filter((item): item is PropertyListing => item != null));
@@ -29,7 +30,7 @@ export function usePropertyListings() {
     return () => {
       cancelled = true;
     };
-  }, [reloadKey]);
+  }, [reloadKey, location]);
 
   return { listings, status, reload };
 }

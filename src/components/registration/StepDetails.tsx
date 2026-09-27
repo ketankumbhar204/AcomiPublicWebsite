@@ -132,6 +132,26 @@ export function StepDetails({ form, errors, kind, onChange }: StepDetailsProps) 
           inputMode="numeric"
           autoComplete="postal-code"
         />
+        <div className="grid grid-cols-2 gap-3">
+          <TextField
+            id="latitude"
+            label="Latitude (optional)"
+            value={form.latitude}
+            onChange={(value) => onChange('latitude', value)}
+            error={errors.latitude}
+            placeholder="e.g. 18.5204"
+            inputMode="decimal"
+          />
+          <TextField
+            id="longitude"
+            label="Longitude (optional)"
+            value={form.longitude}
+            onChange={(value) => onChange('longitude', value)}
+            error={errors.longitude}
+            placeholder="e.g. 73.8567"
+            inputMode="decimal"
+          />
+        </div>
         <TextField
           id="mapUrl"
           label="Google Maps link (optional)"
@@ -141,6 +161,9 @@ export function StepDetails({ form, errors, kind, onChange }: StepDetailsProps) 
           placeholder="Paste a Google Maps link"
           inputMode="url"
         />
+        <p className="text-[12px] text-text-secondary">
+          Add latitude and longitude, a Google Maps link, or both. Either is enough to open the map.
+        </p>
       </Section>
 
       <Section title="Pricing">

@@ -798,6 +798,17 @@
     "sortLabel": "జాబితాలను క్రమబద్ధీకరించండి",
     "openMaps": "గూగుల్ మ్యాప్స్లో తెరవండి",
     "contactEnquire": "సంప్రదించండి / విచారించండి",
+    "representativeImage": "ప్రతినిధి చిత్రం",
+    "representativeImageAria": "{{category}} లిస్టింగ్ కోసం ప్రతినిధి చిత్రం",
+    "representativeCategory": {
+      "PG": "PG",
+      "HOSTEL": "హాస్టల్",
+      "CO_LIVING": "కో-లివింగ్",
+      "RENTAL": "అద్దె",
+      "SERVICED": "సర్వీస్డ్ అపార్ట్‌మెంట్",
+      "MESS": "మెస్",
+      "GENERIC": "వసతి"
+    },
     "openFullPage": "పూర్తి పేజీని తెరవండి",
     "location": "స్థానం",
     "amenities": "సౌకర్యాలు",
@@ -918,12 +929,19 @@
     "title": "మీకు సమీపంలో భోజనాన్ని కనుగొనండి",
     "description": "పూణే అంతటా మెస్, టిఫిన్ మరియు భోజన సేవలు.",
     "searchLabel": "భోజనం శోధించండి",
-    "searchPlaceholder": "నగరం, ప్రాంతం లేదా మెస్ పేరుతో శోధించండి",
-    "foundOne": "{{count}} మెస్ కనుగొనబడింది",
-    "foundMany": "{{count}} మెస్‌లు కనుగొనబడ్డాయి",
-    "emptyTitle": "మెస్‌లు ఏవీ కనుగొనబడలేదు",
-    "emptyDescription": "మరొక ప్రాంతం లేదా ధర పరిధిని ప్రయత్నించండి.",
-    "detailFallback": "మెస్ వివరాలు"
+    "searchPlaceholder": "Search by mess or meal name",
+    "selectLocation": "Select location",
+    "clearLocation": "Clear location",
+    "foundOne": "{{count}} mess found",
+    "foundMany": "{{count}} messes found",
+    "emptyTitle": "No meals found",
+    "emptyDescription": "Try another location or adjust your search.",
+    "emptyInLocation": "No meals found in {{location}}",
+    "emptyInLocationDescription": "Try another location or adjust your filters.",
+    "detailFallback": "Mess details",
+    "loading": "Loading meals…",
+    "loadingMore": "Loading more meals…",
+    "filtersHint": "Use the location selector and search to find meals. Results are filtered on the server."
   },
   "propertyDetail": {
     "seoNotFound": {

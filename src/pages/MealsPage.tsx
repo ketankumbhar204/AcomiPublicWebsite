@@ -1,42 +1,94 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { SlidersHorizontal } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
+import { locationsApi } from '../api/locationsApi';
 import { ActionButton } from '../components/common/ActionButton';
-import { ActiveFilterChips } from '../components/discovery/ActiveFilterChips';
 import { DiscoveryPageShell } from '../components/discovery/DiscoveryPageShell';
 import { DiscoverySearchBar } from '../components/discovery/DiscoverySearchBar';
 import { EnquireDialog } from '../components/discovery/EnquireDialog';
-import { FilterSheet } from '../components/discovery/FilterSheet';
 import { ListingCardSkeleton } from '../components/discovery/ListingCardSkeleton';
 import { ListingDetailDrawer } from '../components/discovery/ListingDetailDrawer';
 import { ListingEmpty } from '../components/discovery/ListingEmpty';
-import { ListingPagination } from '../components/discovery/ListingPagination';
+import { ListingInfiniteSentinel } from '../components/discovery/ListingInfiniteSentinel';
 import { MessCard } from '../components/discovery/MessCard';
 import { MessDetailPanel } from '../components/discovery/MessDetailPanel';
 import { MessFilters } from '../components/discovery/MessFilters';
-import { messFilterChips } from '../components/discovery/messFilterChips';
-import { DEFAULT_MESS_QUERY, messQueryIsFiltered } from '../data/listings/defaults';
-import { filterMesses, uniqueCities, uniqueLocalities } from '../data/listings';
-import { useMessListings } from '../data/listings/useDiscoverListings';
-import type { MessQuery } from '../data/listings/types';
+import { LocationSelectModal, type SelectedLocation } from '../components/onboarding/LocationSelectModal';
+import { DEFAULT_MESS_QUERY } from '../data/listings/defaults';
+import { getDiscoverSpaceDetail } from '../data/listings/discoverApi';
+import { toMessListing } from '../data/listings/mapDiscoverListing';
+import {
+  buildPlacesSearchParams,
+  formatPlacesLocationLabel,
+  parsePlacesUrlState,
+  toPlacesSelectedLocation,
+  type PlacesSelectedLocation,
+} from '../data/listings/placesLocation';
+import { usePagedMessListings } from '../data/listings/usePagedMessListings';
+import type { MessListing, MessQuery } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
-import { takeEnquireResumeIntent } from '../auth/enquireIntent';
-
-const PAGE_SIZE = 12;
+import { readEnquireIntent, takeEnquireResumeIntent } from '../auth/enquireIntent';
+import { useAutoOpenLocationSelect } from '../data/listings/useAutoOpenLocationSelect';
 
 export function MealsPage() {
   const { t } = useTranslation();
-  const { listings, status, reload } = useMessListings();
-  const localities = uniqueLocalities(listings);
-  const cities = uniqueCities(listings);
-  const [query, setQuery] = useState<MessQuery>(DEFAULT_MESS_QUERY);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const parsed = useMemo(() => parsePlacesUrlState(searchParams), [searchParams]);
+  const selectedLocation = parsed.selectedLocation;
+  const [query, setQuery] = useState<MessQuery>(() => ({
+    ...DEFAULT_MESS_QUERY,
+    query: parsed.query,
+  }));
+  const [debouncedSearch, setDebouncedSearch] = useState(parsed.query);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(query.query), 300);
+    return () => window.clearTimeout(timer);
+  }, [query.query]);
+  const discoverFilters = useMemo(
+    () => ({
+      location: selectedLocation?.location,
+      pincode: selectedLocation?.pincode,
+      district: selectedLocation?.district,
+      state: selectedLocation?.state,
+      cityTaluka: selectedLocation?.cityTaluka,
+      search: debouncedSearch,
+      sort: query.sort,
+    }),
+    [
+      debouncedSearch,
+      query.sort,
+      selectedLocation?.cityTaluka,
+      selectedLocation?.district,
+      selectedLocation?.location,
+      selectedLocation?.pincode,
+      selectedLocation?.state,
+    ],
+  );
+  const { listings, status, reload, loadingMore, loadMoreError, hasMore, totalElements, loadMore } =
+    usePagedMessListings(discoverFilters);
+  const enquireResume = readEnquireIntent();
+  const skipLocationPrompt = Boolean(
+    enquireResume?.resumeAfterAuth && enquireResume.listingKind === 'mess',
+  );
+  const [locationOpen, setLocationOpen] = useAutoOpenLocationSelect(
+    Boolean(selectedLocation?.location),
+    skipLocationPrompt,
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [detailListing, setDetailListing] = useState<MessListing | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [savedIds, setSavedIds] = useState<string[]>([]);
-  const [page, setPage] = useState(1);
   const [enquireOpen, setEnquireOpen] = useState(false);
   const restoredEnquire = useRef(false);
+
+  const writeMealsUrl = useCallback(
+    (nextLocation: PlacesSelectedLocation | null, nextQuery: string) => {
+      setSearchParams(buildPlacesSearchParams({ selectedLocation: nextLocation, query: nextQuery }), {
+        replace: true,
+      });
+    },
+    [setSearchParams],
+  );
 
   useEffect(() => {
     applySeo({
@@ -47,8 +99,79 @@ export function MealsPage() {
   }, [t]);
 
   useEffect(() => {
-    setPage(1);
-  }, [query]);
+    if (parsed.legacyLocationInQ) {
+      writeMealsUrl(parsed.selectedLocation, parsed.query);
+    }
+  }, [parsed.legacyLocationInQ, parsed.query, parsed.selectedLocation, writeMealsUrl]);
+
+  useEffect(() => {
+    setQuery((current) => (current.query === parsed.query ? current : { ...current, query: parsed.query }));
+  }, [parsed.query]);
+
+  useEffect(() => {
+    const selected = parsed.selectedLocation;
+    if (!selected?.location || selected.district) {
+      return;
+    }
+    let active = true;
+    const lookup = selected.pincode || selected.location;
+    locationsApi
+      .search(lookup, {
+        state: selected.state,
+        district: selected.district,
+        taluk: selected.cityTaluka,
+      })
+      .then((results) => {
+        if (!active) return;
+        const match =
+          results.find(
+            (record) =>
+              record.location.toLowerCase() === selected.location.toLowerCase() &&
+              (!selected.pincode || record.pincode === selected.pincode),
+          ) ?? results.find((record) => selected.pincode && record.pincode === selected.pincode);
+        if (!match?.district) return;
+        setSearchParams(
+          (current) => {
+            const currentState = parsePlacesUrlState(current);
+            return buildPlacesSearchParams({
+              selectedLocation: toPlacesSelectedLocation({
+                location: selected.location,
+                pincode: selected.pincode || match.pincode,
+                district: match.district,
+                state: match.state,
+                cityTaluka: match.cityTaluka,
+              }),
+              query: currentState.query,
+            });
+          },
+          { replace: true },
+        );
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [parsed.selectedLocation, setSearchParams]);
+
+  useEffect(() => {
+    if (!selectedId) {
+      setDetailListing(null);
+      return;
+    }
+    let active = true;
+    void getDiscoverSpaceDetail(selectedId)
+      .then((detail) => {
+        if (!active) return;
+        setDetailListing(toMessListing(detail));
+      })
+      .catch(() => {
+        if (!active) return;
+        setDetailListing(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [selectedId]);
 
   useEffect(() => {
     if (restoredEnquire.current || status !== 'ready') return;
@@ -61,23 +184,33 @@ export function MealsPage() {
     setEnquireOpen(true);
   }, [listings, status]);
 
-  const results = useMemo(() => filterMesses(listings, query), [listings, query]);
-  const chips = messFilterChips(query, setQuery, t);
-  const filtered = messQueryIsFiltered(query) || query.query.trim().length > 0;
-  const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
-  const shown = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const selected = listings.find((item) => item.id === selectedId) ?? null;
-  const cityLabel = cities.length === 1 ? cities[0] : cities.length > 1 ? cities.slice(0, 2).join(', ') : t('mealsPage.regionFallback');
+  const filtered = query.query.trim().length > 0 || Boolean(selectedLocation?.location);
+  const selected =
+    detailListing?.id === selectedId
+      ? detailListing
+      : (listings.find((item) => item.id === selectedId) ?? null);
+  const locationLabel = selectedLocation ? formatPlacesLocationLabel(selectedLocation) : '';
 
   useEffect(() => {
-    if (selectedId && !listings.some((item) => item.id === selectedId)) {
+    if (selectedId && !listings.some((item) => item.id === selectedId) && detailListing?.id !== selectedId) {
       setSelectedId(null);
       setDetailOpen(false);
     }
-  }, [listings, selectedId]);
+  }, [detailListing?.id, listings, selectedId]);
 
-  const clearFilters = () =>
-    setQuery({ ...DEFAULT_MESS_QUERY, query: query.query, sort: query.sort });
+  const handleSearchChange = (value: string) => {
+    setQuery({ ...query, query: value });
+    writeMealsUrl(selectedLocation, value);
+  };
+
+  const handleLocationConfirm = (next: SelectedLocation) => {
+    setLocationOpen(false);
+    writeMealsUrl(toPlacesSelectedLocation(next), query.query);
+  };
+
+  const handleLocationClear = () => {
+    writeMealsUrl(null, query.query);
+  };
 
   const selectListing = (id: string) => {
     setSelectedId(id);
@@ -87,6 +220,13 @@ export function MealsPage() {
   const toggleSaved = (id: string) => {
     setSavedIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
   };
+
+  const emptyTitle = selectedLocation?.location
+    ? t('mealsPage.emptyInLocation', { location: selectedLocation.location })
+    : t('mealsPage.emptyTitle');
+  const emptyDescription = selectedLocation?.location
+    ? t('mealsPage.emptyInLocationDescription')
+    : t('mealsPage.emptyDescription');
 
   return (
     <>
@@ -100,8 +240,11 @@ export function MealsPage() {
             searchLabel={t('mealsPage.searchLabel')}
             searchValue={query.query}
             searchPlaceholder={t('mealsPage.searchPlaceholder')}
-            onSearchChange={(value) => setQuery({ ...query, query: value })}
-            city={cityLabel}
+            onSearchChange={handleSearchChange}
+            locationLabel={locationLabel || null}
+            locationPlaceholder={t('mealsPage.selectLocation', { defaultValue: 'Select location' })}
+            onLocationClick={() => setLocationOpen(true)}
+            onLocationClear={locationLabel ? handleLocationClear : undefined}
             sortId="meals-sort"
             sortValue={query.sort}
             onSortChange={(sort) => setQuery({ ...query, sort })}
@@ -111,29 +254,20 @@ export function MealsPage() {
           <>
             <h2 className="text-sm font-semibold text-navy">{t('discovery.filters')}</h2>
             <div className="mt-4">
-              <MessFilters query={query} localities={localities} onChange={setQuery} />
+              <MessFilters />
             </div>
           </>
         }
         toolbar={
-          <>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-text-secondary">
-                {status === 'loading'
-                  ? t('mealsPage.loading')
-                  : t(results.length === 1 ? 'mealsPage.foundOne' : 'mealsPage.foundMany', {
-                      count: results.length,
-                    })}
-              </p>
-              <ActionButton onClick={() => setSheetOpen(true)} variant="ghost" className="lg:hidden">
-                <SlidersHorizontal aria-hidden className="h-4 w-4" />
-                {t('discovery.filters')}
-              </ActionButton>
-            </div>
-            <div className="mt-3">
-              <ActiveFilterChips filters={chips} onClearAll={clearFilters} />
-            </div>
-          </>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-text-secondary">
+              {status === 'loading'
+                ? t('mealsPage.loading')
+                : t(totalElements === 1 ? 'mealsPage.foundOne' : 'mealsPage.foundMany', {
+                    count: totalElements,
+                  })}
+            </p>
+          </div>
         }
         results={
           status === 'loading' ? (
@@ -147,18 +281,18 @@ export function MealsPage() {
                 onClear={reload}
               />
             </div>
-          ) : results.length === 0 ? (
+          ) : listings.length === 0 ? (
             <div className="mt-6">
               <ListingEmpty
-                title={t('mealsPage.emptyTitle')}
-                description={t('mealsPage.emptyDescription')}
-                onClear={filtered ? clearFilters : () => setQuery(DEFAULT_MESS_QUERY)}
+                title={emptyTitle}
+                description={emptyDescription}
+                onClear={filtered ? () => writeMealsUrl(selectedLocation, '') : () => writeMealsUrl(null, '')}
               />
             </div>
           ) : (
             <>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {shown.map((listing) => (
+                {listings.map((listing) => (
                   <MessCard
                     key={listing.id}
                     listing={listing}
@@ -166,28 +300,47 @@ export function MealsPage() {
                     saved={savedIds.includes(listing.id)}
                     onSelect={() => selectListing(listing.id)}
                     onToggleSave={() => toggleSaved(listing.id)}
+                    onEnquire={() => {
+                      setSelectedId(listing.id);
+                      setEnquireOpen(true);
+                    }}
                   />
                 ))}
               </div>
-              <ListingPagination page={page} pageCount={pageCount} onPageChange={setPage} />
+              {loadingMore ? (
+                <p className="mt-6 text-center text-sm text-text-secondary">{t('mealsPage.loadingMore')}</p>
+              ) : null}
+              {loadMoreError ? (
+                <div className="mt-6 flex justify-center">
+                  <ActionButton onClick={loadMore} variant="ghost">
+                    {t('discovery.retry')}
+                  </ActionButton>
+                </div>
+              ) : null}
+              <ListingInfiniteSentinel
+                onVisible={loadMore}
+                disabled={!hasMore || loadingMore || loadMoreError || status !== 'ready'}
+              />
             </>
           )
         }
       />
 
-      <FilterSheet
-        open={sheetOpen}
-        title={t('discovery.filters')}
-        labelledBy="meals-filters-title"
-        value={query}
-        onClose={() => setSheetOpen(false)}
-        onApply={setQuery}
-        onClear={clearFilters}
-      >
-        {(draft, setDraft) => (
-          <MessFilters query={draft} localities={localities} onChange={setDraft} />
-        )}
-      </FilterSheet>
+      <LocationSelectModal
+        open={locationOpen}
+        onClose={() => setLocationOpen(false)}
+        onConfirm={handleLocationConfirm}
+        applyOnSelect
+        rankingContext={
+          selectedLocation
+            ? {
+                state: selectedLocation.state,
+                district: selectedLocation.district,
+                taluk: selectedLocation.cityTaluka,
+              }
+            : undefined
+        }
+      />
 
       <ListingDetailDrawer
         open={detailOpen && selected != null}

@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { MapPin, MessageCircle, Users, UtensilsCrossed } from 'lucide-react';
+import { MapPin, Users, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../common/ActionButton';
 import { formatListingAddress } from '../../data/listings/query';
 import type { MessListing } from '../../data/listings/types';
 import { ListingGallery } from './ListingGallery';
+import { ListingInfoChips } from './ListingInfoChips';
 import { ListingMapLink } from './ListingMapLink';
 import { ListingPrice } from './ListingPrice';
 
@@ -18,11 +19,17 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
   const meta = listing.listingMetadata;
   const meals = meta.mealsServed;
   const address = formatListingAddress(listing);
+  const cta = t('discovery.getContactDetails');
 
   return (
     <div className="flex h-full flex-col">
       <div key={listing.id}>
-        <ListingGallery images={meta.images} name={listing.name} />
+        <ListingGallery
+          listingId={listing.id}
+          spaceType="MESS"
+          images={meta.images}
+          name={listing.name}
+        />
       </div>
       <h2 className="mt-4 text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
       {address ? (
@@ -74,16 +81,19 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
           </p>
         </div>
       ) : null}
-      {address ? (
+      {listing.mapUrl ? (
         <div className="mt-5">
           <h3 className="text-sm font-semibold text-navy">{t('discovery.location')}</h3>
           <ListingMapLink listing={listing} compact />
         </div>
       ) : null}
       <div className="mt-auto pt-5">
-        <ActionButton onClick={onEnquire} className="w-full">
-          <MessageCircle aria-hidden className="h-4 w-4" />
-          {t('discovery.contactEnquire')}
+        <h3 className="text-sm font-semibold text-navy">{t('discovery.infoAvailable')}</h3>
+        <div className="mt-2">
+          <ListingInfoChips listing={{ ...listing, mealsServed: meals }} variant="detail" surface="meals" />
+        </div>
+        <ActionButton onClick={onEnquire} className="mt-4 w-full" aria-label={`${cta}: ${listing.name}`}>
+          {cta}
         </ActionButton>
         <Link to={`/meals/${listing.id}`} className="mt-3 block text-center text-[13px] font-semibold text-primary hover:underline">
           {t('discovery.openFullPage')}
