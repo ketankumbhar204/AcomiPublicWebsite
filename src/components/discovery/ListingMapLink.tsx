@@ -14,9 +14,10 @@ type ListingMapLinkProps = {
     pincode: string;
   };
   compact?: boolean;
+  className?: string;
 };
 
-export function ListingMapLink({ listing, compact = false }: ListingMapLinkProps) {
+export function ListingMapLink({ listing, compact = false, className }: ListingMapLinkProps) {
   const { t } = useTranslation();
   const href = listing.mapUrl?.trim();
   if (!href) {
@@ -29,7 +30,7 @@ export function ListingMapLink({ listing, compact = false }: ListingMapLinkProps
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-register hover:underline"
+        className={`inline-flex items-center gap-1.5 text-[13px] font-semibold text-register hover:underline ${className ?? 'mt-3'}`}
       >
         <MapPin aria-hidden className="h-4 w-4" />
         {t('discovery.openMaps')}

@@ -958,7 +958,7 @@
     "enquireSavedEmails": "जतन केलेले ईमेल",
     "enquireUseDifferentEmail": "वेगळा ईमेल वापरा",
     "enquireEmailInvalid": "वैध ईमेल पत्ता लिहा.",
-    "enquireListingUnavailable": "या लिस्टिंगवर अद्याप चौकशी उपलब्ध नाही.",
+    "enquireListingUnavailable": "या लिस्टिंगसाठी चौकशी सुरू करता आली नाही. कृपया पुन्हा प्रयत्न करा किंवा दुसरी लिस्टिंग निवडा.",
     "enquireSubmitError": "चौकशी जमा करता आली नाही. कृपया पुन्हा प्रयत्न करा.",
     "enquireSubmitting": "तुमची चौकशी पाठवली जात आहे…",
     "enquireSubmittingHint": "कृपया थांबा. संपर्क तपशील तयार होत आहेत, याला काही सेकंद लागू शकतात.",

@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../common/ActionButton';
 import { formatListingAddress } from '../../data/listings/query';
 import type { MessListing } from '../../data/listings/types';
+import { ListingCardMeta } from './ListingCardMeta';
 import { ListingGallery } from './ListingGallery';
 import { ListingInfoChips } from './ListingInfoChips';
-import { ListingMapLink } from './ListingMapLink';
 import { ListingPrice } from './ListingPrice';
 
 type MessDetailPanelProps = {
@@ -81,17 +81,19 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
           </p>
         </div>
       ) : null}
-      {listing.mapUrl ? (
-        <div className="mt-5">
-          <h3 className="text-sm font-semibold text-navy">{t('discovery.location')}</h3>
-          <ListingMapLink listing={listing} compact />
-        </div>
-      ) : null}
       <div className="mt-auto pt-5">
-        <h3 className="text-sm font-semibold text-navy">{t('discovery.infoAvailable')}</h3>
-        <div className="mt-2">
-          <ListingInfoChips listing={{ ...listing, mealsServed: meals }} variant="detail" surface="meals" />
-        </div>
+        <ListingCardMeta
+          listing={listing}
+          onEnquire={onEnquire}
+          chips={
+            <ListingInfoChips
+              listing={{ ...listing, mealsServed: meals }}
+              variant="detail"
+              surface="meals"
+              onEnquire={onEnquire}
+            />
+          }
+        />
         <ActionButton onClick={onEnquire} className="mt-4 w-full" aria-label={`${cta}: ${listing.name}`}>
           {cta}
         </ActionButton>

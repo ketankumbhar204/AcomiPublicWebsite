@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../components/common/ActionButton';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { EnquireDialog } from '../components/discovery/EnquireDialog';
+import { ListingCardMeta } from '../components/discovery/ListingCardMeta';
 import { ListingGallery } from '../components/discovery/ListingGallery';
 import { ListingInfoChips } from '../components/discovery/ListingInfoChips';
-import { ListingMapLink } from '../components/discovery/ListingMapLink';
 import { ListingPrice } from '../components/discovery/ListingPrice';
 import { Container } from '../components/layout/Container';
 import { getDiscoverSpaceDetail } from '../data/listings/discoverApi';
@@ -149,14 +149,18 @@ export function MessDetailPage() {
               </p>
             ) : null}
             <div className="mt-6">
-              <h2 className="text-sm font-semibold text-navy">{t('discovery.infoAvailable')}</h2>
-              <div className="mt-2">
-                <ListingInfoChips
-                  listing={{ ...listing, mealsServed: meta.mealsServed }}
-                  variant="detail"
-                  surface="meals"
-                />
-              </div>
+              <ListingCardMeta
+                listing={listing}
+                onEnquire={() => setEnquireOpen(true)}
+                chips={
+                  <ListingInfoChips
+                    listing={{ ...listing, mealsServed: meta.mealsServed }}
+                    variant="detail"
+                    surface="meals"
+                    onEnquire={() => setEnquireOpen(true)}
+                  />
+                }
+              />
               <ActionButton
                 onClick={() => setEnquireOpen(true)}
                 className="mt-4 w-full"
@@ -178,9 +182,14 @@ export function MessDetailPage() {
         {listing.mapUrl ? (
           <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h2 className="text-lg font-semibold text-navy">{t('discovery.location')}</h2>
-            <div className="mt-3">
-              <ListingMapLink listing={listing} />
-            </div>
+            <p className="mt-3 text-[15px] text-text-secondary">{t('discovery.enquireForMap', { defaultValue: 'Map and exact location are shared after you send an enquiry.' })}</p>
+            <ActionButton
+              onClick={() => setEnquireOpen(true)}
+              className="mt-4"
+              aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
+            >
+              {t('discovery.getContactDetails')}
+            </ActionButton>
           </div>
         ) : null}
       </Container>

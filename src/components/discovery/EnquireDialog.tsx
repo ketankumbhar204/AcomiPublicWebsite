@@ -17,6 +17,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import { createSpaceEnquiry, deliverEnquiryContactEmail, resolveDiscoverSpace } from '../../auth/discoverEnquiry';
 import { clearEnquireIntent, saveEnquireIntent } from '../../auth/enquireIntent';
 import { PublicApiError } from '../../lib/apiClient';
+import { enquiryErrorMessage } from '../../auth/enquiryErrors';
 import { isValidEmail } from '../../auth/validation';
 import { ActionButton } from '../common/ActionButton';
 import { Modal } from '../common/Modal';
@@ -303,7 +304,13 @@ export function EnquireDialog({
           setStep('limit');
           return;
         }
-        setError(err.message);
+        setError(
+          enquiryErrorMessage(
+            err,
+            t('discovery.enquireSubmitError'),
+            t('discovery.enquireListingUnavailable'),
+          ),
+        );
       } else {
         setError(t('discovery.enquireSubmitError'));
       }
@@ -379,7 +386,13 @@ export function EnquireDialog({
           setError(t('discovery.enquireEmailInvalid'));
           return;
         }
-        setError(err.message);
+        setError(
+          enquiryErrorMessage(
+            err,
+            t('discovery.enquireSubmitError'),
+            t('discovery.enquireListingUnavailable'),
+          ),
+        );
       } else {
         setError(t('discovery.enquireSubmitError'));
       }

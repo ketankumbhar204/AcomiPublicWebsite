@@ -958,7 +958,7 @@
     "enquireSavedEmails": "सहेजे ईमेल",
     "enquireUseDifferentEmail": "अलग ईमेल इस्तेमाल करें",
     "enquireEmailInvalid": "एक मान्य ईमेल पता दर्ज करें।",
-    "enquireListingUnavailable": "इस लिस्टिंग पर अभी पूछताछ उपलब्ध नहीं है।",
+    "enquireListingUnavailable": "इस लिस्टिंग के लिए पूछताछ शुरू नहीं हो सकी। कृपया फिर कोशिश करें या दूसरी लिस्टिंग चुनें।",
     "enquireSubmitError": "पूछताछ जमा नहीं हो सकी। कृपया फिर कोशिश करें।",
     "enquireSubmitting": "आपकी पूछताछ भेजी जा रही है…",
     "enquireSubmittingHint": "कृपया प्रतीक्षा करें। संपर्क विवरण तैयार हो रहे हैं, इसमें कुछ सेकंड लग सकते हैं।",

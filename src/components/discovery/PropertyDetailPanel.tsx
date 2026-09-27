@@ -5,9 +5,9 @@ import { ActionButton } from '../common/ActionButton';
 import { formatListingAddress } from '../../data/listings/query';
 import type { PropertyListing } from '../../data/listings/types';
 import { amenityIcon } from './listingIcons';
+import { ListingCardMeta } from './ListingCardMeta';
 import { ListingGallery } from './ListingGallery';
 import { ListingInfoChips } from './ListingInfoChips';
-import { ListingMapLink } from './ListingMapLink';
 import { ListingPrice } from './ListingPrice';
 
 type PropertyDetailPanelProps = {
@@ -79,17 +79,12 @@ export function PropertyDetailPanel({ listing, onEnquire }: PropertyDetailPanelP
           </ul>
         </div>
       ) : null}
-      {listing.mapUrl ? (
-        <div className="mt-5">
-          <h3 className="text-sm font-semibold text-navy">{t('discovery.location')}</h3>
-          <ListingMapLink listing={listing} compact />
-        </div>
-      ) : null}
       <div className="mt-auto pt-5">
-        <h3 className="text-sm font-semibold text-navy">{t('discovery.infoAvailable')}</h3>
-        <div className="mt-2">
-          <ListingInfoChips listing={listing} variant="detail" />
-        </div>
+        <ListingCardMeta
+          listing={listing}
+          onEnquire={onEnquire}
+          chips={<ListingInfoChips listing={listing} variant="detail" onEnquire={onEnquire} />}
+        />
         <ActionButton onClick={onEnquire} className="mt-4 w-full" aria-label={`${cta}: ${listing.name}`}>
           {cta}
         </ActionButton>

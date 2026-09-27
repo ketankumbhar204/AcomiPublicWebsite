@@ -1,8 +1,9 @@
-import { Heart, MapPin } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatListingAddress } from '../../data/listings/query';
 import type { PropertyListing } from '../../data/listings/types';
 import { ActionButton } from '../common/ActionButton';
+import { ListingCardMeta } from './ListingCardMeta';
 import { ListingCover } from './ListingCover';
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
@@ -29,6 +30,7 @@ export function PropertyCard({
     ? `${listing.locality}, ${listing.city}`
     : formatListingAddress(listing) || listing.name;
   const cta = t('discovery.getContactDetails');
+  const viewDetails = t('discovery.viewDetails', { defaultValue: 'View details' });
 
   return (
     <article
@@ -61,10 +63,7 @@ export function PropertyCard({
       <div className="flex flex-1 flex-col p-3.5">
         <button type="button" onClick={onSelect} className="w-full text-left">
           <h2 className="line-clamp-2 text-[16px] font-semibold tracking-tight text-navy">{listing.name}</h2>
-          <p className="mt-1 flex items-center gap-1.5 text-[13px] text-text-secondary">
-            <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-muted" />
-            <span className="line-clamp-2">{place}</span>
-          </p>
+          <p className="mt-1 line-clamp-2 text-[13px] text-text-secondary">{place}</p>
           <p className="mt-2 text-[16px] font-semibold text-navy">
             <ListingPrice
               amount={listing.startingPrice}
@@ -73,10 +72,20 @@ export function PropertyCard({
             />
           </p>
         </button>
-        <div className="mt-2">
-          <ListingInfoChips listing={listing} variant="card" />
-        </div>
-        <div className="mt-auto pt-3">
+        <ListingCardMeta
+          listing={listing}
+          onEnquire={onEnquire}
+          chips={<ListingInfoChips listing={listing} variant="card" onEnquire={onEnquire} />}
+        />
+        <div className="mt-auto flex flex-col gap-2 pt-3">
+          <ActionButton
+            variant="outline"
+            onClick={onSelect}
+            className="h-9 w-full px-3 text-[13px]"
+            aria-label={`${viewDetails}: ${listing.name}`}
+          >
+            {viewDetails}
+          </ActionButton>
           <ActionButton
             onClick={onEnquire}
             className="h-9 w-full px-3 text-[13px]"
