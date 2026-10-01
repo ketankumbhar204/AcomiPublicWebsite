@@ -50,6 +50,7 @@ export type PropertyListing = {
   amenityCodes: string[];
   foodIncludedInRent?: boolean;
   hasContact?: boolean;
+  hasMobileContact?: boolean;
   sharingNotes?: string;
   listingMetadata: ListingMetadata & { availableCount?: number | null };
 };
@@ -68,7 +69,10 @@ export type MessListing = {
   longitude?: number | null;
   monthlyPrice: number | null;
   mealPrice: number | null;
+  amenityCodes?: string[];
+  foodIncludedInRent?: boolean;
   hasContact?: boolean;
+  hasMobileContact?: boolean;
   capacityEstimate: number | null;
   listingMetadata: ListingMetadata & {
     mealsServed: string[];

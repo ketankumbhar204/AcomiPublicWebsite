@@ -116,6 +116,9 @@ assert(meals.includes('takeEnquireResumeIntent'), 'Meals page must restore listi
 assert(discover.includes('/spaces/discover'), 'enquiry resolution must use discover APIs');
 assert(discover.includes('/enquiries'), 'enquiry submit must use existing enquiry API');
 assert(discover.includes('deliveryChannel'), 'enquiry create must support deliveryChannel');
+assert(enquire.includes('fetchInquiryQuota'), 'email card must load remaining daily quota');
+assert(enquire.includes('emailAlreadyDeliveredTo'), 'first email send must not look like already-sent');
+assert(!enquire.includes('\n                    5\n'), 'email remaining badge must not be hardcoded');
 assert(!types.includes('ownerMobile'), 'public auth types must not model ownerMobile field name');
 assert(listingTypes.includes('Never shown: ownerName, mobileNumber'), 'listing types must keep owner contact out');
 assert(!links.includes('enquireSignInUrl'), 'legacy app login enquire URL helper must be removed');

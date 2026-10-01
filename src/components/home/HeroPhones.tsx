@@ -1,10 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { SHOTS } from '../../data/shots';
 import { PhoneMock } from '../common/PhoneMock';
 
-const PG_CAPTION = "PG · Know who's staying";
-const MESS_CAPTION = "MESS · Know who's eating";
-
 export function HeroPhones() {
+  const { t } = useTranslation();
+  const pgCaption = t('home.heroPhones.property');
+  const messCaption = t('home.heroPhones.food');
   return (
     <div className="relative mx-auto w-full max-w-[560px]">
       <div className="flex flex-col items-center gap-8 lg:relative lg:block lg:h-[560px]">
@@ -16,7 +17,7 @@ export function HeroPhones() {
           <PhoneMock
             src={SHOTS.dashboard.src}
             alt={SHOTS.dashboard.alt}
-            caption={PG_CAPTION}
+            caption={pgCaption}
             size="hero"
             tilt={-6}
             priority
@@ -27,7 +28,7 @@ export function HeroPhones() {
           <PhoneMock
             src={SHOTS.mess.src}
             alt={SHOTS.mess.alt}
-            caption={MESS_CAPTION}
+            caption={messCaption}
             size="hero"
             tilt={6}
             priority
@@ -36,8 +37,8 @@ export function HeroPhones() {
         </div>
       </div>
       <div className="mt-2 hidden justify-between lg:flex">
-        <p className="w-[252px] text-center text-sm font-medium text-text-secondary">{PG_CAPTION}</p>
-        <p className="w-[252px] text-center text-sm font-medium text-text-secondary">{MESS_CAPTION}</p>
+        <p className="w-[252px] text-center text-sm font-medium text-text-secondary">{pgCaption}</p>
+        <p className="w-[252px] text-center text-sm font-medium text-text-secondary">{messCaption}</p>
       </div>
     </div>
   );

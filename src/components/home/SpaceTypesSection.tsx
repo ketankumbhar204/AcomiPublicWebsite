@@ -47,6 +47,9 @@ export function SpaceTypesSection() {
         >
           {t('home.spaceTypes.title')}
         </h2>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-text-secondary">
+          {t('home.spaceTypes.subtitle')}
+        </p>
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {types.map((item) => (
             <li

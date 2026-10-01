@@ -70,6 +70,7 @@ export function toPropertyListing(detail: DiscoverSpaceCard & Partial<DiscoverSp
     amenityCodes: amenityCodesOf(detail),
     foodIncludedInRent: detail.foodIncludedInRent === true,
     hasContact: detail.hasContact === true,
+    hasMobileContact: detail.hasMobileContact === true,
     sharingNotes: text(detail.sharingNotes) || undefined,
     listingMetadata: {
       images: listingImages(detail),
@@ -96,7 +97,10 @@ export function toMessListing(detail: DiscoverSpaceCard & Partial<DiscoverSpaceD
     longitude: toNumber(detail.longitude),
     monthlyPrice: toNumber(detail.monthlyPrice),
     mealPrice: toNumber(detail.mealPrice),
+    amenityCodes: amenityCodesOf(detail),
+    foodIncludedInRent: detail.foodIncludedInRent === true,
     hasContact: detail.hasContact === true,
+    hasMobileContact: detail.hasMobileContact === true,
     capacityEstimate: null,
     listingMetadata: {
       images: listingImages(detail),

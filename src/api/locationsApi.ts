@@ -1,3 +1,4 @@
+import type { LocationAutocompleteSuggestion } from '../data/listings/locationAutocomplete';
 import { publicApi } from '../lib/apiClient';
 
 export type LocationRecord = {
@@ -44,5 +45,15 @@ export const locationsApi = {
     if (district) params.set('district', district);
     if (taluk) params.set('taluk', taluk);
     return publicApi<LocationRecord[]>(`/locations/search?${params.toString()}`);
+  },
+
+  autocomplete: (q: string, options: Pick<LocationSearchOptions, 'state' | 'district'> = {}) => {
+    const params = new URLSearchParams();
+    params.set('q', q.trim());
+    const state = options.state?.trim();
+    const district = options.district?.trim();
+    if (state) params.set('state', state);
+    if (district) params.set('district', district);
+    return publicApi<LocationAutocompleteSuggestion[]>(`/locations/autocomplete?${params.toString()}`);
   },
 };

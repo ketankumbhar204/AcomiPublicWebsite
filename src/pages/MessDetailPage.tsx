@@ -4,10 +4,13 @@ import { MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../components/common/ActionButton';
 import { ButtonLink } from '../components/common/ButtonLink';
+import { useAlreadyInquired, useInquirySentVia } from '../auth/useAlreadyInquired';
 import { EnquireDialog } from '../components/discovery/EnquireDialog';
+import { InquirySentBadge, InquirySentButton } from '../components/discovery/InquirySentBadge';
 import { ListingCardMeta } from '../components/discovery/ListingCardMeta';
 import { ListingGallery } from '../components/discovery/ListingGallery';
 import { ListingInfoChips } from '../components/discovery/ListingInfoChips';
+import { ListingUnavailableDetails } from '../components/discovery/ListingUnavailableDetails';
 import { ListingPrice } from '../components/discovery/ListingPrice';
 import { Container } from '../components/layout/Container';
 import { getDiscoverSpaceDetail } from '../data/listings/discoverApi';
@@ -23,6 +26,8 @@ export function MessDetailPage() {
   const [listing, setListing] = useState<MessListing | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
   const [enquireOpen, setEnquireOpen] = useState(false);
+  const alreadyInquired = useAlreadyInquired(listing?.id);
+  const sentVia = useInquirySentVia(listing?.id);
 
   useEffect(() => {
     let cancelled = false;
@@ -124,9 +129,24 @@ export function MessDetailPage() {
 
           <div className="rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h1 className="mt-1 text-[1.75rem] font-semibold tracking-tight text-navy">{listing.name}</h1>
-            {address ? (
+            {alreadyInquired ? (
+              <div className="mt-2">
+                <InquirySentBadge variant="inline" sentVia={sentVia} />
+              </div>
+            ) : null}
+            {address && !alreadyInquired ? (
+              <button
+                type="button"
+                onClick={() => setEnquireOpen(true)}
+                className="mt-2 flex w-full items-center gap-1.5 text-left text-[14px] text-text-secondary underline decoration-black/15 underline-offset-2 hover:text-primary hover:decoration-primary"
+                aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
+              >
+                <MapPin aria-hidden className="h-4 w-4 shrink-0 text-muted" />
+                {address}
+              </button>
+            ) : address ? (
               <p className="mt-2 flex items-center gap-1.5 text-[14px] text-text-secondary">
-                <MapPin aria-hidden className="h-4 w-4 text-muted" />
+                <MapPin aria-hidden className="h-4 w-4 shrink-0 text-muted" />
                 {address}
               </p>
             ) : null}
@@ -151,23 +171,28 @@ export function MessDetailPage() {
             <div className="mt-6">
               <ListingCardMeta
                 listing={listing}
-                onEnquire={() => setEnquireOpen(true)}
+                showMaps={Boolean(listing.mapUrl?.trim())}
+                onEnquire={alreadyInquired ? undefined : () => setEnquireOpen(true)}
                 chips={
                   <ListingInfoChips
                     listing={{ ...listing, mealsServed: meta.mealsServed }}
                     variant="detail"
                     surface="meals"
-                    onEnquire={() => setEnquireOpen(true)}
+                    onEnquire={alreadyInquired ? undefined : () => setEnquireOpen(true)}
                   />
                 }
               />
-              <ActionButton
-                onClick={() => setEnquireOpen(true)}
-                className="mt-4 w-full"
-                aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
-              >
-                {t('discovery.getContactDetails')}
-              </ActionButton>
+              {alreadyInquired ? (
+                <InquirySentButton className="mt-4" />
+              ) : (
+                <ActionButton
+                  onClick={() => setEnquireOpen(true)}
+                  className="mt-4 w-full"
+                  aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
+                >
+                  {t('discovery.getContactDetails')}
+                </ActionButton>
+              )}
             </div>
           </div>
         </div>
@@ -179,17 +204,25 @@ export function MessDetailPage() {
           </div>
         ) : null}
 
+        <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
+          <ListingUnavailableDetails className="space-y-1" />
+        </div>
+
         {listing.mapUrl ? (
           <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h2 className="text-lg font-semibold text-navy">{t('discovery.location')}</h2>
             <p className="mt-3 text-[15px] text-text-secondary">{t('discovery.enquireForMap', { defaultValue: 'Map and exact location are shared after you send an enquiry.' })}</p>
-            <ActionButton
-              onClick={() => setEnquireOpen(true)}
-              className="mt-4"
-              aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
-            >
-              {t('discovery.getContactDetails')}
-            </ActionButton>
+            {alreadyInquired ? (
+              <InquirySentButton className="mt-4" />
+            ) : (
+              <ActionButton
+                onClick={() => setEnquireOpen(true)}
+                className="mt-4"
+                aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
+              >
+                {t('discovery.getContactDetails')}
+              </ActionButton>
+            )}
           </div>
         ) : null}
       </Container>

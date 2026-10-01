@@ -34,8 +34,8 @@ export type UserTypeOption = {
 export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   {
     id: 'ACCOMMODATION_SEEKER',
-    title: 'Search a rental property',
-    description: 'PG • Hostel • Rental • Co-living',
+    title: 'I need a place',
+    description: 'Find a PG, hostel, co-living or rental.',
     shortLabel: 'Looking for a place',
     Icon: Home,
     to: '/places',
@@ -47,8 +47,8 @@ export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   },
   {
     id: 'MEAL_SEEKER',
-    title: 'Search a meal service',
-    description: 'Mess • Tiffin • Meal plans',
+    title: 'I need meals',
+    description: 'Find a mess or meal service.',
     shortLabel: 'Looking for meals',
     Icon: Soup,
     to: '/meals',
@@ -60,8 +60,8 @@ export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   },
   {
     id: 'PROPERTY_OWNER',
-    title: 'I own a property',
-    description: 'PG • Hostel • Rental • Co-living',
+    title: 'I manage a property',
+    description: 'Run occupancy, rooms, members and payments.',
     shortLabel: 'Property owner',
     Icon: Building2,
     to: '/property-owners',
@@ -74,7 +74,7 @@ export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   {
     id: 'MESS_VENDOR',
     title: 'I run a food service',
-    description: 'Mess • Tiffin • Meal service',
+    description: 'Manage customers, menus, meals and headcount.',
     shortLabel: 'Mess vendor',
     Icon: UtensilsCrossed,
     to: '/mess-vendors',

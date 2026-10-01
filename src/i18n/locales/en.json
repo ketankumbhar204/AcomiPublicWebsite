@@ -165,27 +165,30 @@
     "subtitle": "Choose what best describes you to get started",
     "getStartedFree": "Get started free →",
     "seeHowItWorks": "See how it works",
-    "builtFor": "Built for Indian mess, PG, hostel and co-living operators."
+    "findPlace": "Find a place",
+    "findMeals": "Find meals",
+    "seeHowFindingWorks": "See how finding works",
+    "builtFor": "Find a place or meals, or run a property or a food service."
   },
   "userTypes": {
     "PROPERTY_OWNER": {
-      "title": "I own a property",
-      "description": "PG • Hostel • Rental • Co-living",
+      "title": "I manage a property",
+      "description": "Run occupancy, rooms, members and payments.",
       "shortLabel": "Property owner"
     },
     "MESS_VENDOR": {
       "title": "I run a food service",
-      "description": "Mess • Tiffin • Meal service",
+      "description": "Manage customers, menus, meals and headcount.",
       "shortLabel": "Mess vendor"
     },
     "ACCOMMODATION_SEEKER": {
-      "title": "Search a rental property",
-      "description": "PG • Hostel • Rental • Co-living",
+      "title": "I need a place",
+      "description": "Find a PG, hostel, co-living or rental.",
       "shortLabel": "Looking for a place"
     },
     "MEAL_SEEKER": {
-      "title": "Search a meal service",
-      "description": "Mess • Tiffin • Meal plans",
+      "title": "I need meals",
+      "description": "Find a mess or meal service.",
       "shortLabel": "Looking for meals"
     }
   },
@@ -204,9 +207,33 @@
     "description": "Search an area, city or pincode to find places nearby.",
     "searchLabel": "Search",
     "searchPlaceholder": "Search area, city or pincode",
-    "searching": "Searching…",
-    "searchFailed": "Could not search locations.",
-    "noResults": "No matching locations.",
+    "searching": "Searching locations...",
+    "searchFailed": "Location search is temporarily unavailable.",
+    "noResults": "No matching locations found. Try another area, city or pincode.",
+    "searchTab": "Search location",
+    "browseTab": "Browse by location",
+    "intro": "Search for an area, city or pincode",
+    "selectAction": "Select location",
+    "applyAction": "Apply location",
+    "cancel": "Cancel",
+    "clearSearch": "Clear search",
+    "stateLabel": "State",
+    "districtLabel": "District",
+    "talukaLabel": "City / Taluka",
+    "areaLabel": "Area",
+    "selectState": "Select state",
+    "selectDistrict": "Select district",
+    "selectTaluka": "Select city or taluka",
+    "selectArea": "Select area",
+    "chooseByLocation": "Choose by location",
+    "or": "or",
+    "retry": "Try again",
+    "attributionGeoapify": "Powered by Geoapify",
+    "attributionOsm": "© OpenStreetMap contributors",
+    "browseStates": "Select a state",
+    "browseDistricts": "Select a district",
+    "browseTalukas": "Select a city / taluka",
+    "browseAreas": "Select an area",
     "continue": "See places",
     "continueMeals": "See meals"
   },
@@ -289,9 +316,128 @@
   },
   "finalCta": {
     "title": "Run your space from one place.",
-    "subtitle": "Occupancy, meals, headcount and payments — together."
+    "subtitle": "Occupancy, meals, headcount and payments — together.",
+    "balancedTitle": "What are you looking to do?",
+    "balancedSubtitle": "Find a place or meals, or run a property or a food service.",
+    "findPlace": "Find a place",
+    "findMeals": "Find meals",
+    "manageProperty": "Manage my property",
+    "runFood": "Run my food service"
   },
   "home": {
+    "heroPhones": {
+      "property": "Property operations",
+      "food": "Food-service operations"
+    },
+    "atAGlance": {
+      "title": "At a glance",
+      "body": "Sample figures from the product. They show what an operator can track. They are not live listings or company statistics."
+    },
+    "findPlace": {
+      "eyebrow": "Places",
+      "title": "Find a place that fits you",
+      "body": "Explore ACOMI listings by location. Each listing shows the information that was provided, such as rent, sharing, amenities, food, address, and map.",
+      "illustration": "Illustration",
+      "cta": "Explore places",
+      "types": {
+        "pg": {
+          "name": "PG",
+          "line": "Explore PG listings, rent, sharing, amenities, and contact information where the listing includes them."
+        },
+        "hostel": {
+          "name": "Hostel",
+          "line": "Explore hostel listings and the property information provided on each one."
+        },
+        "coliving": {
+          "name": "Co-living",
+          "line": "Explore co-living listings and the details provided for each place."
+        },
+        "rental": {
+          "name": "Rental",
+          "line": "Explore rental listings and the property information provided on each one."
+        }
+      }
+    },
+    "findMeals": {
+      "eyebrow": "Meals",
+      "title": "Find your everyday meals",
+      "body": "Explore mess and meal-service listings by location. Open a listing to see the meal information it includes, such as menu, timing, food type, or price.",
+      "cta": "Find meals",
+      "types": {
+        "mess": {
+          "name": "Mess",
+          "line": "Explore mess listings and the meal details provided on each one."
+        },
+        "tiffin": {
+          "name": "Tiffin",
+          "line": "Explore tiffin and packed-meal listings where that service is listed."
+        },
+        "mealService": {
+          "name": "Meal service",
+          "line": "Explore meal-service listings and the information each one provides."
+        }
+      }
+    },
+    "discoverySteps": {
+      "eyebrow": "Finding a place or meals",
+      "title": "How finding something on ACOMI works",
+      "steps": {
+        "location": {
+          "title": "Choose a location",
+          "line": "Search an area, city, or pincode."
+        },
+        "explore": {
+          "title": "Explore places or meals",
+          "line": "Open the listings for that location."
+        },
+        "review": {
+          "title": "Review what is listed",
+          "line": "Read the information that listing provides."
+        },
+        "enquire": {
+          "title": "Send an enquiry",
+          "line": "Ask for contact details. This is not a booking."
+        }
+      }
+    },
+    "operatorBridge": {
+      "eyebrow": "For owners and operators",
+      "title": "Running a property or a food service?",
+      "body": "The same ACOMI product is where owners and operators run those spaces. Properties track rooms, members, and dues. Food services track customers, menus, and plates.",
+      "manageProperty": "Manage my property",
+      "runFood": "Run my food service",
+      "getStarted": "Get started"
+    },
+    "propertyRun": {
+      "eyebrow": "Property",
+      "title": "Run your property from one place",
+      "body": "PG, hostel, co-living, and rental. Occupancy, members, and dues stay with the property.",
+      "occupied": "occupied",
+      "vacant": "vacant",
+      "reserved": "reserved",
+      "cta": "Manage my property",
+      "capabilities": {
+        "layout": "Buildings, floors, rooms, and beds",
+        "occupancy": "Occupied, vacant, and reserved",
+        "members": "Members, move-ins, and invitations",
+        "payments": "Rent, deposits, and payment proofs",
+        "issues": "Complaints and inventory"
+      }
+    },
+    "foodRun": {
+      "eyebrow": "Food service",
+      "title": "Run your food service from one place",
+      "body": "Mess, tiffin, and meal service. Customers, menus, polls, headcount, and meal dues.",
+      "plates": "Know how many plates to prepare.",
+      "cta": "Run my food service",
+      "capabilities": {
+        "customers": "Customers",
+        "menu": "Menus and meal plans",
+        "poll": "Polls and participation",
+        "headcount": "Daily headcount",
+        "dues": "Meal payments and proofs"
+      }
+    },
     "problem": {
       "title": "Still in notebooks, spreadsheets and WhatsApp.",
       "whosStaying": "Who's staying?",
@@ -356,7 +502,7 @@
     "whatsapp": {
       "eyebrow": "WhatsApp updates",
       "title": "Keep people updated on WhatsApp.",
-      "subtitle": "Tenants and customers get menus, poll, and pending payment updates where they already check.",
+      "subtitle": "Menus, meal polls, and pending payments can be copied and shared as text. ACOMI does not send these messages on WhatsApp automatically.",
       "chips": {
         "selectMeal": "Select meal",
         "pollOpen": "Poll is open",
@@ -420,32 +566,34 @@
       }
     },
     "spaceTypes": {
-      "title": "Space types",
+      "title": "Operators run these space types",
+      "subtitle": "Space type is chosen once. A mess starts from customers and menus. A property starts from rooms and beds.",
       "types": {
         "mess": {
           "name": "MESS",
-          "line": "Customers · menu · headcount"
+          "line": "Customers, menu, and headcount"
         },
         "pg": {
           "name": "PG",
-          "line": "Rooms · beds · members"
+          "line": "Rooms, beds, and members"
         },
         "hostel": {
           "name": "HOSTEL",
-          "line": "Accommodation · occupancy"
+          "line": "Beds, occupancy, and dues"
         },
         "coliving": {
           "name": "CO-LIVING",
-          "line": "Shared accommodation"
+          "line": "Shared units and members"
         },
         "rental": {
           "name": "RENTAL",
-          "line": "Units · tenants"
+          "line": "Units, tenants, and dues"
         }
       }
     },
     "howItWorks": {
-      "title": "How it works",
+      "eyebrow": "For owners and operators",
+      "title": "How a space gets started",
       "steps": {
         "createSpace": {
           "title": "Create space",
@@ -483,6 +631,7 @@
     },
     "access": {
       "title": "Access",
+      "whoTitle": "Who uses ACOMI",
       "ownerTitle": "Owner / operator",
       "memberTitle": "Member",
       "owner": {
@@ -499,6 +648,14 @@
         "respondToPolls": "Respond to meal polls",
         "submitProof": "Submit payment proof",
         "raiseComplaints": "Raise complaints"
+      },
+      "seekerTitle": "Looking for a place or meals",
+      "seekerNote": "This is separate from being a member of a space someone else runs.",
+      "seeker": {
+        "findPlace": "Find a place on this website",
+        "findMeals": "Find meals on this website",
+        "review": "Review the information on a listing",
+        "enquire": "Send an enquiry for contact details"
       }
     },
     "multiSpace": {
@@ -517,6 +674,7 @@
     },
     "platforms": {
       "title": "Platforms",
+      "note": "Places and meals are on this website. The web app and the Android app are where owners, operators, and invited members run a space or take part in one.",
       "web": "Web",
       "androidApp": "ACOMI Android app",
       "openWebApp": "Open web app"
@@ -955,6 +1113,11 @@
       "GENERIC": "accommodation"
     },
     "getContactDetails": "Get Contact Details",
+    "inquirySent": "Inquiry sent",
+    "inquirySentByEmail": "Sent to your email",
+    "inquirySentInApp": "Sent in the ACOMI app",
+    "inquirySentEmailAndApp": "Sent to your email and the ACOMI app",
+    "view": "View",
     "viewDetails": "View details",
     "infoAvailable": "Information available",
     "infoContact": "Contact",
@@ -973,6 +1136,9 @@
     "openFullPage": "Open full page",
     "location": "Location",
     "amenities": "Amenities",
+    "reviewsRatings": "Review & Ratings",
+    "photos": "Photos",
+    "notAvailable": "Not available",
     "rating": "Rating",
     "aboutPlace": "About this place",
     "aboutMess": "About this mess",
@@ -1004,7 +1170,9 @@
     "enquireBenefitFast": "Fast & easy",
     "enquireBenefitSecure": "Secure",
     "enquireBenefitAnywhere": "Access anywhere",
-    "enquireEmailDailyLimit": "Only 5 enquiries per day",
+    "enquireEmailDailyLimit": "Only {{count}} enquiries per day",
+    "enquireEmailRemaining": "{{remaining}} enquiries remaining out of {{limit}}",
+    "enquireEmailRemainingOne": "{{remaining}} enquiry remaining out of {{limit}}",
     "enquireEmailCardHint": "Get owner contact details on your email.",
     "enquireAppSentTitle": "Enquiry sent!",
     "enquireAppSentBody": "Open ACOMI app to check owner contact details.",
@@ -1044,6 +1212,10 @@
     "enquireAppCtaPending": "Open ACOMI App",
     "enquireAppHint": "Unlimited enquiries · Free on Android",
     "enquireEmailCtaReady": "Send details by email",
+    "enquireEmailCtaExhausted": "Get 30 more enquiries",
+    "enquireEmailExhaustedHint": "Pay ₹9 on UPI, then send the screenshot on WhatsApp.",
+    "enquireEmailPaidRemaining": "{{count}} paid enquiries left",
+    "enquireEmailPaidHint": "Admin approved credits are ready to use.",
     "enquireEmailCtaPending": "Get updates by email",
     "enquireEmailHintReady": "We'll email the contact details.",
     "enquireEmailHintPending": "We'll email you when details are available.",
@@ -1094,29 +1266,32 @@
     "enquireSubmittingHint": "Please wait…",
     "enquireDone": "Done",
     "pagesNav": "Listing pages",
-    "limitTitle": "Your 5 free enquiries are used",
-    "limitBody": "Choose how to continue.",
+    "limitTitle": "Your free enquiries are used",
+    "limitTitleWithCount": "Your {{count}} free enquiries are used",
+    "limitBody": "Pay ₹9 for 30 more email enquiries, or use the Android app for unlimited enquiries.",
     "limitAndroidCta": "Unlimited enquiries in ACOMI",
     "limitAndroidNote": "Free on Android",
     "limitEmailTitle": "Don't use Android?",
     "limitEmailBody": "Get 30 more enquiries for web.",
     "limitMyEnquiries": "Go to My Enquiries →",
-    "limitCreditsCtaDefault": "Get 30 more enquiries",
+    "limitCreditsCtaDefault": "Get 30 more enquiries · ₹9",
     "limitCreditsCta": "Get {{count}} more enquiries · {{amount}}",
     "limitCreditsUnit": "credits",
-    "limitCreditsJust": "Just {{amount}}",
-    "limitPaymentUnavailable": "Payment is temporarily unavailable.",
-    "limitPaymentSubmit": "Submit payment request",
+    "limitCreditsJust": "Pay {{amount}} on UPI, then send the screenshot on WhatsApp",
+    "limitPaymentUnavailable": "Payment details are not set yet. Ask an admin to add UPI, QR, and WhatsApp under Inquiry credits.",
+    "limitPaymentSubmit": "I've paid — notify admin",
     "limitPaymentSubmitError": "Could not submit payment request. Please try again.",
-    "limitPaymentPendingTitle": "Payment request received",
-    "limitPaymentPendingBody": "Your request is being reviewed. Credits will be added once verified.",
+    "limitPaymentPendingTitle": "Screenshot sent — waiting for admin",
+    "limitPaymentPendingBody": "After you pay and share the screenshot on WhatsApp, an admin will add 30 enquiries to your account.",
     "limitQrAlt": "UPI QR code",
     "limitCopyUpi": "Copy UPI ID",
     "limitUtrLabel": "UTR / Transaction reference (optional)",
     "limitUtrPlaceholder": "e.g. 123456789012",
-    "limitWhatsappCta": "Contact on WhatsApp",
-    "limitWhatsappText": "Hi, I have submitted a payment request for {{package}} ({{amount}}) on ACOMI. Please verify.",
+    "limitWhatsappCta": "Send payment screenshot on WhatsApp",
+    "limitWhatsappText": "Hi, I paid {{amount}} for {{package}} on ACOMI. Sharing the payment screenshot. Please enable 30 more enquiries.",
     "limitDismiss": "Dismiss",
+    "limitResetQuota": "Reset today's limit (local only)",
+    "limitContinueWithCredits": "Use {{count}} paid enquiries",
     "save": "Save {{name}}",
     "unsave": "Remove {{name}} from saved",
     "availableNow": "Available now",

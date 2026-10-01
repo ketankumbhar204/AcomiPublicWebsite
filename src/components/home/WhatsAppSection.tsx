@@ -80,6 +80,9 @@ export function WhatsAppSection() {
           {t('home.whatsapp.title')}
         </h2>
         <p className="mt-2 max-w-xl text-[15px] text-text-secondary">{t('home.whatsapp.subtitle')}</p>
+        <DemoLabel className="mt-3">
+          {DEMO_LABEL} · {t('home.whatsapp.bubbles.shareableNote')}
+        </DemoLabel>
 
         <ul className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-4">
           {chips.map((c) => (
@@ -291,9 +294,6 @@ export function WhatsAppSection() {
           <Flow title={t('home.whatsapp.flow.tenant')} steps={pgFlow} />
         </div>
         <p className="mt-5 text-sm font-semibold text-navy">{t('home.whatsapp.bubbles.oneUpdate')}</p>
-        <DemoLabel className="mt-2">
-          {DEMO_LABEL} · {t('home.whatsapp.bubbles.shareableNote')}
-        </DemoLabel>
       </div>
     </section>
   );

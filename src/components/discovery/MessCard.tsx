@@ -1,10 +1,12 @@
 import { Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAlreadyInquired, useInquirySentVia } from '../../auth/useAlreadyInquired';
 import { formatListingAddress } from '../../data/listings/query';
 import type { MessListing } from '../../data/listings/types';
 import { ActionButton } from '../common/ActionButton';
 import { ListingCardMeta } from './ListingCardMeta';
 import { ListingCover } from './ListingCover';
+import { InquirySentBadge, InquirySentButton } from './InquirySentBadge';
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
 
@@ -28,7 +30,10 @@ export function MessCard({
   const { t } = useTranslation();
   const address = formatListingAddress(listing);
   const cta = t('discovery.getContactDetails');
+  const viewLabel = t('discovery.view', { defaultValue: 'View' });
   const viewDetails = t('discovery.viewDetails', { defaultValue: 'View details' });
+  const alreadyInquired = useAlreadyInquired(listing.id);
+  const sentVia = useInquirySentVia(listing.id);
 
   return (
     <article
@@ -45,6 +50,11 @@ export function MessCard({
             className="h-full w-full"
           />
         </button>
+        {alreadyInquired ? (
+          <div className="absolute top-3 left-3 max-w-[calc(100%-3.25rem)]">
+            <InquirySentBadge />
+          </div>
+        ) : null}
         <button
           type="button"
           onClick={onToggleSave}
@@ -55,10 +65,28 @@ export function MessCard({
           <Heart aria-hidden className={`h-4 w-4 ${saved ? 'fill-coral text-coral' : ''}`} />
         </button>
       </div>
-      <div className="flex flex-1 flex-col p-3.5">
+      <div className="@container flex flex-1 flex-col p-3.5">
         <button type="button" onClick={onSelect} className="w-full text-left">
           <h2 className="line-clamp-2 text-[16px] font-semibold tracking-tight text-navy">{listing.name}</h2>
-          <p className="mt-1 line-clamp-2 text-[13px] text-text-secondary">{address || listing.name}</p>
+          {alreadyInquired ? (
+            <span className="mt-1 block">
+              <InquirySentBadge variant="inline" sentVia={sentVia} />
+            </span>
+          ) : null}
+        </button>
+        {address && !alreadyInquired ? (
+          <button
+            type="button"
+            onClick={onEnquire}
+            className="mt-1 line-clamp-2 w-full text-left text-[13px] text-text-secondary underline decoration-black/15 underline-offset-2 hover:text-primary hover:decoration-primary"
+            aria-label={`${cta}: ${listing.name}`}
+          >
+            {address}
+          </button>
+        ) : address ? (
+          <p className="mt-1 line-clamp-2 text-[13px] text-text-secondary">{address}</p>
+        ) : null}
+        <button type="button" onClick={onSelect} className="w-full text-left">
           <p className="mt-2 text-[16px] font-semibold text-navy">
             <ListingPrice
               amount={listing.monthlyPrice}
@@ -74,32 +102,37 @@ export function MessCard({
         </button>
         <ListingCardMeta
           listing={listing}
-          onEnquire={onEnquire}
+          showMaps={false}
+          onEnquire={alreadyInquired ? undefined : onEnquire}
           chips={
             <ListingInfoChips
               listing={{ ...listing, mealsServed: listing.listingMetadata.mealsServed }}
               variant="card"
               surface="meals"
-              onEnquire={onEnquire}
+              onEnquire={alreadyInquired ? undefined : onEnquire}
             />
           }
         />
-        <div className="mt-auto flex flex-col gap-2 pt-3">
+        <div className="mt-auto flex flex-col gap-2 pt-3 @min-[260px]:flex-row">
           <ActionButton
             variant="outline"
             onClick={onSelect}
-            className="h-9 w-full px-3 text-[13px]"
+            className="h-10 w-full shrink-0 whitespace-nowrap px-3 text-[13px] @min-[260px]:w-auto"
             aria-label={`${viewDetails}: ${listing.name}`}
           >
-            {viewDetails}
+            {viewLabel}
           </ActionButton>
-          <ActionButton
-            onClick={onEnquire}
-            className="h-9 w-full px-3 text-[13px]"
-            aria-label={`${cta}: ${listing.name}`}
-          >
-            {cta}
-          </ActionButton>
+          {alreadyInquired ? (
+            <InquirySentButton className="@min-[260px]:w-auto @min-[260px]:grow" />
+          ) : (
+            <ActionButton
+              onClick={onEnquire}
+              className="h-10 w-full shrink-0 whitespace-nowrap px-3 text-[13px] @min-[260px]:w-auto @min-[260px]:grow"
+              aria-label={`${cta}: ${listing.name}`}
+            >
+              {cta}
+            </ActionButton>
+          )}
         </div>
       </div>
     </article>

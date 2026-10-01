@@ -6,11 +6,29 @@ export type PlacesSelectedLocation = {
   cityTaluka?: string;
 };
 
+const PLACE_TYPE_PARAMS = ['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING'] as const;
+
+export type PlaceTypeParam = (typeof PLACE_TYPE_PARAMS)[number];
+
 export type PlacesUrlState = {
   selectedLocation: PlacesSelectedLocation | null;
   query: string;
   legacyLocationInQ: boolean;
+  types: PlaceTypeParam[];
 };
+
+function parsePlaceTypes(params: URLSearchParams): PlaceTypeParam[] {
+  const fromTypes = params.getAll('types');
+  const raw = fromTypes.length > 0 ? fromTypes : params.getAll('type');
+  const seen: PlaceTypeParam[] = [];
+  for (const value of raw) {
+    const code = value.trim().toUpperCase().replace(/[\s-]+/g, '_');
+    if (!(PLACE_TYPE_PARAMS as readonly string[]).includes(code)) continue;
+    const type = code as PlaceTypeParam;
+    if (!seen.includes(type)) seen.push(type);
+  }
+  return seen;
+}
 
 function trimParam(params: URLSearchParams, key: string): string {
   return params.get(key)?.trim() ?? '';
@@ -223,11 +241,14 @@ export function parsePlacesUrlState(params: URLSearchParams): PlacesUrlState {
   const cityTaluka = trimParam(params, 'taluk');
   const q = trimParam(params, 'q');
 
+  const types = parsePlaceTypes(params);
+
   if (location) {
     return {
       selectedLocation: { location, pincode, district, state, cityTaluka },
       query: q,
       legacyLocationInQ: false,
+      types,
     };
   }
 
@@ -237,6 +258,7 @@ export function parsePlacesUrlState(params: URLSearchParams): PlacesUrlState {
       selectedLocation: { location: q, pincode, district, state, cityTaluka },
       query: '',
       legacyLocationInQ: true,
+      types,
     };
   }
 
@@ -244,12 +266,14 @@ export function parsePlacesUrlState(params: URLSearchParams): PlacesUrlState {
     selectedLocation: null,
     query: q,
     legacyLocationInQ: false,
+    types,
   };
 }
 
 export function buildPlacesSearchParams(input: {
   selectedLocation: PlacesSelectedLocation | null;
   query: string;
+  types?: readonly string[];
 }): URLSearchParams {
   const next = new URLSearchParams();
   const selected = input.selectedLocation;
@@ -271,6 +295,12 @@ export function buildPlacesSearchParams(input: {
   const query = input.query.trim();
   if (query) {
     next.set('q', query);
+  }
+  for (const type of input.types ?? []) {
+    const code = type.trim().toUpperCase().replace(/[\s-]+/g, '_');
+    if ((PLACE_TYPE_PARAMS as readonly string[]).includes(code)) {
+      next.append('types', code);
+    }
   }
   return next;
 }

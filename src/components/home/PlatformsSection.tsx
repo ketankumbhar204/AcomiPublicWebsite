@@ -18,6 +18,7 @@ export function PlatformsSection() {
         >
           {t('home.platforms.title')}
         </h2>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-text-secondary">{t('home.platforms.note')}</p>
         <div className="mt-6 grid items-center gap-8 lg:grid-cols-[0.42fr_0.58fr] lg:gap-12">
           <div className="grid gap-3">
             <article className="rounded-[20px] border border-black/5 bg-mint p-5 shadow-[var(--shadow-sm)]">

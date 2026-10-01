@@ -99,6 +99,10 @@ body.modal-open header {
   outline-color: var(--color-register);
 }
 
+.location-search-input:focus-visible {
+  outline: none;
+}
+
 .dual-range {
   pointer-events: none;
   position: absolute;

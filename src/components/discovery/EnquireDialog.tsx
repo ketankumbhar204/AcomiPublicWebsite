@@ -16,6 +16,7 @@ import {
 import { useAuth } from '../../auth/AuthProvider';
 import { createSpaceEnquiry, deliverEnquiryContactEmail, resolveDiscoverSpace } from '../../auth/discoverEnquiry';
 import { clearEnquireIntent, saveEnquireIntent } from '../../auth/enquireIntent';
+import { inquirySentViaFromEnquiry, markInquired } from '../../auth/inquiredListings';
 import { PublicApiError } from '../../lib/apiClient';
 import { enquiryErrorMessage } from '../../auth/enquiryErrors';
 import { isValidEmail } from '../../auth/validation';
@@ -24,6 +25,13 @@ import { Modal } from '../common/Modal';
 import { InquiryLimitModal } from './InquiryLimitModal';
 import type { EnquireListingKind } from '../../constants/links';
 import { openAcomiAndroidApp } from '../../lib/openAcomiAndroidApp';
+import { fetchInquiryQuota, resetInquiryQuota, type InquiryQuota } from '../../auth/inquiryCreditsApi';
+import {
+  isUnlimitedQuota,
+  needsInquiryPayment,
+  paidCreditsOf,
+} from '../../auth/inquiryCreditsApi';
+import { IS_LOCAL_DEV } from '../../config/env';
 import type { PublicUser, SpaceEnquiryResponse } from '../../auth/types';
 
 type EnquireDialogProps = {
@@ -74,6 +82,28 @@ function savedEnquiryEmails(user: PublicUser | null | undefined): string[] {
   return emails;
 }
 
+function normalizeEmail(value: string | null | undefined): string {
+  return value?.trim().toLowerCase() ?? '';
+}
+
+/** True when this listing already emailed owner details to the chosen address. */
+function emailAlreadyDeliveredTo(
+  enquiry: SpaceEnquiryResponse | null | undefined,
+  address: string,
+): boolean {
+  if (!enquiry) return false;
+  const delivered =
+    enquiry.alreadyDelivered === true ||
+    Boolean(enquiry.emailDeliveredAt) ||
+    Boolean(enquiry.contactEmailSentAt) ||
+    enquiry.contactEmailSent === true;
+  if (!delivered) return false;
+  const sentTo = normalizeEmail(enquiry.requesterEmail);
+  const wanted = normalizeEmail(address);
+  if (!sentTo || !wanted) return delivered;
+  return sentTo === wanted;
+}
+
 function formatDeliveredAt(value: string | null | undefined): string {
   if (!value) return '';
   const date = new Date(value);
@@ -85,6 +115,10 @@ function formatDeliveredAt(value: string | null | undefined): string {
     hour: 'numeric',
     minute: '2-digit',
   });
+}
+
+function paidCreditsRemaining(current: InquiryQuota | null): number {
+  return paidCreditsOf(current);
 }
 
 function IconBadge({
@@ -216,8 +250,40 @@ export function EnquireDialog({
   const [resultEmail, setResultEmail] = useState('');
   const [pendingIntent, setPendingIntent] = useState<SubmitIntent | null>(null);
   const [bootLoading, setBootLoading] = useState(false);
+  const [quota, setQuota] = useState<InquiryQuota | null>(null);
   const busyRef = useRef(false);
   const initKeyRef = useRef<string | null>(null);
+
+  async function refreshQuota() {
+    if (!isAuthenticated) {
+      return;
+    }
+    try {
+      setQuota(await fetchInquiryQuota());
+    } catch {
+      // Keep the last known remaining rather than pretending the daily quota is full.
+    }
+  }
+
+  function consumeLocalQuota() {
+    setQuota((prev) => {
+      if (!prev || isUnlimitedQuota(prev)) return prev;
+      if (prev.freeRemainingToday > 0) {
+        return {
+          ...prev,
+          freeUsedToday: prev.freeUsedToday + 1,
+          freeRemainingToday: Math.max(0, prev.freeRemainingToday - 1),
+        };
+      }
+      if (prev.availableCredits > 0) {
+        return {
+          ...prev,
+          availableCredits: Math.max(0, prev.availableCredits - 1),
+        };
+      }
+      return prev;
+    });
+  }
 
   async function createEnquiry(options?: {
     email?: string;
@@ -237,7 +303,9 @@ export function EnquireDialog({
     const created = await createSpaceEnquiry(space.spaceId, options);
     clearEnquireIntent();
     setSubmitted(created);
+    markInquired(created.spaceId || space.spaceId, inquirySentViaFromEnquiry(created));
     void refreshUser();
+    void refreshQuota();
     return created;
   }
 
@@ -263,6 +331,7 @@ export function EnquireDialog({
         } as SpaceEnquiryResponse),
       );
     }
+    markInquired(listingId, channel === 'APP' ? 'APP' : 'EMAIL');
     setStep(channel === 'APP' ? 'appAlready' : 'emailAlready');
   }
 
@@ -323,10 +392,41 @@ export function EnquireDialog({
 
   function onChooseEmail() {
     if (busyRef.current) return;
+    if (needsInquiryPayment(quota)) {
+      setStep('limit');
+      return;
+    }
     setError(null);
     setPendingIntent('email');
     setEmail(savedEmails[0] ?? user?.email?.trim() ?? '');
     setStep('email');
+  }
+
+  function onContinueWithPaidCredits() {
+    if (busyRef.current) return;
+    if (paidCreditsRemaining(quota) <= 0) {
+      setStep('limit');
+      return;
+    }
+    setError(null);
+    setPendingIntent('email');
+    setEmail(savedEmails[0] ?? user?.email?.trim() ?? '');
+    setStep('email');
+  }
+
+  async function onResetLocalQuota() {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
+    try {
+      setQuota(await resetInquiryQuota());
+      setStep('choose');
+    } catch {
+      setError(t('discovery.enquireSubmitError'));
+    } finally {
+      busyRef.current = false;
+      setBusy(false);
+    }
   }
 
   async function sendDetailsByEmail() {
@@ -336,17 +436,38 @@ export function EnquireDialog({
       setError(t('discovery.enquireEmailInvalid'));
       return;
     }
+    if (needsInquiryPayment(quota)) {
+      setStep('limit');
+      return;
+    }
 
     busyRef.current = true;
     setBusy(true);
     setError(null);
     setPendingIntent('email');
     setStep('submitting');
+    let enquiry = submitted;
     try {
-      let enquiry = submitted;
       if (!enquiry) {
         enquiry = await createEnquiry({ email: value, deliveryChannel: 'EMAIL' });
         if (!enquiry) return;
+      }
+      // Auto-share already emails on create. Calling email-contact again for the
+      // same address is a duplicate and must not show "Already sent" for a first send.
+      if (emailAlreadyDeliveredTo(enquiry, value)) {
+        setSubmitted(enquiry);
+        setResultEmail(enquiry.requesterEmail || value);
+        setPendingIntent(null);
+        setDeliveredAtLabel(
+          formatDeliveredAt(
+            enquiry.deliveredAt || enquiry.emailDeliveredAt || enquiry.contactEmailSentAt,
+          ),
+        );
+        setStep(enquiry.reusedExisting ? 'emailAlready' : 'emailSent');
+        if (!enquiry.reusedExisting) consumeLocalQuota();
+        void refreshUser();
+        await refreshQuota();
+        return;
       }
       const updated = await deliverEnquiryContactEmail(enquiry.enquiryId, value);
       setSubmitted(updated);
@@ -354,16 +475,29 @@ export function EnquireDialog({
       setPendingIntent(null);
       if (updated.alreadyDelivered) {
         setDeliveredAtLabel(formatDeliveredAt(updated.deliveredAt || updated.emailDeliveredAt));
-        setStep('emailAlready');
+        setStep(enquiry.reusedExisting ? 'emailAlready' : 'emailSent');
+        if (!enquiry.reusedExisting) consumeLocalQuota();
+        await refreshQuota();
         return;
       }
       setDeliveredAtLabel(formatDeliveredAt(updated.deliveredAt || updated.emailDeliveredAt));
       setStep('emailSent');
+      consumeLocalQuota();
       void refreshUser();
+      await refreshQuota();
     } catch (err) {
       if (err instanceof PublicApiError) {
         const already = readAlreadyDelivered(err);
         if (already) {
+          if (enquiry && !enquiry.reusedExisting) {
+            setResultEmail(already.recipientEmail || value);
+            setDeliveredAtLabel(formatDeliveredAt(already.deliveredAt));
+            setPendingIntent(null);
+            setStep('emailSent');
+            if (!enquiry.reusedExisting) consumeLocalQuota();
+            await refreshQuota();
+            return;
+          }
           applyAlreadyDelivered(already, 'EMAIL');
           return;
         }
@@ -424,6 +558,10 @@ export function EnquireDialog({
     }
     setBootLoading(false);
 
+    if (isAuthenticated) {
+      void refreshQuota();
+    }
+
     const initKey = `${listingId}|${isAuthenticated ? user?.id ?? 'auth' : 'anon'}`;
     if (initKeyRef.current === initKey) {
       return;
@@ -439,6 +577,13 @@ export function EnquireDialog({
     setStep(isAuthenticated ? 'choose' : 'gate');
   }, [open, listingId, isAuthenticated, isBootstrapping, user?.id, savedEmails, user?.email]);
 
+  useEffect(() => {
+    if (step !== 'email') return;
+    if (needsInquiryPayment(quota)) {
+      setStep('limit');
+    }
+  }, [step, quota]);
+
   function handleClose() {
     if (busyRef.current) return;
     clearEnquireIntent();
@@ -448,6 +593,12 @@ export function EnquireDialog({
   const isSending = step === 'submitting' || bootLoading;
   const enquiryIdForApp = submitted?.enquiryId;
   const displayEmail = resultEmail || submitted?.requesterEmail || email;
+  const dailyLimit = quota?.dailyFreeLimit ?? 5;
+  const remainingKnown = quota != null && !isUnlimitedQuota(quota);
+  const remainingToday = quota?.freeRemainingToday ?? dailyLimit;
+  const paidLeft = paidCreditsOf(quota);
+  const remainingExhausted = needsInquiryPayment(quota);
+  const showPaidRemaining = remainingKnown && remainingToday <= 0 && paidLeft > 0;
 
   return (
     <Modal
@@ -456,10 +607,17 @@ export function EnquireDialog({
       labelledBy="enquire-title"
       describedBy="enquire-body"
       closeOnBackdrop={!isSending && !busy}
-      className="relative max-w-[400px] overflow-hidden p-5 sm:p-6"
+      className="relative box-border max-h-[min(92dvh,720px)] w-full max-w-[min(480px,calc(100vw-2rem))] overflow-y-auto overscroll-contain p-4 sm:p-6"
     >
       {step === 'limit' ? (
-        <InquiryLimitModal onClose={handleClose} />
+        <InquiryLimitModal
+          onClose={handleClose}
+          onQuotaReset={IS_LOCAL_DEV ? () => void onResetLocalQuota() : undefined}
+          availableCredits={paidCreditsRemaining(quota)}
+          onContinueWithCredits={
+            paidCreditsRemaining(quota) > 0 ? onContinueWithPaidCredits : undefined
+          }
+        />
       ) : isSending ? (
         <div className="text-center" role="status" aria-live="polite" aria-busy="true">
           <IconBadge>
@@ -586,29 +744,70 @@ export function EnquireDialog({
 
             <p className="text-center text-[12px] font-medium text-muted">{t('discovery.enquireOr')}</p>
 
-            {/* EMAIL — limited (5/day) */}
+            {/* EMAIL — limited (5/day) unless admin disabled purchases. Paid credits send. */}
             <button
               type="button"
               disabled={busy}
-              onClick={onChooseEmail}
+              onClick={() => {
+                if (remainingExhausted) {
+                  setStep('limit');
+                  return;
+                }
+                onChooseEmail();
+              }}
               className="w-full rounded-2xl border border-amber-300/70 bg-[#FFF4EC] p-3.5 text-left transition hover:border-amber-400 disabled:opacity-60 sm:p-4"
             >
               <div className="flex items-start gap-3">
                 <span className="relative mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/90 text-amber-700 shadow-sm ring-1 ring-amber-200/80">
                   <Mail className="h-5 w-5" aria-hidden />
-                  <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1 text-[10px] font-bold text-white">
-                    5
-                  </span>
+                  {remainingKnown && !showPaidRemaining ? (
+                    <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1 text-[10px] font-bold text-white">
+                      {remainingToday}
+                    </span>
+                  ) : null}
+                  {showPaidRemaining ? (
+                    <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
+                      {paidLeft}
+                    </span>
+                  ) : null}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-[13px] font-semibold text-navy/80">
-                    {t('discovery.enquireEmailCtaReady')}
+                    {remainingExhausted
+                      ? t('discovery.enquireEmailCtaExhausted')
+                      : t('discovery.enquireEmailCtaReady')}
                   </span>
-                  <span className="mt-1 inline-block rounded-md bg-amber-100/90 px-1.5 py-0.5 text-[17px] font-extrabold leading-tight tracking-tight text-amber-900 sm:text-[18px]">
-                    {t('discovery.enquireEmailDailyLimit')}
-                  </span>
+                  {remainingKnown ? (
+                    <span className="mt-1 inline-block max-w-full whitespace-nowrap rounded-md bg-amber-100/90 px-1.5 py-0.5 text-[15px] font-extrabold leading-tight tracking-tight text-amber-900 sm:text-[16px]">
+                      {showPaidRemaining
+                        ? t('discovery.enquireEmailPaidRemaining', { count: paidLeft })
+                        : remainingToday === 1
+                          ? t('discovery.enquireEmailRemainingOne', {
+                              remaining: remainingToday,
+                              limit: dailyLimit,
+                            })
+                          : t('discovery.enquireEmailRemaining', {
+                              remaining: remainingToday,
+                              limit: dailyLimit,
+                            })}
+                    </span>
+                  ) : null}
+                  {remainingKnown && !showPaidRemaining && !remainingExhausted ? (
+                    <span className="mt-1 block text-[12px] font-semibold text-navy/55">
+                      {t('discovery.enquireEmailDailyLimit', { count: dailyLimit })}
+                    </span>
+                  ) : null}
+                  {remainingExhausted ? (
+                    <span className="mt-1 block text-[12px] font-semibold text-navy/55">
+                      {t('discovery.limitCreditsCtaDefault')}
+                    </span>
+                  ) : null}
                   <span className="mt-1.5 block text-[12px] text-navy/60">
-                    {t('discovery.enquireEmailCardHint')}
+                    {remainingExhausted
+                      ? t('discovery.enquireEmailExhaustedHint')
+                      : showPaidRemaining
+                        ? t('discovery.enquireEmailPaidHint')
+                        : t('discovery.enquireEmailCardHint')}
                   </span>
                 </span>
                 <ChevronRight className="mt-3 h-5 w-5 shrink-0 text-amber-700/60" aria-hidden />
@@ -619,6 +818,16 @@ export function EnquireDialog({
           <ActionButton variant="ghost" className="mt-4 w-full" onClick={handleClose} disabled={busy}>
             {t('discovery.enquireDone')}
           </ActionButton>
+          {IS_LOCAL_DEV ? (
+            <ActionButton
+              variant="ghost"
+              className="mt-2 w-full"
+              onClick={() => void onResetLocalQuota()}
+              disabled={busy}
+            >
+              {t('discovery.limitResetQuota')}
+            </ActionButton>
+          ) : null}
         </div>
       ) : step === 'own' ? (
         <div className="text-center">

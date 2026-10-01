@@ -30,6 +30,16 @@ export function Footer() {
             </p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
+                <Link to="/places" className="text-text-secondary transition hover:text-primary">
+                  {t('nav.places')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/meals" className="text-text-secondary transition hover:text-primary">
+                  {t('nav.meals')}
+                </Link>
+              </li>
+              <li>
                 <Link to="/features" className="text-text-secondary transition hover:text-primary">
                   {t('nav.features')}
                 </Link>

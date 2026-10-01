@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { USER_TYPE_OPTIONS, getUserTypeOption } from '../../constants/userTypes';
 import type { UserType } from '../../constants/userTypes';
 import { useUserType } from '../../context/UserTypeContext';
-import { ActionButton } from '../common/ActionButton';
 import { ButtonLink } from '../common/ButtonLink';
 import { Container } from '../layout/Container';
 import { HeroIntentCard } from '../onboarding/UserTypeCard';
@@ -13,16 +12,18 @@ import { HeroPhones } from './HeroPhones';
 export function Hero() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { openUserTypeModal, selectUserType, rememberUserType, openLocationSelector } =
-    useUserType();
+  const { rememberUserType } = useUserType();
 
   function handleSelect(id: UserType) {
-    if (id === 'ACCOMMODATION_SEEKER' || id === 'MEAL_SEEKER') {
-      rememberUserType(id);
-      openLocationSelector(id);
+    rememberUserType(id);
+    if (id === 'ACCOMMODATION_SEEKER') {
+      navigate('/places');
       return;
     }
-    selectUserType(id);
+    if (id === 'MEAL_SEEKER') {
+      navigate('/meals');
+      return;
+    }
     navigate(getUserTypeOption(id).to);
   }
 
@@ -54,9 +55,14 @@ export function Hero() {
               ))}
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              <ActionButton onClick={openUserTypeModal}>{t('hero.getStartedFree')}</ActionButton>
-              <ButtonLink href="/how-it-works" variant="ghost" external={false}>
-                {t('hero.seeHowItWorks')}
+              <ButtonLink href="/places" external={false}>
+                {t('hero.findPlace')}
+              </ButtonLink>
+              <ButtonLink href="/meals" variant="ghost" external={false}>
+                {t('hero.findMeals')}
+              </ButtonLink>
+              <ButtonLink href="#how-finding-works" variant="ghost" external={false}>
+                {t('hero.seeHowFindingWorks')}
               </ButtonLink>
             </div>
             <p className="mt-4 flex items-center gap-2 text-xs text-muted">

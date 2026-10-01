@@ -1,4 +1,4 @@
-import { UtensilsCrossed } from 'lucide-react';
+import { ClipboardList, IndianRupee, Users, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DEMO, DEMO_LABEL } from '../../data/demo';
 import { SHOTS } from '../../data/shots';
@@ -6,13 +6,22 @@ import { IconBadge } from '../common/IconBadge';
 import { DemoLabel } from '../common/DemoLabel';
 import { PhoneMock } from '../common/PhoneMock';
 import { ProgressBar } from '../product/MetricCard';
+import { ButtonLink } from '../common/ButtonLink';
 import { Container } from '../layout/Container';
+
+const FOOD_CAPABILITIES = [
+  { key: 'customers', Icon: Users },
+  { key: 'menu', Icon: UtensilsCrossed },
+  { key: 'poll', Icon: ClipboardList },
+  { key: 'headcount', Icon: Users },
+  { key: 'dues', Icon: IndianRupee },
+] as const;
 
 const mealColors = ['bg-[#128C7E]', 'bg-[#D97706]', 'bg-[#7C3AED]'];
 const locTones = ['bg-[#E7F6EE] text-[#0F6B4C]', 'bg-[#FFF1E0] text-[#D97706]', 'bg-[#E8F1FF] text-[#2563EB]'];
 const menuTones = ['bg-[#E7F6EE] text-[#0F6B4C]', 'bg-[#FFF1E0] text-[#D97706]', 'bg-[#F1EBFF] text-[#6D28D9]'];
 
-export function HeadcountSection() {
+export function HeadcountSection({ framed = false }: { framed?: boolean }) {
   const { t } = useTranslation();
   const d = DEMO.mess.breakfastDetail;
 
@@ -22,14 +31,33 @@ export function HeadcountSection() {
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.16em] text-orange uppercase">
-              {t('home.headcount.eyebrow')}
+              {t(framed ? 'home.foodRun.eyebrow' : 'home.headcount.eyebrow')}
             </p>
             <h2
               id="headcount-heading"
               className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.4rem]"
             >
-              {t('home.headcount.title')}
+              {t(framed ? 'home.foodRun.title' : 'home.headcount.title')}
             </h2>
+            {framed ? (
+              <>
+                <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
+                  {t('home.foodRun.body')}
+                </p>
+                <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+                  {FOOD_CAPABILITIES.map((item) => (
+                    <li
+                      key={item.key}
+                      className="flex items-center gap-2 rounded-xl border border-black/5 bg-white px-3 py-2.5 text-sm font-semibold text-navy shadow-[var(--shadow-sm)]"
+                    >
+                      <item.Icon className="h-4 w-4 shrink-0 text-orange" aria-hidden />
+                      {t(`home.foodRun.capabilities.${item.key}`)}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-5 text-sm font-semibold text-navy">{t('home.foodRun.plates')}</p>
+              </>
+            ) : null}
             <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-md)]">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
@@ -85,6 +113,13 @@ export function HeadcountSection() {
               </ul>
             </div>
             <DemoLabel className="mt-4">{DEMO_LABEL}</DemoLabel>
+            {framed ? (
+              <div className="mt-6">
+                <ButtonLink href="/mess-vendors" external={false}>
+                  {t('home.foodRun.cta')}
+                </ButtonLink>
+              </div>
+            ) : null}
           </div>
           <div className="flex justify-center lg:justify-end">
             <PhoneMock {...SHOTS.mess} size="lg" />

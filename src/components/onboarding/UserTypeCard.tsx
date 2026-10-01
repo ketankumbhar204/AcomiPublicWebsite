@@ -34,7 +34,7 @@ export function HeroIntentCard({ option, onSelect }: HeroIntentCardProps) {
         >
           {title}
         </span>
-        <span className="mt-1 block whitespace-nowrap text-[12px] leading-[1.4] text-text-secondary">
+        <span className="mt-1 block text-[12px] leading-[1.4] text-text-secondary">
           {description}
         </span>
       </span>

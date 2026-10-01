@@ -48,8 +48,11 @@ export type DiscoverSpaceCard = {
   imageUrl?: string | null;
   address?: string | null;
   startingPrice?: number | string | null;
+  monthlyPrice?: number | string | null;
+  mealPrice?: number | string | null;
   mapUrl?: string | null;
   hasContact?: boolean;
+  hasMobileContact?: boolean;
   amenityCodes?: string[];
   amenityLabels?: string[];
   foodIncludedInRent?: boolean;

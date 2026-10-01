@@ -59,9 +59,12 @@ export function HowItWorksHomeSection() {
       aria-labelledby="hiw-heading"
     >
       <Container>
+        <p className="text-[11px] font-semibold tracking-[0.16em] text-primary uppercase">
+          {t('home.howItWorks.eyebrow')}
+        </p>
         <h2
           id="hiw-heading"
-          className="text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
+          className="mt-2 text-[2rem] leading-[1.1] font-semibold tracking-tight text-navy sm:text-[2.25rem]"
         >
           {t('home.howItWorks.title')}
         </h2>

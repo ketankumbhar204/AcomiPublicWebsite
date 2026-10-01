@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Users, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAlreadyInquired, useInquirySentVia } from '../../auth/useAlreadyInquired';
 import { ActionButton } from '../common/ActionButton';
 import { formatListingAddress } from '../../data/listings/query';
 import type { MessListing } from '../../data/listings/types';
+import { InquirySentBadge, InquirySentButton } from './InquirySentBadge';
 import { ListingCardMeta } from './ListingCardMeta';
 import { ListingGallery } from './ListingGallery';
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
+import { ListingUnavailableDetails } from './ListingUnavailableDetails';
 
 type MessDetailPanelProps = {
   listing: MessListing;
@@ -20,6 +23,8 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
   const meals = meta.mealsServed;
   const address = formatListingAddress(listing);
   const cta = t('discovery.getContactDetails');
+  const alreadyInquired = useAlreadyInquired(listing.id);
+  const sentVia = useInquirySentVia(listing.id);
 
   return (
     <div className="flex h-full flex-col">
@@ -32,7 +37,22 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
         />
       </div>
       <h2 className="mt-4 text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
-      {address ? (
+      {alreadyInquired ? (
+        <div className="mt-2">
+          <InquirySentBadge variant="inline" sentVia={sentVia} />
+        </div>
+      ) : null}
+      {address && !alreadyInquired ? (
+        <button
+          type="button"
+          onClick={onEnquire}
+          className="mt-2 flex w-full items-start gap-1.5 text-left text-[13px] text-text-secondary underline decoration-black/15 underline-offset-2 hover:text-primary hover:decoration-primary"
+          aria-label={`${cta}: ${listing.name}`}
+        >
+          <MapPin aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-muted" />
+          {address}
+        </button>
+      ) : address ? (
         <p className="mt-2 flex items-start gap-1.5 text-[13px] text-text-secondary">
           <MapPin aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-muted" />
           {address}
@@ -81,22 +101,28 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
           </p>
         </div>
       ) : null}
+      <ListingUnavailableDetails />
       <div className="mt-auto pt-5">
         <ListingCardMeta
           listing={listing}
-          onEnquire={onEnquire}
+          showMaps={Boolean(listing.mapUrl?.trim())}
+          onEnquire={alreadyInquired ? undefined : onEnquire}
           chips={
             <ListingInfoChips
               listing={{ ...listing, mealsServed: meals }}
               variant="detail"
               surface="meals"
-              onEnquire={onEnquire}
+              onEnquire={alreadyInquired ? undefined : onEnquire}
             />
           }
         />
-        <ActionButton onClick={onEnquire} className="mt-4 w-full" aria-label={`${cta}: ${listing.name}`}>
-          {cta}
-        </ActionButton>
+        {alreadyInquired ? (
+          <InquirySentButton className="mt-4" />
+        ) : (
+          <ActionButton onClick={onEnquire} className="mt-4 w-full" aria-label={`${cta}: ${listing.name}`}>
+            {cta}
+          </ActionButton>
+        )}
         <Link to={`/meals/${listing.id}`} className="mt-3 block text-center text-[13px] font-semibold text-primary hover:underline">
           {t('discovery.openFullPage')}
         </Link>

@@ -27,6 +27,12 @@ import { PublicApiError } from '../../lib/apiClient';
 type InquiryLimitModalProps = {
   /** Called when the user wants to close / dismiss */
   onClose: () => void;
+  /** Local-only quota reset. Omit in production. */
+  onQuotaReset?: () => void;
+  /** Paid wallet credits already on the account. */
+  availableCredits?: number;
+  /** Skip payment and use existing paid credits. */
+  onContinueWithCredits?: () => void;
 };
 
 // ─── Small helpers ────────────────────────────────────────────────────────
@@ -107,14 +113,17 @@ function PaymentPanel({ config, pkg, onSuccess }: PaymentPanelProps) {
       amount: formatCurrency(pkg.priceAmount, pkg.currency),
     }),
   );
-  const waHref = config.whatsappNumber
-    ? `https://wa.me/${digitsOnly(config.whatsappNumber)}?text=${whatsappText}`
+  const waDigits = digitsOnly(config.whatsappNumber ?? '');
+  const waFull =
+    waDigits.length === 10 ? `91${waDigits}` : waDigits;
+  const waHref = waFull
+    ? `https://wa.me/${waFull}?text=${whatsappText}`
     : null;
 
   return (
     <div className="mt-4 rounded-2xl border border-primary/20 bg-[#E7F6EE] px-4 py-4">
       {/* Package summary */}
-      <p className="text-[14px] font-semibold text-navy">
+      <p className="text-[14px] font-semibold text-navy break-words">
         {pkg.name} &mdash;{' '}
         {formatCurrency(pkg.priceAmount, pkg.currency)}{' '}
         <span className="font-normal text-text-secondary">
@@ -135,7 +144,7 @@ function PaymentPanel({ config, pkg, onSuccess }: PaymentPanelProps) {
           <img
             src={config.qrUrl}
             alt={t('discovery.limitQrAlt')}
-            className="h-40 w-40 rounded-xl border border-black/10 object-contain bg-white p-1"
+            className="h-40 w-40 max-w-full rounded-xl border border-black/10 object-contain bg-white p-1"
           />
         </div>
       ) : null}
@@ -204,10 +213,15 @@ function PaymentPanel({ config, pkg, onSuccess }: PaymentPanelProps) {
 
 // ─── Main component ───────────────────────────────────────────────────────
 
-export function InquiryLimitModal({ onClose }: InquiryLimitModalProps) {
+export function InquiryLimitModal({
+  onClose,
+  onQuotaReset,
+  availableCredits = 0,
+  onContinueWithCredits,
+}: InquiryLimitModalProps) {
   const { t } = useTranslation();
 
-  const [paymentExpanded, setPaymentExpanded] = useState(false);
+  const [paymentExpanded, setPaymentExpanded] = useState(true);
 
   const [config, setConfig] = useState<InquiryPaymentConfig | null>(null);
   const [configLoading, setConfigLoading] = useState(false);
@@ -229,6 +243,7 @@ export function InquiryLimitModal({ onClose }: InquiryLimitModalProps) {
   const pkg = firstEnabledPackage(config);
   const paymentAvailable =
     config !== null && config.enabled && pkg !== null;
+  const dailyLimit = config?.webFreeDailyLimit ?? 5;
 
   return (
     <div className="flex flex-col gap-0">
@@ -240,7 +255,9 @@ export function InquiryLimitModal({ onClose }: InquiryLimitModalProps) {
           id="enquire-title"
           className="text-xl font-semibold tracking-tight text-navy"
         >
-          {t('discovery.limitTitle')}
+          {t('discovery.limitTitleWithCount', {
+            count: dailyLimit,
+          })}
         </h2>
         <p
           id="enquire-body"
@@ -249,6 +266,12 @@ export function InquiryLimitModal({ onClose }: InquiryLimitModalProps) {
           {t('discovery.limitBody')}
         </p>
       </div>
+
+      {availableCredits > 0 && onContinueWithCredits ? (
+        <ActionButton className="mt-4 w-full" onClick={onContinueWithCredits}>
+          {t('discovery.limitContinueWithCredits', { count: availableCredits })}
+        </ActionButton>
+      ) : null}
 
       <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
         <button
@@ -319,6 +342,11 @@ export function InquiryLimitModal({ onClose }: InquiryLimitModalProps) {
       <ActionButton variant="ghost" onClick={onClose} className="mt-4 w-full">
         {t('discovery.limitDismiss')}
       </ActionButton>
+      {onQuotaReset ? (
+        <ActionButton variant="ghost" onClick={onQuotaReset} className="mt-2 w-full">
+          {t('discovery.limitResetQuota')}
+        </ActionButton>
+      ) : null}
     </div>
   );
 }

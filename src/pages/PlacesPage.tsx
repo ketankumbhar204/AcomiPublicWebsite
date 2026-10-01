@@ -43,6 +43,7 @@ export function PlacesPage() {
   const [query, setQuery] = useState<PropertyQuery>(() => ({
     ...DEFAULT_PROPERTY_QUERY,
     query: parsed.query,
+    types: parsed.types,
   }));
   const [debouncedSearch, setDebouncedSearch] = useState(parsed.query);
   useEffect(() => {
@@ -87,12 +88,13 @@ export function PlacesPage() {
   const restoredEnquire = useRef(false);
 
   const writePlacesUrl = useCallback(
-    (nextLocation: PlacesSelectedLocation | null, nextQuery: string) => {
-      setSearchParams(buildPlacesSearchParams({ selectedLocation: nextLocation, query: nextQuery }), {
-        replace: true,
-      });
+    (nextLocation: PlacesSelectedLocation | null, nextQuery: string, nextTypes: readonly string[] = query.types) => {
+      setSearchParams(
+        buildPlacesSearchParams({ selectedLocation: nextLocation, query: nextQuery, types: nextTypes }),
+        { replace: true },
+      );
     },
-    [setSearchParams],
+    [query.types, setSearchParams],
   );
 
   useEffect(() => {
@@ -112,6 +114,14 @@ export function PlacesPage() {
   useEffect(() => {
     setQuery((current) => (current.query === parsed.query ? current : { ...current, query: parsed.query }));
   }, [parsed.query]);
+
+  const typeKey = parsed.types.join(',');
+  useEffect(() => {
+    setQuery((current) => {
+      if (current.types.join(',') === typeKey) return current;
+      return { ...current, types: parsed.types };
+    });
+  }, [parsed.types, typeKey]);
 
   useEffect(() => {
     const selected = parsed.selectedLocation;
@@ -142,6 +152,7 @@ export function PlacesPage() {
                 state: match.state,
               }),
               query: currentState.query,
+              types: currentState.types,
             });
           },
           { replace: true },
@@ -164,7 +175,14 @@ export function PlacesPage() {
     setEnquireOpen(true);
   }, [listings, status]);
 
-  const chips = propertyFilterChips(query, setQuery, t);
+  const updateQuery = (next: PropertyQuery) => {
+    setQuery(next);
+    if (next.types.join(',') !== query.types.join(',')) {
+      writePlacesUrl(selectedLocation, next.query, next.types);
+    }
+  };
+
+  const chips = propertyFilterChips(query, updateQuery, t);
   const filtered =
     propertyQueryIsFiltered(query) ||
     query.query.trim().length > 0 ||
@@ -179,8 +197,11 @@ export function PlacesPage() {
     }
   }, [listings, selectedId]);
 
-  const clearFilters = () =>
-    setQuery({ ...DEFAULT_PROPERTY_QUERY, query: query.query, sort: query.sort });
+  const clearFilters = () => {
+    const next = { ...DEFAULT_PROPERTY_QUERY, query: query.query, sort: query.sort };
+    setQuery(next);
+    writePlacesUrl(selectedLocation, next.query, next.types);
+  };
 
   const handleSearchChange = (value: string) => {
     setQuery({ ...query, query: value });
@@ -235,7 +256,7 @@ export function PlacesPage() {
                 query={query}
                 listings={listings}
                 localities={[]}
-                onChange={setQuery}
+                onChange={updateQuery}
               />
             </div>
           </>
@@ -282,7 +303,7 @@ export function PlacesPage() {
             </div>
           ) : (
             <>
-              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {listings.map((listing) => (
                   <PropertyCard
                     key={listing.id}
@@ -339,7 +360,7 @@ export function PlacesPage() {
         labelledBy="places-filters-title"
         value={query}
         onClose={() => setSheetOpen(false)}
-        onApply={setQuery}
+        onApply={updateQuery}
         onClear={clearFilters}
       >
         {(draft, setDraft) => (
