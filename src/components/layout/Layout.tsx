@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { EnquiryFeedbackProvider } from '../../context/EnquiryFeedbackContext';
+import { FavoritesProvider } from '../../context/FavoritesContext';
 import { ListingDrawerProvider } from '../../context/ListingDrawerContext';
 import { ListingPreviewProvider } from '../../context/ListingPreviewContext';
 import { UserTypeProvider } from '../../context/UserTypeContext';
@@ -32,19 +34,23 @@ export function Layout() {
     <AuthProvider>
       <UserTypeProvider>
         <ListingDrawerProvider>
-          <ListingPreviewProvider>
-            <div className="min-h-dvh bg-background text-text antialiased">
-              <SkipLink />
-              <Navbar />
-              <PersistentListingActions />
-              <RouteScroll />
-              <main id="main" className="pt-16">
-                <Outlet />
-              </main>
-              <Footer />
-              <AuthModal />
-            </div>
-          </ListingPreviewProvider>
+          <FavoritesProvider>
+            <EnquiryFeedbackProvider>
+              <ListingPreviewProvider>
+                <div className="min-h-dvh bg-background text-text antialiased">
+                  <SkipLink />
+                  <Navbar />
+                  <PersistentListingActions />
+                  <RouteScroll />
+                  <main id="main" className="pt-[4.5rem]">
+                    <Outlet />
+                  </main>
+                  <Footer />
+                  <AuthModal />
+                </div>
+              </ListingPreviewProvider>
+            </EnquiryFeedbackProvider>
+          </FavoritesProvider>
         </ListingDrawerProvider>
       </UserTypeProvider>
     </AuthProvider>

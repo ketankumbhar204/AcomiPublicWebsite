@@ -6,7 +6,7 @@ import {
   ChevronRight,
   Clock3,
   ExternalLink,
-  Loader2,
+  Eye,
   Lock,
   Mail,
   MessageCircle,
@@ -14,6 +14,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useAuth } from '../../auth/AuthProvider';
+import { useEnquiryFeedback } from '../../context/EnquiryFeedbackContext';
 import { createSpaceEnquiry, deliverEnquiryContactEmail, resolveDiscoverSpace } from '../../auth/discoverEnquiry';
 import { clearEnquireIntent, saveEnquireIntent } from '../../auth/enquireIntent';
 import { inquirySentViaFromEnquiry, markInquired } from '../../auth/inquiredListings';
@@ -23,9 +24,16 @@ import { isValidEmail } from '../../auth/validation';
 import { ActionButton } from '../common/ActionButton';
 import { Modal } from '../common/Modal';
 import { InquiryLimitModal } from './InquiryLimitModal';
+import type { RevealedOwnerContact } from './OwnerContactCard';
 import type { EnquireListingKind } from '../../constants/links';
 import { openAcomiAndroidApp } from '../../lib/openAcomiAndroidApp';
-import { fetchInquiryQuota, resetInquiryQuota, type InquiryQuota } from '../../auth/inquiryCreditsApi';
+import {
+  fetchInquiryPaymentConfig,
+  fetchInquiryQuota,
+  resetInquiryQuota,
+  type InquiryCreditPackage,
+  type InquiryQuota,
+} from '../../auth/inquiryCreditsApi';
 import {
   isUnlimitedQuota,
   needsInquiryPayment,
@@ -40,6 +48,8 @@ type EnquireDialogProps = {
   listingName: string;
   listingKind: EnquireListingKind;
   onClose: () => void;
+  onOpen?: () => void;
+  onViewedHere?: (contact: RevealedOwnerContact) => void;
 };
 
 /** UI steps — business handlers unchanged; visuals follow mock states 1–8. */
@@ -56,7 +66,7 @@ type Step =
   | 'own'
   | 'limit';
 
-type SubmitIntent = 'app' | 'email';
+type SubmitIntent = 'app' | 'email' | 'view';
 
 type AlreadyDeliveredPayload = {
   channel?: string;
@@ -119,6 +129,32 @@ function formatDeliveredAt(value: string | null | undefined): string {
 
 function paidCreditsRemaining(current: InquiryQuota | null): number {
   return paidCreditsOf(current);
+}
+
+function RequestLoader({ intent }: { intent: SubmitIntent | null }) {
+  const Icon = intent === 'email' ? Mail : intent === 'view' ? Eye : Smartphone;
+  return (
+    <div className="relative mx-auto h-28 w-28" aria-hidden>
+      <span className="absolute inset-0 animate-pulse rounded-full bg-primary/10" />
+      <span className="absolute inset-1 rounded-full border border-primary/15" />
+      <span
+        className="absolute inset-1 animate-spin rounded-full border-2 border-transparent border-t-[#0F6B4C] border-r-primary/30"
+        style={{ animationDuration: '0.9s' }}
+      />
+      <span
+        className="absolute inset-4 animate-spin rounded-full border-2 border-transparent border-b-emerald-400"
+        style={{ animationDuration: '1.5s', animationDirection: 'reverse' }}
+      />
+      <span className="absolute inset-1 animate-spin" style={{ animationDuration: '1.8s' }}>
+        <span className="absolute top-0 left-1/2 h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_10px_rgba(15,107,76,0.55)]" />
+      </span>
+      <span className="absolute inset-0 flex items-center justify-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-primary shadow-sm ring-1 ring-primary/15">
+          <Icon className="h-6 w-6" strokeWidth={1.75} />
+        </span>
+      </span>
+    </div>
+  );
 }
 
 function IconBadge({
@@ -224,6 +260,16 @@ function ChannelCard({
   );
 }
 
+function OrDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-3 py-0.5" aria-hidden="true">
+      <span className="h-px flex-1 bg-black/10" />
+      <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-400">{label}</span>
+      <span className="h-px flex-1 bg-black/10" />
+    </div>
+  );
+}
+
 function readAlreadyDelivered(err: PublicApiError): AlreadyDeliveredPayload | null {
   if (err.errorCode !== 'ALREADY_DELIVERED' || !err.data || typeof err.data !== 'object') {
     return null;
@@ -237,11 +283,15 @@ export function EnquireDialog({
   listingName,
   listingKind,
   onClose,
+  onOpen,
+  onViewedHere,
 }: EnquireDialogProps) {
   const { t } = useTranslation();
   const { isAuthenticated, user, openAuth, isBootstrapping, refreshUser } = useAuth();
+  const { beginSend, endSend, showToast } = useEnquiryFeedback();
   const savedEmails = useMemo(() => savedEnquiryEmails(user), [user]);
   const [step, setStep] = useState<Step>('gate');
+  const [limitPayment, setLimitPayment] = useState(false);
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -251,7 +301,9 @@ export function EnquireDialog({
   const [pendingIntent, setPendingIntent] = useState<SubmitIntent | null>(null);
   const [bootLoading, setBootLoading] = useState(false);
   const [quota, setQuota] = useState<InquiryQuota | null>(null);
+  const [offerPkg, setOfferPkg] = useState<InquiryCreditPackage | null>(null);
   const busyRef = useRef(false);
+  const preserveOnCloseRef = useRef(false);
   const initKeyRef = useRef<string | null>(null);
 
   async function refreshQuota() {
@@ -287,7 +339,7 @@ export function EnquireDialog({
 
   async function createEnquiry(options?: {
     email?: string;
-    deliveryChannel?: 'APP' | 'EMAIL';
+    deliveryChannel?: 'APP' | 'EMAIL' | 'VIEW_HERE';
   }): Promise<SpaceEnquiryResponse | null> {
     const space = await resolveDiscoverSpace(listingId, listingName, listingKind);
     if (!space) {
@@ -303,7 +355,15 @@ export function EnquireDialog({
     const created = await createSpaceEnquiry(space.spaceId, options);
     clearEnquireIntent();
     setSubmitted(created);
-    markInquired(created.spaceId || space.spaceId, inquirySentViaFromEnquiry(created));
+    const listingKey = created.spaceId || space.spaceId;
+    if (options?.deliveryChannel === 'VIEW_HERE') {
+      markInquired(listingKey, null, { contactViewed: true, sentAt: created.deliveredAt || created.requestedAt });
+    } else if (options?.deliveryChannel !== 'EMAIL') {
+      markInquired(listingKey, inquirySentViaFromEnquiry(created), {
+        sentToEmail: created.requesterEmail,
+        sentAt: created.contactEmailSentAt || created.deliveredAt || created.requestedAt,
+      });
+    }
     void refreshUser();
     void refreshQuota();
     return created;
@@ -390,6 +450,71 @@ export function EnquireDialog({
     }
   }
 
+  async function onViewHere() {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
+    setError(null);
+    setPendingIntent('view');
+    setStep('submitting');
+    beginSend(listingId, 'view');
+    try {
+      const created = await createEnquiry({ deliveryChannel: 'VIEW_HERE' });
+      if (!created) return;
+      onViewedHere?.(created.ownerContact ?? { available: false });
+      onClose();
+    } catch (err) {
+      if (err instanceof PublicApiError) {
+        const already = readAlreadyDelivered(err);
+        if (already?.channel === 'VIEW_HERE') {
+          try {
+            const created = await createEnquiry({ deliveryChannel: 'VIEW_HERE' });
+            if (created) {
+              onViewedHere?.(created.ownerContact ?? { available: false });
+              onClose();
+              return;
+            }
+          } catch {
+            // Fall through to the original error.
+          }
+        }
+        if (err.errorCode === 'SELF_ENQUIRY_NOT_ALLOWED') {
+          clearEnquireIntent();
+          setStep('own');
+          return;
+        }
+        if (err.status === 401) {
+          setStep('gate');
+          openAuth('login');
+          return;
+        }
+        if (err.errorCode === 'WEB_FREE_LIMIT_REACHED' || err.errorCode === 'INQUIRY_CREDITS_REQUIRED') {
+          setStep('limit');
+          return;
+        }
+        if (err.errorCode === 'VIEW_HERE_LIMIT_REACHED') {
+          void refreshQuota();
+          setStep('choose');
+          return;
+        }
+        setError(
+          enquiryErrorMessage(
+            err,
+            t('discovery.enquireViewFailed'),
+            t('discovery.enquireListingUnavailable'),
+          ),
+        );
+      } else {
+        setError(t('discovery.enquireViewFailed'));
+      }
+      setStep('error');
+    } finally {
+      endSend(listingId);
+      busyRef.current = false;
+      setBusy(false);
+    }
+  }
+
   function onChooseEmail() {
     if (busyRef.current) return;
     if (needsInquiryPayment(quota)) {
@@ -414,12 +539,12 @@ export function EnquireDialog({
     setStep('email');
   }
 
-  async function onResetLocalQuota() {
+  async function onResetLocalQuota(target: 'EMAIL' | 'VIEW_HERE' = 'EMAIL') {
     if (busyRef.current) return;
     busyRef.current = true;
     setBusy(true);
     try {
-      setQuota(await resetInquiryQuota());
+      setQuota(await resetInquiryQuota(target));
       setStep('choose');
     } catch {
       setError(t('discovery.enquireSubmitError'));
@@ -441,69 +566,96 @@ export function EnquireDialog({
       return;
     }
 
+    let reopenDialog = false;
+    const sentToast = (address: string) => {
+      markInquired(listingId, 'EMAIL', {
+        sentToEmail: address || null,
+        sentAt: new Date().toISOString(),
+      });
+      showToast({
+        title: t('discovery.enquireEmailSentTitle'),
+        body: address
+          ? t('discovery.enquireEmailSentBodyTo', { email: address })
+          : t('discovery.enquireEmailSentBody'),
+      });
+    };
+    const alreadyToast = (address: string, when: string) => {
+      showToast({
+        title: t('discovery.enquireAlreadyEmailTitle'),
+        body:
+          when && address
+            ? t('discovery.enquireAlreadyEmailBodyTo', { date: when, email: address })
+            : when
+              ? t('discovery.enquireAlreadyEmailBody', { date: when })
+              : t('discovery.enquireAlreadyEmailBodyNoDate'),
+      });
+    };
+
     busyRef.current = true;
     setBusy(true);
     setError(null);
     setPendingIntent('email');
-    setStep('submitting');
+    preserveOnCloseRef.current = true;
+    beginSend(listingId);
+    onClose();
+
     let enquiry = submitted;
     try {
       if (!enquiry) {
         enquiry = await createEnquiry({ email: value, deliveryChannel: 'EMAIL' });
-        if (!enquiry) return;
+        if (!enquiry) {
+          reopenDialog = true;
+          onOpen?.();
+          return;
+        }
       }
       // Auto-share already emails on create. Calling email-contact again for the
       // same address is a duplicate and must not show "Already sent" for a first send.
       if (emailAlreadyDeliveredTo(enquiry, value)) {
-        setSubmitted(enquiry);
-        setResultEmail(enquiry.requesterEmail || value);
-        setPendingIntent(null);
-        setDeliveredAtLabel(
-          formatDeliveredAt(
-            enquiry.deliveredAt || enquiry.emailDeliveredAt || enquiry.contactEmailSentAt,
-          ),
+        const address = enquiry.requesterEmail || value;
+        const when = formatDeliveredAt(
+          enquiry.deliveredAt || enquiry.emailDeliveredAt || enquiry.contactEmailSentAt,
         );
-        setStep(enquiry.reusedExisting ? 'emailAlready' : 'emailSent');
-        if (!enquiry.reusedExisting) consumeLocalQuota();
+        if (enquiry.reusedExisting) alreadyToast(address, when);
+        else {
+          sentToast(address);
+          consumeLocalQuota();
+        }
         void refreshUser();
         await refreshQuota();
         return;
       }
       const updated = await deliverEnquiryContactEmail(enquiry.enquiryId, value);
-      setSubmitted(updated);
-      setResultEmail(updated.requesterEmail || value);
-      setPendingIntent(null);
-      if (updated.alreadyDelivered) {
-        setDeliveredAtLabel(formatDeliveredAt(updated.deliveredAt || updated.emailDeliveredAt));
-        setStep(enquiry.reusedExisting ? 'emailAlready' : 'emailSent');
+      const address = updated.requesterEmail || value;
+      if (updated.alreadyDelivered && enquiry.reusedExisting) {
+        alreadyToast(address, formatDeliveredAt(updated.deliveredAt || updated.emailDeliveredAt));
+      } else {
         if (!enquiry.reusedExisting) consumeLocalQuota();
-        await refreshQuota();
-        return;
+        sentToast(address);
       }
-      setDeliveredAtLabel(formatDeliveredAt(updated.deliveredAt || updated.emailDeliveredAt));
-      setStep('emailSent');
-      consumeLocalQuota();
       void refreshUser();
       await refreshQuota();
     } catch (err) {
       if (err instanceof PublicApiError) {
         const already = readAlreadyDelivered(err);
         if (already) {
+          const address = already.recipientEmail || value;
+          const when = formatDeliveredAt(already.deliveredAt);
           if (enquiry && !enquiry.reusedExisting) {
-            setResultEmail(already.recipientEmail || value);
-            setDeliveredAtLabel(formatDeliveredAt(already.deliveredAt));
-            setPendingIntent(null);
-            setStep('emailSent');
-            if (!enquiry.reusedExisting) consumeLocalQuota();
+            sentToast(address);
+            consumeLocalQuota();
             await refreshQuota();
             return;
           }
-          applyAlreadyDelivered(already, 'EMAIL');
+          alreadyToast(address, when);
+          markInquired(listingId, 'EMAIL');
           return;
         }
         if (err.errorCode === 'SELF_ENQUIRY_NOT_ALLOWED') {
           clearEnquireIntent();
           setStep('own');
+          reopenDialog = true;
+          onOpen?.();
           return;
         }
         if (err.status === 401) {
@@ -513,32 +665,49 @@ export function EnquireDialog({
         }
         if (err.errorCode === 'WEB_FREE_LIMIT_REACHED' || err.errorCode === 'INQUIRY_CREDITS_REQUIRED') {
           setStep('limit');
+          reopenDialog = true;
+          onOpen?.();
           return;
         }
         if (err.errorCode === 'REQUESTER_EMAIL_REQUIRED') {
           setStep('email');
           setError(t('discovery.enquireEmailInvalid'));
+          reopenDialog = true;
+          onOpen?.();
           return;
         }
-        setError(
-          enquiryErrorMessage(
+        showToast({
+          tone: 'error',
+          title: t('discovery.enquireSendFailed'),
+          body: enquiryErrorMessage(
             err,
-            t('discovery.enquireSubmitError'),
+            t('discovery.enquireSendFailed'),
             t('discovery.enquireListingUnavailable'),
           ),
-        );
+        });
       } else {
-        setError(t('discovery.enquireSubmitError'));
+        showToast({ tone: 'error', title: t('discovery.enquireSendFailed') });
       }
-      setStep('email');
     } finally {
+      preserveOnCloseRef.current = false;
       busyRef.current = false;
       setBusy(false);
+      endSend(listingId);
+      if (!reopenDialog) {
+        setSubmitted(null);
+        setPendingIntent(null);
+        setStep('choose');
+      }
     }
   }
 
   useEffect(() => {
+    if (!open || step !== 'limit') setLimitPayment(false);
+  }, [open, step]);
+
+  useEffect(() => {
     if (!open) {
+      if (preserveOnCloseRef.current) return;
       initKeyRef.current = null;
       setError(null);
       setBusy(false);
@@ -560,6 +729,19 @@ export function EnquireDialog({
 
     if (isAuthenticated) {
       void refreshQuota();
+      if (!offerPkg) {
+        void fetchInquiryPaymentConfig()
+          .then((config) => {
+            const pkg =
+              config.packages
+                .filter((item) => item.enabled)
+                .sort((a, b) => a.displayOrder - b.displayOrder)[0] ?? null;
+            setOfferPkg(pkg);
+          })
+          .catch(() => {
+            // Leave the offer blank until the configured package can be loaded.
+          });
+      }
     }
 
     const initKey = `${listingId}|${isAuthenticated ? user?.id ?? 'auth' : 'anon'}`;
@@ -598,7 +780,17 @@ export function EnquireDialog({
   const remainingToday = quota?.freeRemainingToday ?? dailyLimit;
   const paidLeft = paidCreditsOf(quota);
   const remainingExhausted = needsInquiryPayment(quota);
+  const offerCount = offerPkg?.credits;
+  const offerAmount = offerPkg
+    ? offerPkg.currency === 'INR'
+      ? `₹${Number(offerPkg.priceAmount)}`
+      : `${offerPkg.currency} ${Number(offerPkg.priceAmount)}`
+    : null;
   const showPaidRemaining = remainingKnown && remainingToday <= 0 && paidLeft > 0;
+  const viewHereLimit = quota?.viewHereDailyLimit ?? 0;
+  const viewHereRemaining = quota?.viewHereRemainingToday ?? 0;
+  const showViewHere = viewHereLimit > 0 && viewHereRemaining > 0 && !remainingExhausted;
+  const showViewHereExhausted = viewHereLimit > 0 && viewHereRemaining <= 0 && !remainingExhausted;
 
   return (
     <Modal
@@ -607,39 +799,49 @@ export function EnquireDialog({
       labelledBy="enquire-title"
       describedBy="enquire-body"
       closeOnBackdrop={!isSending && !busy}
-      className="relative box-border max-h-[min(92dvh,720px)] w-full max-w-[min(480px,calc(100vw-2rem))] overflow-y-auto overscroll-contain p-4 sm:p-6"
+      className={
+        step === 'limit' && limitPayment
+          ? 'box-border max-h-[90vh] w-full max-w-[min(640px,calc(100vw-2rem))] overflow-y-auto overscroll-contain p-4 [scrollbar-width:none] [-ms-overflow-style:none] sm:px-5 sm:py-3.5 [&::-webkit-scrollbar]:hidden'
+          : 'relative box-border max-h-[min(92dvh,720px)] w-full max-w-[min(560px,calc(100vw-2rem))] overflow-y-auto overscroll-contain p-4 sm:p-5'
+      }
     >
       {step === 'limit' ? (
         <InquiryLimitModal
           onClose={handleClose}
           onQuotaReset={IS_LOCAL_DEV ? () => void onResetLocalQuota() : undefined}
+          freeUsedToday={quota?.freeUsedToday}
           availableCredits={paidCreditsRemaining(quota)}
+          onPaymentActive={setLimitPayment}
           onContinueWithCredits={
             paidCreditsRemaining(quota) > 0 ? onContinueWithPaidCredits : undefined
           }
         />
       ) : isSending ? (
-        <div className="text-center" role="status" aria-live="polite" aria-busy="true">
-          <IconBadge>
-            <Loader2 className="h-7 w-7 animate-spin" aria-hidden />
-          </IconBadge>
+        <div className="py-4 text-center" role="status" aria-live="polite" aria-busy="true">
+          <RequestLoader intent={pendingIntent} />
           {!bootLoading ? (
             <>
-              <div className="mt-4 flex justify-center text-primary" aria-hidden>
-                {pendingIntent === 'email' ? (
-                  <Mail className="h-10 w-10 opacity-80" strokeWidth={1.5} />
-                ) : (
-                  <Smartphone className="h-10 w-10 opacity-80" strokeWidth={1.5} />
-                )}
-              </div>
-              <h2 id="enquire-title" className="mt-3 text-xl font-semibold tracking-tight text-navy">
-                {t('discovery.enquireSendingTitle')}
+              <h2 id="enquire-title" className="mt-5 text-xl font-semibold tracking-tight text-navy">
+                {pendingIntent === 'view'
+                  ? t('discovery.enquireSendingViewTitle')
+                  : t('discovery.enquireSendingTitle')}
               </h2>
               <p id="enquire-body" className="mt-1.5 text-[14px] text-text-secondary">
                 {pendingIntent === 'email'
                   ? t('discovery.enquireSendingEmailBody')
-                  : t('discovery.enquireSendingAppBody')}
+                  : pendingIntent === 'view'
+                    ? t('discovery.enquireSendingViewBody')
+                    : t('discovery.enquireSendingAppBody')}
               </p>
+              <div className="mt-4 flex items-center justify-center gap-1.5" aria-hidden>
+                {[0, 1, 2].map((dot) => (
+                  <span
+                    key={dot}
+                    className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary"
+                    style={{ animationDelay: `${dot * 0.15}s` }}
+                  />
+                ))}
+              </div>
             </>
           ) : null}
         </div>
@@ -691,39 +893,39 @@ export function EnquireDialog({
           <IconBadge>
             <MessageCircle className="h-6 w-6" aria-hidden />
           </IconBadge>
-          <h2 id="enquire-title" className="mt-3 text-xl font-semibold tracking-tight text-navy">
+          <h2 id="enquire-title" className="mt-2 text-[17px] font-semibold tracking-tight text-navy">
             {t('discovery.enquireChooseTitle')}
           </h2>
-          <p id="enquire-body" className="mt-1.5 text-[14px] text-text-secondary">
+          <p id="enquire-body" className="mt-1 text-[13px] text-text-secondary">
             {t('discovery.enquireChooseBody')}
           </p>
 
-          <div className="mt-5 space-y-3 text-left">
+          <div className="mt-3 space-y-2 text-left">
             {/* APP — recommended / unlimited */}
             <button
               type="button"
               disabled={busy}
               onClick={() => void onSendOnAcomiApp()}
-              className="w-full rounded-2xl border border-primary/30 bg-[#E7F6EE] p-3.5 text-left transition hover:border-primary/55 disabled:opacity-60 sm:p-4"
+              className="w-full rounded-2xl border border-primary/30 bg-[#E7F6EE] p-3 text-left transition hover:border-primary/55 disabled:opacity-60"
             >
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/80 text-primary shadow-sm ring-1 ring-primary/10">
-                  <Smartphone className="h-6 w-6" aria-hidden />
+              <div className="flex items-start gap-2.5">
+                <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/80 text-primary shadow-sm ring-1 ring-primary/10">
+                  <Smartphone className="h-4 w-4" aria-hidden />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="inline-flex rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                     {t('discovery.enquireRecommended')}
                   </span>
-                  <span className="mt-1.5 block text-[13px] font-semibold text-navy/80">
+                  <span className="mt-1 block text-[12px] font-semibold text-navy/80">
                     {t('discovery.enquireSendOnApp')}
                   </span>
-                  <span className="mt-1 block text-[20px] font-extrabold leading-tight tracking-tight text-navy sm:text-[22px]">
+                  <span className="mt-0.5 block text-[15px] font-bold leading-tight text-navy">
                     {t('discovery.enquireUnlimitedTitle')}
                   </span>
-                  <span className="mt-0.5 block text-[18px] font-bold leading-tight text-primary sm:text-[20px]">
+                  <span className="mt-0.5 block text-[14px] font-semibold leading-tight text-primary">
                     {t('discovery.enquireFreeAndroid')}
                   </span>
-                  <span className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-medium text-navy/65">
+                  <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-medium text-navy/65">
                     <span className="inline-flex items-center gap-1">
                       <Zap className="h-3 w-3 text-primary" aria-hidden />
                       {t('discovery.enquireBenefitFast')}
@@ -738,13 +940,56 @@ export function EnquireDialog({
                     </span>
                   </span>
                 </span>
-                <ChevronRight className="mt-3 h-5 w-5 shrink-0 text-primary/70" aria-hidden />
+                <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-primary/70" aria-hidden />
               </div>
             </button>
 
-            <p className="text-center text-[12px] font-medium text-muted">{t('discovery.enquireOr')}</p>
+            <OrDivider label={t('discovery.enquireOptionOr')} />
 
-            {/* EMAIL — limited (5/day) unless admin disabled purchases. Paid credits send. */}
+            {showViewHere ? (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void onViewHere()}
+                className="w-full rounded-2xl border border-sky-200 bg-[#F3F8FF] p-3 text-left transition hover:border-sky-300 disabled:opacity-60"
+              >
+                <div className="flex items-start gap-2.5">
+                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-700">
+                    <Eye className="h-4 w-4" aria-hidden />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-bold leading-tight text-navy">
+                      {t('discovery.enquireViewHereTitle')}
+                    </span>
+                    <span className="mt-1 block text-[12px] leading-snug text-navy/70">
+                      {t('discovery.enquireViewHereBody')}
+                    </span>
+                    <span className="mt-2 inline-block max-w-full rounded-full bg-sky-100 px-2 py-0.5 text-[12px] font-semibold leading-tight text-sky-800">
+                      {viewHereRemaining === 1
+                        ? t('discovery.enquireViewHereRemainingOne', {
+                            remaining: viewHereRemaining,
+                            limit: viewHereLimit,
+                          })
+                        : t('discovery.enquireViewHereRemaining', {
+                            remaining: viewHereRemaining,
+                            limit: viewHereLimit,
+                          })}
+                    </span>
+                  </span>
+                  <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-sky-700/70" aria-hidden />
+                </div>
+              </button>
+            ) : null}
+
+            {showViewHereExhausted ? (
+              <p className="rounded-xl bg-sky-50 px-3 py-2 text-center text-[13px] leading-snug text-sky-900">
+                {t('discovery.enquireViewHereExhausted')}
+              </p>
+            ) : null}
+
+            {showViewHere || showViewHereExhausted ? <OrDivider label={t('discovery.enquireOptionOr')} /> : null}
+
+            {/* EMAIL — limited unless admin disabled purchases. Paid credits send. */}
             <button
               type="button"
               disabled={busy}
@@ -755,11 +1000,11 @@ export function EnquireDialog({
                 }
                 onChooseEmail();
               }}
-              className="w-full rounded-2xl border border-amber-300/70 bg-[#FFF4EC] p-3.5 text-left transition hover:border-amber-400 disabled:opacity-60 sm:p-4"
+              className="w-full rounded-2xl border border-amber-300/70 bg-[#FFF4EC] p-3 text-left transition hover:border-amber-400 disabled:opacity-60"
             >
-              <div className="flex items-start gap-3">
-                <span className="relative mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/90 text-amber-700 shadow-sm ring-1 ring-amber-200/80">
-                  <Mail className="h-5 w-5" aria-hidden />
+              <div className="flex items-start gap-2.5">
+                <span className="relative mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/90 text-amber-700 shadow-sm ring-1 ring-amber-200/80">
+                  <Mail className="h-4 w-4" aria-hidden />
                   {remainingKnown && !showPaidRemaining ? (
                     <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1 text-[10px] font-bold text-white">
                       {remainingToday}
@@ -772,13 +1017,15 @@ export function EnquireDialog({
                   ) : null}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[13px] font-semibold text-navy/80">
+                  <span className="block text-[12px] font-semibold text-navy/80">
                     {remainingExhausted
-                      ? t('discovery.enquireEmailCtaExhausted')
+                      ? offerCount
+                        ? t('discovery.enquireEmailCtaExhausted', { count: offerCount })
+                        : t('discovery.enquireEmailCtaExhaustedPending')
                       : t('discovery.enquireEmailCtaReady')}
                   </span>
                   {remainingKnown ? (
-                    <span className="mt-1 inline-block max-w-full whitespace-nowrap rounded-md bg-amber-100/90 px-1.5 py-0.5 text-[15px] font-extrabold leading-tight tracking-tight text-amber-900 sm:text-[16px]">
+                    <span className="mt-1 inline-block max-w-full whitespace-nowrap rounded-md bg-amber-100/90 px-1.5 py-0.5 text-[13px] font-bold leading-tight text-amber-900">
                       {showPaidRemaining
                         ? t('discovery.enquireEmailPaidRemaining', { count: paidLeft })
                         : remainingToday === 1
@@ -797,36 +1044,48 @@ export function EnquireDialog({
                       {t('discovery.enquireEmailDailyLimit', { count: dailyLimit })}
                     </span>
                   ) : null}
-                  {remainingExhausted ? (
+                  {remainingExhausted && offerCount && offerAmount ? (
                     <span className="mt-1 block text-[12px] font-semibold text-navy/55">
-                      {t('discovery.limitCreditsCtaDefault')}
+                      {t('discovery.limitCreditsCta', { count: offerCount, amount: offerAmount })}
                     </span>
                   ) : null}
                   <span className="mt-1.5 block text-[12px] text-navy/60">
                     {remainingExhausted
-                      ? t('discovery.enquireEmailExhaustedHint')
+                      ? offerAmount
+                        ? t('discovery.enquireEmailExhaustedHint', { amount: offerAmount })
+                        : null
                       : showPaidRemaining
                         ? t('discovery.enquireEmailPaidHint')
                         : t('discovery.enquireEmailCardHint')}
                   </span>
                 </span>
-                <ChevronRight className="mt-3 h-5 w-5 shrink-0 text-amber-700/60" aria-hidden />
+                <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-amber-700/60" aria-hidden />
               </div>
             </button>
           </div>
 
-          <ActionButton variant="ghost" className="mt-4 w-full" onClick={handleClose} disabled={busy}>
+          <ActionButton variant="ghost" className="mt-3 w-full" onClick={handleClose} disabled={busy}>
             {t('discovery.enquireDone')}
           </ActionButton>
           {IS_LOCAL_DEV ? (
-            <ActionButton
-              variant="ghost"
-              className="mt-2 w-full"
-              onClick={() => void onResetLocalQuota()}
-              disabled={busy}
-            >
-              {t('discovery.limitResetQuota')}
-            </ActionButton>
+            <>
+              <ActionButton
+                variant="ghost"
+                className="mt-2 w-full"
+                onClick={() => void onResetLocalQuota('EMAIL')}
+                disabled={busy}
+              >
+                {t('discovery.limitResetQuota')}
+              </ActionButton>
+              <ActionButton
+                variant="ghost"
+                className="mt-2 w-full"
+                onClick={() => void onResetLocalQuota('VIEW_HERE')}
+                disabled={busy}
+              >
+                {t('discovery.limitResetViewHere')}
+              </ActionButton>
+            </>
           ) : null}
         </div>
       ) : step === 'own' ? (

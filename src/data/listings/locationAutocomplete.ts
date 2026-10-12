@@ -91,6 +91,57 @@ export function suggestionDetail(suggestion: LocationAutocompleteSuggestion): st
   return unique.join(', ');
 }
 
+export function googleMapsLink(latitude: number, longitude: number): string {
+  const format = (value: number) => String(Math.round(value * 10_000_000) / 10_000_000);
+  return `https://www.google.com/maps?q=${format(latitude)},${format(longitude)}`;
+}
+
+export type NormalizedRegistrationLocation = {
+  address: string;
+  locality: string;
+  city: string;
+  district: string;
+  state: string;
+  pincode: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  formattedAddress: string;
+  googleMapsLink: string;
+  placeId: string;
+};
+
+/** Maps one selected Geoapify suggestion onto the registration location fields. */
+export function normalizeRegistrationLocation(
+  suggestion: LocationAutocompleteSuggestion,
+): NormalizedRegistrationLocation | null {
+  const latitude = typeof suggestion.latitude === 'number' ? suggestion.latitude : Number(suggestion.latitude);
+  const longitude = typeof suggestion.longitude === 'number' ? suggestion.longitude : Number(suggestion.longitude);
+  const city = clean(suggestion.city);
+  const state = clean(suggestion.state);
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || !city || !state) {
+    return null;
+  }
+  const locality = clean(suggestion.area);
+  const district = clean(suggestion.district);
+  const formatted = clean(suggestion.formattedAddress) || clean(suggestion.displayName);
+  const address = (formatted || [locality, city, state].filter(Boolean).join(', ')).slice(0, 255);
+  return {
+    address,
+    locality,
+    city,
+    district,
+    state,
+    pincode: clean(suggestion.pincode),
+    country: clean(suggestion.country),
+    latitude,
+    longitude,
+    formattedAddress: formatted || address,
+    googleMapsLink: googleMapsLink(latitude, longitude),
+    placeId: clean(suggestion.id),
+  };
+}
+
 export function suggestionKey(suggestion: LocationAutocompleteSuggestion, index: number): string {
   return [suggestion.id, suggestionTitle(suggestion), suggestion.pincode, suggestion.district, index]
     .map((value) => (typeof value === 'number' ? String(value) : clean(value)))

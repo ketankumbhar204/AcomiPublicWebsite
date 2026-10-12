@@ -2,19 +2,27 @@ import { useTranslation } from 'react-i18next';
 
 type ListingUnavailableDetailsProps = {
   className?: string;
+  hidePhotos?: boolean;
 };
 
-export function ListingUnavailableDetails({ className = 'mt-5 space-y-1' }: ListingUnavailableDetailsProps) {
+export function ListingUnavailableDetails({
+  className = 'mt-5 space-y-1',
+  hidePhotos = false,
+}: ListingUnavailableDetailsProps) {
   const { t } = useTranslation();
   const rows = [
     {
       label: t('discovery.reviewsRatings', { defaultValue: 'Review & Ratings' }),
       value: t('discovery.notAvailable', { defaultValue: 'Not available' }),
     },
-    {
-      label: t('discovery.photos', { defaultValue: 'Photos' }),
-      value: t('discovery.notAvailable', { defaultValue: 'Not available' }),
-    },
+    ...(hidePhotos
+      ? []
+      : [
+          {
+            label: t('discovery.photos', { defaultValue: 'Photos' }),
+            value: t('discovery.notAvailable', { defaultValue: 'Not available' }),
+          },
+        ]),
   ];
 
   return (

@@ -1,30 +1,41 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Users, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useAlreadyInquired, useInquirySentVia } from '../../auth/useAlreadyInquired';
-import { ActionButton } from '../common/ActionButton';
+import { useAlreadyInquired, useContactViewed, useInquiryRecord } from '../../auth/useAlreadyInquired';
+import { useIsEnquirySending } from '../../context/EnquiryFeedbackContext';
+import { GetContactDetailsButton } from './GetContactDetailsButton';
 import { formatListingAddress } from '../../data/listings/query';
 import type { MessListing } from '../../data/listings/types';
-import { InquirySentBadge, InquirySentButton } from './InquirySentBadge';
+import { InquirySentButton, InquirySentDetails } from './InquirySentBadge';
 import { ListingCardMeta } from './ListingCardMeta';
 import { ListingGallery } from './ListingGallery';
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
+import { priceBasisLabel } from '../../lib/priceBasis';
 import { ListingUnavailableDetails } from './ListingUnavailableDetails';
+import { PhotoRequestAction } from './PhotoRequestAction';
+import { hasActualListingPhotos } from '../../lib/photoRequest';
+import { OwnerContactCard, type RevealedOwnerContact } from './OwnerContactCard';
+import { usePersistedRevealedContact } from './usePersistedRevealedContact';
 
 type MessDetailPanelProps = {
   listing: MessListing;
   onEnquire: () => void;
+  revealedContact?: RevealedOwnerContact | null;
 };
 
-export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
+export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDetailPanelProps) {
   const { t } = useTranslation();
   const meta = listing.listingMetadata;
   const meals = meta.mealsServed;
   const address = formatListingAddress(listing);
   const cta = t('discovery.getContactDetails');
   const alreadyInquired = useAlreadyInquired(listing.id);
-  const sentVia = useInquirySentVia(listing.id);
+  const contactViewed = useContactViewed(listing.id);
+  const inquiry = useInquiryRecord(listing.id);
+  const contact = usePersistedRevealedContact(listing.id, revealedContact);
+  const sendingEnquiry = useIsEnquirySending(listing.id);
+  const unlocked = Boolean(contact) || contactViewed || alreadyInquired;
 
   return (
     <div className="flex h-full flex-col">
@@ -37,12 +48,12 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
         />
       </div>
       <h2 className="mt-4 text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
-      {alreadyInquired ? (
-        <div className="mt-2">
-          <InquirySentBadge variant="inline" sentVia={sentVia} />
-        </div>
+      {contactViewed ? (
+        <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
       ) : null}
-      {address && !alreadyInquired ? (
+      <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+      {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
+      {address && !unlocked ? (
         <button
           type="button"
           onClick={onEnquire}
@@ -61,7 +72,9 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
       <p className="mt-4 text-[1.35rem] font-semibold text-navy">
         <ListingPrice
           amount={listing.monthlyPrice}
-          suffix={t('discovery.perMonth')}
+          suffix={t(`discovery.priceBasis.${listing.priceBasis ?? ''}`, {
+            defaultValue: priceBasisLabel(listing.priceBasis, 'MESS'),
+          })}
           fallback={t('discovery.priceOnRequest')}
           size="detail"
         />
@@ -101,27 +114,44 @@ export function MessDetailPanel({ listing, onEnquire }: MessDetailPanelProps) {
           </p>
         </div>
       ) : null}
-      <ListingUnavailableDetails />
+      <ListingUnavailableDetails hidePhotos={hasActualListingPhotos(meta.images)} />
+      <PhotoRequestAction
+        kind="mess"
+        name={listing.name}
+        spaceType="MESS"
+        location={address}
+        photoUrls={meta.images}
+        phones={
+          contact
+            ? [contact.mobileNumber, contact.alternateMobileNumber, contact.additionalMobileNumber]
+            : []
+        }
+        contactAuthorized={Boolean(contact)}
+        onNeedContact={contact || contactViewed ? undefined : onEnquire}
+      />
       <div className="mt-auto pt-5">
         <ListingCardMeta
           listing={listing}
           showMaps={Boolean(listing.mapUrl?.trim())}
-          onEnquire={alreadyInquired ? undefined : onEnquire}
+          mapHref={unlocked ? listing.mapUrl : undefined}
+          onEnquire={unlocked ? undefined : onEnquire}
           chips={
             <ListingInfoChips
               listing={{ ...listing, mealsServed: meals }}
               variant="detail"
               surface="meals"
-              onEnquire={alreadyInquired ? undefined : onEnquire}
             />
           }
         />
-        {alreadyInquired ? (
-          <InquirySentButton className="mt-4" />
+        {contactViewed && !sendingEnquiry ? null : alreadyInquired && !sendingEnquiry ? (
+          <InquirySentButton email={inquiry?.sentToEmail} className="mt-4" />
         ) : (
-          <ActionButton onClick={onEnquire} className="mt-4 w-full" aria-label={`${cta}: ${listing.name}`}>
-            {cta}
-          </ActionButton>
+          <GetContactDetailsButton
+            listingId={listing.id}
+            onClick={onEnquire}
+            className="mt-4 w-full"
+            aria-label={`${cta}: ${listing.name}`}
+          />
         )}
         <Link to={`/meals/${listing.id}`} className="mt-3 block text-center text-[13px] font-semibold text-primary hover:underline">
           {t('discovery.openFullPage')}

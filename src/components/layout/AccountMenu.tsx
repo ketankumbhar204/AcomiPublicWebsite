@@ -16,8 +16,6 @@ import {
   SUPPORTED_LANGUAGES,
   type AppLanguage,
 } from '../../i18n';
-import { AccountProfileModal } from './AccountProfileModal';
-import { DownloadAcomiAppModal } from './DownloadAcomiAppModal';
 
 function initialsFromName(name: string | undefined): string {
   if (!name?.trim()) return 'A';
@@ -34,8 +32,6 @@ export function AccountMenu({ onNavigate }: AccountMenuProps) {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [enquiriesAppOpen, setEnquiriesAppOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const current = (i18n.language?.split('-')[0] ?? 'en') as AppLanguage;
@@ -127,37 +123,20 @@ export function AccountMenu({ onNavigate }: AccountMenuProps) {
                 </select>
               </label>
 
-              {/* Only Dashboard leaves the public site for app.acomi.in */}
               <a href={APP.web} role="menuitem" className={itemClass} onClick={close}>
                 <LayoutDashboard className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
                 {t('nav.dashboard')}
               </a>
 
-              <button
-                type="button"
-                role="menuitem"
-                className={itemClass}
-                onClick={() => {
-                  close();
-                  setEnquiriesAppOpen(true);
-                }}
-              >
+              <a href={APP.enquiries} role="menuitem" className={itemClass} onClick={close}>
                 <Inbox className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
                 {t('nav.myEnquiries')}
-              </button>
+              </a>
 
-              <button
-                type="button"
-                role="menuitem"
-                className={itemClass}
-                onClick={() => {
-                  close();
-                  setProfileOpen(true);
-                }}
-              >
+              <a href={APP.profile} role="menuitem" className={itemClass} onClick={close}>
                 <UserRound className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
                 {t('nav.account')}
-              </button>
+              </a>
             </div>
 
             <div className="border-t border-border p-2">
@@ -178,8 +157,6 @@ export function AccountMenu({ onNavigate }: AccountMenuProps) {
         ) : null}
       </div>
 
-      <AccountProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
-      <DownloadAcomiAppModal open={enquiriesAppOpen} onClose={() => setEnquiriesAppOpen(false)} />
     </>
   );
 }

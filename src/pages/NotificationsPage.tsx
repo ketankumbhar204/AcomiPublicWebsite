@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { isSafeEnquiryId, listMyNotifications, markMyNotificationRead } from '../auth/inboxApi';
 import type { UserNotification } from '../auth/types';
 import { RequireAuth } from '../components/auth/RequireAuth';
@@ -18,6 +19,7 @@ export function NotificationsPage() {
 
 function NotificationsView() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [items, setItems] = useState<UserNotification[]>([]);
   const [loading, setLoading] = useState(true);
   const [appPrompt, setAppPrompt] = useState<{ open: boolean; enquiryId: string | null }>({
@@ -57,6 +59,11 @@ function NotificationsView() {
       } catch {
         // Still open the app prompt.
       }
+    }
+    if (item.actionRoute === 'EnquiriesReceived') {
+      const enquiryId = isSafeEnquiryId(item.enquiryId) ? item.enquiryId : null;
+      navigate(enquiryId ? `/my-enquiries?id=${encodeURIComponent(enquiryId)}` : '/my-enquiries');
+      return;
     }
     const enquiryId = isSafeEnquiryId(item.enquiryId) ? item.enquiryId : null;
     setAppPrompt({ open: true, enquiryId });

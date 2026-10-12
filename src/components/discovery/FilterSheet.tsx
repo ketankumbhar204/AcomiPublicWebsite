@@ -41,9 +41,9 @@ export function FilterSheet<T>({
       labelledBy={labelledBy}
       closeOnBackdrop
       variant="drawer"
-      className="max-w-md"
+      className="w-full sm:w-[22.5rem] sm:max-w-[22.5rem]"
     >
-      <div className="flex h-full flex-col bg-[#d6f3e4]">
+      <div className="flex h-full flex-col bg-white">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 id={labelledBy} className="text-lg font-semibold text-navy">
             {title}
@@ -59,7 +59,7 @@ export function FilterSheet<T>({
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-5">{children(draft, setDraft)}</div>
         <div className="flex gap-3 border-t border-border px-5 py-4">
-          <ActionButton onClick={onClear} variant="ghost" className="flex-1">
+          <ActionButton onClick={onClear} variant="outline" className="flex-1">
             {t('discovery.clearAll')}
           </ActionButton>
           <ActionButton

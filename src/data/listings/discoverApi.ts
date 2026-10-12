@@ -19,6 +19,14 @@ export type DiscoverSpacesParams = {
   minRent?: number | null;
   maxRent?: number | null;
   amenities?: string[];
+  genders?: string[];
+  sharings?: string[];
+  foods?: string[];
+  furnishings?: string[];
+  contactAvailable?: boolean;
+  servicedApartment?: boolean;
+  mealTypes?: string[];
+  foodTypes?: string[];
   page?: number;
   size?: number;
   sort?: string;
@@ -37,6 +45,12 @@ export async function discoverSpaces(
     minRent,
     maxRent,
     amenities,
+    genders,
+    sharings,
+    foods,
+    furnishings,
+    contactAvailable,
+    servicedApartment,
     page = 0,
     size = DISCOVER_PAGE_SIZE,
     sort = 'newest',
@@ -59,6 +73,26 @@ export async function discoverSpaces(
       query.append('amenities', code.trim());
     }
   }
+  for (const gender of genders ?? []) {
+    if (gender.trim()) query.append('genders', gender.trim());
+  }
+  for (const sharing of sharings ?? []) {
+    if (sharing.trim()) query.append('sharings', sharing.trim());
+  }
+  for (const food of foods ?? []) {
+    if (food.trim()) query.append('foods', food.trim());
+  }
+  for (const furnishing of furnishings ?? []) {
+    if (furnishing.trim()) query.append('furnishings', furnishing.trim());
+  }
+  if (contactAvailable) query.set('contactAvailable', 'true');
+  for (const mealType of params.mealTypes ?? []) {
+    if (mealType.trim()) query.append('mealTypes', mealType.trim());
+  }
+  for (const foodType of params.foodTypes ?? []) {
+    if (foodType.trim()) query.append('foodTypes', foodType.trim());
+  }
+  if (servicedApartment) query.set('servicedApartment', 'true');
   query.set('page', String(page));
   query.set('size', String(size));
   query.set('sort', sort);

@@ -4,6 +4,11 @@ import type { MessQuery, PropertyListing, PropertyQuery } from './types';
 export const DEFAULT_PROPERTY_QUERY: PropertyQuery = {
   query: '',
   types: [],
+  genders: [],
+  sharings: [],
+  foods: [],
+  furnishings: [],
+  contactAvailable: false,
   localities: [],
   minPrice: null,
   maxPrice: null,
@@ -15,6 +20,11 @@ export const DEFAULT_PROPERTY_QUERY: PropertyQuery = {
 export const DEFAULT_MESS_QUERY: MessQuery = {
   query: '',
   localities: [],
+  foods: [],
+  amenities: [],
+  mealTypes: [],
+  foodTypes: [],
+  contactAvailable: false,
   minMonthly: null,
   maxMonthly: null,
   minMeal: null,
@@ -68,6 +78,11 @@ export function amenitiesInUse(listings: readonly PropertyListing[]): string[] {
 export function propertyQueryIsFiltered(query: PropertyQuery): boolean {
   return (
     query.types.length > 0 ||
+    query.genders.length > 0 ||
+    query.sharings.length > 0 ||
+    query.foods.length > 0 ||
+    query.furnishings.length > 0 ||
+    query.contactAvailable ||
     query.localities.length > 0 ||
     query.minPrice != null ||
     query.maxPrice != null ||
@@ -79,6 +94,11 @@ export function propertyQueryIsFiltered(query: PropertyQuery): boolean {
 export function messQueryIsFiltered(query: MessQuery): boolean {
   return (
     query.localities.length > 0 ||
+    query.foods.length > 0 ||
+    query.amenities.length > 0 ||
+    query.mealTypes.length > 0 ||
+    query.foodTypes.length > 0 ||
+    query.contactAvailable ||
     query.minMonthly != null ||
     query.maxMonthly != null ||
     query.minMeal != null ||

@@ -48,6 +48,7 @@ export type DiscoverSpaceCard = {
   imageUrl?: string | null;
   address?: string | null;
   startingPrice?: number | string | null;
+  priceBasis?: string | null;
   monthlyPrice?: number | string | null;
   mealPrice?: number | string | null;
   mapUrl?: string | null;
@@ -56,6 +57,8 @@ export type DiscoverSpaceCard = {
   amenityCodes?: string[];
   amenityLabels?: string[];
   foodIncludedInRent?: boolean;
+  foodAvailability?: 'INCLUDED' | 'AVAILABLE' | 'NONE' | null;
+  sharingNotes?: string | null;
   genderPolicy?: string | null;
   alreadyMember?: boolean;
   testSpace?: boolean;
@@ -76,6 +79,33 @@ export type DiscoverSpaceDetail = DiscoverSpaceCard & {
   monthlyPrice?: number | string | null;
   mealPrice?: number | string | null;
   sharingNotes?: string | null;
+};
+
+export type EnquiryInboxMode = 'MINE' | 'RECEIVED';
+
+export type EnquiryInboxListing = {
+  spaceId: string;
+  name: string;
+  spaceType?: string | null;
+};
+
+export type EnquiryInboxResponse = {
+  mode: EnquiryInboxMode;
+  listings: EnquiryInboxListing[];
+};
+
+export type ReceivedEnquiry = {
+  enquiryId: string;
+  spaceId: string;
+  spaceName: string;
+  spaceType?: string | null;
+  locationLabel?: string | null;
+  requesterName?: string | null;
+  requesterEmail?: string | null;
+  requesterMobile?: string | null;
+  status: string;
+  requestedAt: string;
+  expiresAt?: string | null;
 };
 
 export type SpaceEnquiryResponse = {
@@ -107,7 +137,7 @@ export type SpaceEnquiryResponse = {
   } | null;
   reusedExisting?: boolean;
   alreadyDelivered?: boolean;
-  deliveryChannel?: 'APP' | 'EMAIL' | null;
+  deliveryChannel?: 'APP' | 'EMAIL' | 'VIEW_HERE' | null;
   deliveredAt?: string | null;
   appDeliveredAt?: string | null;
   emailDeliveredAt?: string | null;

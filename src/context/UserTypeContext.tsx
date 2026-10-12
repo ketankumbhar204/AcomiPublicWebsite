@@ -43,7 +43,7 @@ function readStoredUserType(): UserType | null {
 function shouldPromptOnLoad(): boolean {
   if (typeof window !== 'undefined') {
     const path = window.location.pathname;
-    if (path === '/' || path === '') {
+    if (path === '/' || path === '' || path.startsWith('/places') || path.startsWith('/meals')) {
       return false;
     }
   }

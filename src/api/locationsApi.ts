@@ -56,4 +56,9 @@ export const locationsApi = {
     if (district) params.set('district', district);
     return publicApi<LocationAutocompleteSuggestion[]>(`/locations/autocomplete?${params.toString()}`);
   },
+
+  autocompleteAddress: (q: string) =>
+    publicApi<LocationAutocompleteSuggestion[]>(
+      `/locations/autocomplete/address?q=${encodeURIComponent(q.trim())}`,
+    ),
 };

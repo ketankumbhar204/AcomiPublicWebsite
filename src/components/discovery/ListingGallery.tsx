@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { resolveListingCover } from '../../data/listings/representativeImage';
-import { RepresentativeImageBadge } from './ListingCover';
 import { ListingImage } from './ListingImage';
 
 type ListingGalleryProps = {
@@ -31,9 +30,6 @@ export function ListingGallery({ listingId, spaceType, images, name }: ListingGa
     <div>
       <div className="relative overflow-hidden rounded-[24px] border border-black/5 bg-white shadow-[var(--shadow-sm)]">
         <ListingImage src={current} alt={alt} className="aspect-[16/10] w-full" />
-        {cover.kind === 'representative' ? (
-          <RepresentativeImageBadge />
-        ) : null}
       </div>
       {gallery.length > 1 ? (
         <div className="mt-3 flex gap-2 overflow-x-auto pb-1">

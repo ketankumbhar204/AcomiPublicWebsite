@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 import { isSafeEnquiryId, listMyNotifications, markMyNotificationRead } from '../../auth/inboxApi';
 import { useAuth } from '../../auth/AuthProvider';
@@ -10,6 +10,7 @@ import { DownloadAcomiAppModal } from './DownloadAcomiAppModal';
 
 export function NotificationBell() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<UserNotification[]>([]);
@@ -77,8 +78,13 @@ export function NotificationBell() {
         // Still open the app prompt.
       }
     }
+    if (item.actionRoute === 'EnquiriesReceived') {
+      const enquiryId = isSafeEnquiryId(item.enquiryId) ? item.enquiryId : null;
+      navigate(enquiryId ? `/my-enquiries?id=${encodeURIComponent(enquiryId)}` : '/my-enquiries');
+      return;
+    }
     const enquiryId = isSafeEnquiryId(item.enquiryId) ? item.enquiryId : null;
-    // Enquiry details live in the Android app — do not open website enquiry pages.
+    // Tenant enquiry details live in the Android app.
     setAppPrompt({ open: true, enquiryId });
   }
 

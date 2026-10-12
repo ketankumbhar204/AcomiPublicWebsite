@@ -13,8 +13,11 @@ import { Modal } from '../common/Modal';
 import { CtaButton, SecondaryButton } from './RegistrationButtons';
 import { RegistrationStepper } from './RegistrationStepper';
 import { RegistrationSuccess } from './RegistrationSuccess';
+import { fileToDataUrl, listingPhotoError } from './listingPhotos';
 import { StepDetails } from './StepDetails';
+import { StepPhotos, type SelectedListingPhoto } from './StepPhotos';
 import { StepProperty } from './StepProperty';
+import { StepReview } from './StepReview';
 import { StepVerify } from './StepVerify';
 import type { VerifyPhase } from './StepVerify';
 import {
@@ -29,9 +32,11 @@ import {
   writeDraft,
 } from './registrationForm';
 import type { FieldErrors, RegistrationForm } from './registrationForm';
+import { defaultPriceBasis } from '../../lib/priceBasis';
 import type { ListingKind } from '../../constants/listing';
 import { LISTING_COPY } from '../../constants/listing';
 
+const LAST_STEP = 5;
 const PROPERTY_OTP_PURPOSE = 'PROPERTY_REGISTRATION' as const;
 const MESS_OTP_PURPOSE = 'MESS_REGISTRATION' as const;
 
@@ -81,10 +86,14 @@ type PropertyRegistrationDrawerProps = {
 
 function formForKind(kind: ListingKind, form: RegistrationForm): RegistrationForm {
   if (kind === 'mess') {
-    return { ...form, propertyType: 'MESS' };
+    return {
+      ...form,
+      propertyType: 'MESS',
+      priceBasis: form.propertyType === 'MESS' && form.priceBasis ? form.priceBasis : 'PER_UNIT',
+    };
   }
   if (form.propertyType === 'MESS') {
-    return { ...form, propertyType: null };
+    return { ...form, propertyType: null, priceBasis: null };
   }
   return form;
 }
@@ -109,6 +118,7 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
   const [verifyError, setVerifyError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const [photos, setPhotos] = useState<SelectedListingPhoto[]>([]);
   const [result, setResult] = useState<{ reference: string } | null>(null);
   const otpPurpose = kind === 'mess' ? MESS_OTP_PURPOSE : PROPERTY_OTP_PURPOSE;
 
@@ -124,13 +134,22 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
       return;
     }
     if (!result && open) {
-      writeDraft(form, step, copy.draftKey);
+      writeDraft(form, Math.min(step, 3), copy.draftKey);
     }
   }, [form, step, result, open, copy.draftKey]);
 
   const updateField = useCallback(
     <K extends keyof RegistrationForm>(key: K, value: RegistrationForm[K]) => {
-      setForm((current) => ({ ...current, [key]: value }));
+      setForm((current) => {
+        if (key === 'propertyType' && value) {
+          return {
+            ...current,
+            propertyType: value as RegistrationForm['propertyType'],
+            priceBasis: defaultPriceBasis(value as RegistrationForm['propertyType']),
+          };
+        }
+        return { ...current, [key]: value };
+      });
       setErrors((current) => {
         if (!(key in current)) {
           return current;
@@ -144,12 +163,35 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
   );
 
   function goToStep(next: number) {
-    setStep(next);
+    const safe = next > 3 && phase !== 'verified' ? 3 : next;
+    setStep(safe);
     setErrors({});
     bodyRef.current?.scrollTo({ top: 0 });
   }
 
   function handleContinue() {
+    if (step === 3) {
+      if (phase !== 'verified' || !verificationToken) {
+        setVerifyError('Verify your mobile number before continuing.');
+        return;
+      }
+      goToStep(4);
+      return;
+    }
+    if (step === 4) {
+      const rejection = photos.map((photo) => listingPhotoError(photo.file, 0)).find(Boolean);
+      if (rejection) {
+        setSubmitError(rejection);
+        return;
+      }
+      if (photos.length > 3) {
+        setSubmitError('You can add up to 3 photos.');
+        return;
+      }
+      setSubmitError(null);
+      goToStep(5);
+      return;
+    }
     const found = step === 1 ? validatePropertyStep(form) : validateDetailsStep(form);
     const firstInvalid = Object.keys(found)[0];
     if (firstInvalid) {
@@ -158,6 +200,11 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
       // Continue look unresponsive.
       requestAnimationFrame(() => focusField(firstInvalid));
       return;
+    }
+    if (step === 1) {
+      setForm((current) =>
+        current.buildingNameEdited ? current : { ...current, buildingName: current.propertyName },
+      );
     }
     goToStep(step + 1);
   }
@@ -179,7 +226,11 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
     skipPersist.current = true;
     const restoredDraft = readDraft(copy.draftKey);
     setForm(formForKind(kind, restoredDraft.form));
-    setStep(kind === kindRef.current ? restoredDraft.step : 1);
+    setStep(kind === kindRef.current ? Math.min(restoredDraft.step, 3) : 1);
+    setPhotos((current) => {
+      current.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+      return [];
+    });
     setErrors({});
     setResult(null);
     resetVerification();
@@ -229,16 +280,17 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
   }
 
   async function handleSubmit() {
-    if (!verificationToken) {
+    if (step !== LAST_STEP || !verificationToken || phase !== 'verified') {
       return;
     }
     setSubmitting(true);
     setSubmitError(null);
     try {
+      const encoded = await Promise.all(photos.map((photo) => fileToDataUrl(photo.file)));
       const response =
         kind === 'mess'
-          ? await createMessRegistration(buildMessRequest(form, verificationToken))
-          : await createPropertyRegistration(buildRequest(form, verificationToken));
+          ? await createMessRegistration(buildMessRequest(form, verificationToken, encoded))
+          : await createPropertyRegistration(buildRequest(form, verificationToken, encoded));
       clearDraft(copy.draftKey);
       setResult(response);
     } catch (error) {
@@ -246,6 +298,7 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
       if (isVerificationExpired(error)) {
         // The token is single-use, so a rejected one can never succeed on retry.
         resetVerification();
+        setStep(3);
       }
     } finally {
       setSubmitting(false);
@@ -257,6 +310,10 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
       // A submitted registration must not reappear when the drawer is opened again.
       setResult(null);
       setForm(formForKind(kind, EMPTY_FORM));
+      setPhotos((current) => {
+        current.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+        return [];
+      });
       setStep(1);
       setErrors({});
       resetVerification();
@@ -345,8 +402,13 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
                 onSendOtp={handleSendOtp}
                 onVerifyOtp={handleVerifyOtp}
                 onChangeNumber={resetVerification}
-                onEditStep={goToStep}
               />
+            ) : null}
+            {step === 4 && phase === 'verified' ? (
+              <StepPhotos photos={photos} onChange={setPhotos} />
+            ) : null}
+            {step === 5 && phase === 'verified' ? (
+              <StepReview form={form} kind={kind} photos={photos} onEditStep={goToStep} />
             ) : null}
           </div>
 
@@ -363,8 +425,12 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
                   Back
                 </SecondaryButton>
               ) : null}
-              {step < 3 ? (
-                <CtaButton onClick={handleContinue} className="flex-1">
+              {step < LAST_STEP ? (
+                <CtaButton
+                  onClick={handleContinue}
+                  disabled={step === 3 && phase !== 'verified'}
+                  className="flex-1"
+                >
                   Continue
                   <ArrowRight aria-hidden className="h-4 w-4" />
                 </CtaButton>
@@ -372,10 +438,10 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
                 <CtaButton
                   onClick={handleSubmit}
                   loading={submitting}
-                  disabled={phase !== 'verified'}
+                  disabled={phase !== 'verified' || !verificationToken}
                   className="flex-1"
                 >
-                  {kind === 'mess' ? 'Submit mess' : 'Submit property'}
+                  {submitting ? 'Saving…' : kind === 'mess' ? 'Submit mess' : 'Submit property'}
                 </CtaButton>
               )}
             </div>

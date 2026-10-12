@@ -6,7 +6,7 @@ export type PlacesSelectedLocation = {
   cityTaluka?: string;
 };
 
-const PLACE_TYPE_PARAMS = ['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING'] as const;
+const PLACE_TYPE_PARAMS = ['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING', 'MESS', 'SERVICED'] as const;
 
 export type PlaceTypeParam = (typeof PLACE_TYPE_PARAMS)[number];
 

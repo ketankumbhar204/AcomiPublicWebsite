@@ -1,4 +1,4 @@
-import { ChevronDown, MapPin, Search, X } from 'lucide-react';
+import { ChevronDown, MapPin, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { SORT_OPTIONS } from '../../data/listings/defaults';
 import type { PropertySort } from '../../data/listings/types';
@@ -18,6 +18,9 @@ type DiscoverySearchBarProps = {
   sortId: string;
   sortValue: PropertySort;
   onSortChange: (value: PropertySort) => void;
+  onOpenFilters?: () => void;
+  filtersOpen?: boolean;
+  activeFilterCount?: number;
 };
 
 export function DiscoverySearchBar({
@@ -34,6 +37,9 @@ export function DiscoverySearchBar({
   sortId,
   sortValue,
   onSortChange,
+  onOpenFilters,
+  filtersOpen = false,
+  activeFilterCount = 0,
 }: DiscoverySearchBarProps) {
   const { t } = useTranslation();
   const locationText = locationLabel?.trim() || locationPlaceholder || city;
@@ -88,7 +94,31 @@ export function DiscoverySearchBar({
           className={`${FIELD_INPUT_BASE} border-transparent py-2.5 pr-3 pl-10 shadow-none focus:border-register`}
         />
       </div>
-      <div className="sm:w-48">
+      <div className={onOpenFilters ? 'flex gap-2 sm:contents' : 'sm:w-44 sm:shrink-0'}>
+      {onOpenFilters ? (
+        <button
+          type="button"
+          onClick={onOpenFilters}
+          aria-haspopup="dialog"
+          aria-expanded={filtersOpen}
+          aria-label={
+            activeFilterCount > 0
+              ? t('discovery.filterButtonActive', {
+                  count: activeFilterCount,
+                  defaultValue: 'Filter, {{count}} active',
+                })
+              : t('discovery.filterButton', { defaultValue: 'Filter' })
+          }
+          className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-3.5 text-[13px] font-semibold text-navy transition hover:bg-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        >
+          <SlidersHorizontal aria-hidden className="h-4 w-4 text-register" />
+          <span>
+            {t('discovery.filterButton', { defaultValue: 'Filter' })}
+            {activeFilterCount > 0 ? <span className="text-register"> · {activeFilterCount}</span> : null}
+          </span>
+        </button>
+      ) : null}
+      <div className={onOpenFilters ? 'min-w-0 flex-1 sm:w-44 sm:flex-none sm:shrink-0' : undefined}>
         <label htmlFor={sortId} className="sr-only">
           {t('discovery.sortLabel')}
         </label>
@@ -104,6 +134,7 @@ export function DiscoverySearchBar({
             </option>
           ))}
         </select>
+      </div>
       </div>
     </div>
   );

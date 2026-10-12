@@ -51,6 +51,9 @@ export type InquiryQuota = {
   androidBillingMode?: string;
   purchasesEnabled?: boolean;
   unlimited?: boolean;
+  viewHereDailyLimit?: number;
+  viewHereUsedToday?: number;
+  viewHereRemainingToday?: number;
 };
 
 export type PurchaseRequest = {
@@ -111,6 +114,11 @@ export function parseInquiryQuota(raw: unknown): InquiryQuota | null {
           : undefined,
     purchasesEnabled: readBoolean(row.purchasesEnabled, row.purchases_enabled),
     unlimited: readBoolean(row.unlimited),
+    viewHereDailyLimit:
+      readNumber(row.viewHereDailyLimit, row.view_here_daily_limit) ?? undefined,
+    viewHereUsedToday: readNumber(row.viewHereUsedToday, row.view_here_used_today) ?? undefined,
+    viewHereRemainingToday:
+      readNumber(row.viewHereRemainingToday, row.view_here_remaining_today) ?? undefined,
   };
 }
 
@@ -150,9 +158,10 @@ export async function fetchInquiryQuota(): Promise<InquiryQuota> {
   return parsed;
 }
 
-export async function resetInquiryQuota(): Promise<InquiryQuota> {
+export async function resetInquiryQuota(target?: 'EMAIL' | 'VIEW_HERE'): Promise<InquiryQuota> {
+  const query = target === 'VIEW_HERE' ? '?target=VIEW_HERE' : '';
   const parsed = parseInquiryQuota(
-    await publicApi<unknown>('/inquiry-credits/quota/reset', { method: 'POST' }),
+    await publicApi<unknown>(`/inquiry-credits/quota/reset${query}`, { method: 'POST' }),
   );
   if (!parsed) {
     throw new Error('Invalid inquiry quota response');

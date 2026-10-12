@@ -1,4 +1,4 @@
-import type { PropertyType } from '../../api/types';
+import type { PriceBasis, PropertyType } from '../../api/types';
 
 /**
  * Field mapping
@@ -22,7 +22,17 @@ import type { PropertyType } from '../../api/types';
  * Ratings, availability, and capacity are omitted — the API does not provide them.
  */
 
-export type PropertyListingType = Exclude<PropertyType, 'MESS'>;
+export type PropertyListingType = PropertyType;
+
+export type PlaceFilterType = PropertyType | 'SERVICED';
+
+export type GenderFilter = 'MALE' | 'FEMALE' | 'MIXED';
+
+export type SharingFilter = 'SINGLE' | 'TWO' | 'THREE' | 'FOUR' | 'FIVE' | 'SIX_PLUS';
+
+export type FoodFilter = 'INCLUDED' | 'AVAILABLE' | 'NONE';
+
+export type FurnishingFilter = 'FULL' | 'SEMI' | 'UNFURNISHED';
 
 export type ListingMetadata = {
   rating?: number;
@@ -46,9 +56,13 @@ export type PropertyListing = {
   latitude?: number | null;
   longitude?: number | null;
   startingPrice: number | null;
+  priceBasis?: PriceBasis | null;
   capacityEstimate: number | null;
   amenityCodes: string[];
+  amenityLabels?: string[];
   foodIncludedInRent?: boolean;
+  foodAvailability?: FoodFilter | null;
+  genderPolicy?: GenderFilter | null;
   hasContact?: boolean;
   hasMobileContact?: boolean;
   sharingNotes?: string;
@@ -69,8 +83,10 @@ export type MessListing = {
   longitude?: number | null;
   monthlyPrice: number | null;
   mealPrice: number | null;
+  priceBasis?: PriceBasis | null;
   amenityCodes?: string[];
   foodIncludedInRent?: boolean;
+  foodAvailability?: FoodFilter | null;
   hasContact?: boolean;
   hasMobileContact?: boolean;
   capacityEstimate: number | null;
@@ -83,7 +99,12 @@ export type PropertySort = 'recommended' | 'price-asc' | 'price-desc' | 'rating-
 
 export type PropertyQuery = {
   query: string;
-  types: PropertyListingType[];
+  types: PlaceFilterType[];
+  genders: GenderFilter[];
+  sharings: SharingFilter[];
+  foods: FoodFilter[];
+  furnishings: FurnishingFilter[];
+  contactAvailable: boolean;
   localities: string[];
   minPrice: number | null;
   maxPrice: number | null;
@@ -92,9 +113,18 @@ export type PropertyQuery = {
   sort: PropertySort;
 };
 
+export type MealSlotFilter = 'BREAKFAST' | 'LUNCH' | 'DINNER';
+
+export type MealFoodTypeFilter = 'VEG' | 'NON_VEG' | 'EGG';
+
 export type MessQuery = {
   query: string;
   localities: string[];
+  foods: FoodFilter[];
+  amenities: string[];
+  mealTypes: MealSlotFilter[];
+  foodTypes: MealFoodTypeFilter[];
+  contactAvailable: boolean;
   minMonthly: number | null;
   maxMonthly: number | null;
   minMeal: number | null;

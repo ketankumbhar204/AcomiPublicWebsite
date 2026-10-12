@@ -57,6 +57,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@layer base {
+  button:not(:disabled),
+  [type='button']:not(:disabled),
+  [type='submit']:not(:disabled),
+  [type='reset']:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  summary,
+  label:has(input, select) {
+    cursor: pointer;
+  }
+}
+
 #root {
   min-height: 100dvh;
 }
@@ -101,6 +113,31 @@ body.modal-open header {
 
 .location-search-input:focus-visible {
   outline: none;
+}
+
+/*
+ * Listing-card title accent. The rule sits under the name only, so it reads as a
+ * title mark rather than a full-width divider between sections.
+ */
+.listing-card-title {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding-bottom: 8px;
+}
+
+.listing-card-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(42%, 6.5rem);
+  min-width: 2.75rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  pointer-events: none;
 }
 
 .dual-range {

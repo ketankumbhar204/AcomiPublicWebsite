@@ -12,6 +12,11 @@ export type PagedMessFilters = {
   state?: string;
   cityTaluka?: string;
   search?: string;
+  contactAvailable: boolean;
+  mealTypes: string[];
+  foodTypes: string[];
+  minRent: number | null;
+  maxRent: number | null;
   sort?: string;
 };
 
@@ -24,6 +29,11 @@ export function mealsDiscoverFilterKey(filters: PagedMessFilters): string {
     cityTaluka: filters.cityTaluka?.trim() ?? '',
     search: filters.search?.trim() ?? '',
     type: 'MESS',
+    contactAvailable: filters.contactAvailable,
+    mealTypes: [...filters.mealTypes].sort(),
+    foodTypes: [...filters.foodTypes].sort(),
+    minRent: filters.minRent,
+    maxRent: filters.maxRent,
     sort: filters.sort ?? 'newest',
     pageSize: DISCOVER_PAGE_SIZE,
   });
@@ -41,6 +51,11 @@ function discoverPage(filters: PagedMessFilters, page: number) {
     location: filters.location?.trim() || undefined,
     search: filters.search?.trim() || undefined,
     type: 'MESS',
+    contactAvailable: filters.contactAvailable,
+    mealTypes: filters.mealTypes,
+    foodTypes: filters.foodTypes,
+    minRent: filters.minRent,
+    maxRent: filters.maxRent,
     page,
     size: DISCOVER_PAGE_SIZE,
     sort: filters.sort?.trim() || 'newest',

@@ -81,6 +81,18 @@ export function filterMesses(listings: readonly MessListing[], query: MessQuery)
     if (query.minRating != null && (item.listingMetadata.rating == null || item.listingMetadata.rating < query.minRating)) {
       return false;
     }
+    if (query.foods.length > 0 && (item.foodAvailability == null || !query.foods.includes(item.foodAvailability))) {
+      return false;
+    }
+    if (
+      query.amenities.length > 0 &&
+      !query.amenities.every((code) => (item.amenityCodes ?? []).includes(code))
+    ) {
+      return false;
+    }
+    if (query.contactAvailable && !item.hasContact) {
+      return false;
+    }
     return true;
   });
 
@@ -129,6 +141,17 @@ export function formatInr(amount: number): string {
   }).format(amount);
 }
 
+function addressSegments(value: string): string[] {
+  return value
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function postcodesIn(value: string): string[] {
+  return value.match(/\b[1-9]\d{5}\b/g) ?? [];
+}
+
 export function formatListingAddress(listing: {
   addressLine: string;
   locality: string;
@@ -136,19 +159,37 @@ export function formatListingAddress(listing: {
   state: string;
   pincode: string;
 }): string {
+  const line = listing.addressLine.trim();
+  const segments = line ? addressSegments(line) : [];
+  const pinsInLine = new Set(postcodesIn(line));
   const parts: string[] = [];
+  const seen = new Set<string>();
+
   const push = (value: string) => {
     const next = value.trim();
     if (!next) return;
-    if (parts.some((part) => part.toLowerCase() === next.toLowerCase())) return;
+    const key = next.toLowerCase();
+    if (seen.has(key)) return;
+    if (parts.some((part) => part.toLowerCase().includes(key))) return;
+    seen.add(key);
     parts.push(next);
   };
-  push(listing.addressLine);
+
+  for (const segment of segments) {
+    const onlyPin = /^\d{6}$/.test(segment);
+    if (onlyPin && pinsInLine.size > 1 && parts.some((part) => postcodesIn(part).length > 0)) {
+      continue;
+    }
+    push(segment);
+  }
+
   push(listing.locality);
   push(listing.city);
   push(listing.state);
-  if (listing.pincode.trim()) {
-    parts.push(listing.pincode.trim());
+
+  const pin = listing.pincode.trim();
+  if (pin && pinsInLine.size === 0) {
+    push(pin);
   }
   return parts.join(', ');
 }

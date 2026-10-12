@@ -3,8 +3,12 @@ import { Field, inputClasses } from '../form/Field';
 import { TextField } from '../form/TextField';
 import type { ListingKind } from '../../constants/listing';
 import { getPropertyTypeOption } from '../../constants/propertyRegistration';
+import { PRICE_BASIS_OPTIONS, defaultPriceBasis } from '../../lib/priceBasis';
+import type { PriceBasis } from '../../api/types';
 import { digitsOnly } from '../../lib/indianMobile';
+import { AddressLocationField } from './AddressLocationField';
 import { AmenityChips } from './AmenityChips';
+import type { AmenityAssignment } from '../../lib/amenities';
 import type { FieldErrors, RegistrationForm } from './registrationForm';
 
 type StepDetailsProps = {
@@ -28,6 +32,8 @@ function RupeeField({
   label,
   value,
   suffix,
+  basis,
+  onBasisChange,
   error,
   placeholder,
   onChange,
@@ -35,15 +41,17 @@ function RupeeField({
   id: string;
   label: string;
   value: string;
-  suffix: string;
+  suffix?: string;
+  basis?: PriceBasis;
+  onBasisChange?: (value: PriceBasis) => void;
   error?: string;
   placeholder: string;
   onChange: (value: string) => void;
 }) {
   return (
     <Field htmlFor={id} label={label} required error={error}>
-      <div className="flex items-stretch gap-2">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
+        <div className="relative min-w-0 flex-1">
           <span
             aria-hidden
             className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[14px] text-muted"
@@ -61,12 +69,28 @@ function RupeeField({
             className={`${inputClasses(Boolean(error))} pl-7`}
           />
         </div>
-        <span
-          id={`${id}-basis`}
-          className="flex items-center rounded-lg bg-background px-3 text-[12px] font-medium whitespace-nowrap text-text-secondary"
-        >
-          {suffix}
-        </span>
+        {onBasisChange && basis ? (
+          <select
+            id={`${id}-basis`}
+            aria-label="Pricing unit"
+            value={basis}
+            onChange={(event) => onBasisChange(event.target.value as PriceBasis)}
+            className="h-11 shrink-0 rounded-lg border border-border bg-background px-3 text-[12px] font-medium text-text-secondary sm:w-[170px]"
+          >
+            {PRICE_BASIS_OPTIONS.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <span
+            id={`${id}-basis`}
+            className="flex h-11 items-center rounded-lg bg-background px-3 text-[12px] font-medium whitespace-nowrap text-text-secondary"
+          >
+            {suffix}
+          </span>
+        )}
       </div>
     </Field>
   );
@@ -76,94 +100,10 @@ export function StepDetails({ form, errors, kind, onChange }: StepDetailsProps) 
   // Step 1 guarantees a type before this step can be reached.
   const option = form.propertyType ? getPropertyTypeOption(form.propertyType) : null;
 
-  function toggleAmenity(code: string) {
-    const next = form.amenities.includes(code)
-      ? form.amenities.filter((item) => item !== code)
-      : [...form.amenities, code];
-    onChange('amenities', next);
-  }
-
   return (
     <div className="space-y-6">
       <Section title="Location">
-        <TextField
-          id="addressLine"
-          label="Address"
-          required
-          value={form.addressLine}
-          onChange={(value) => onChange('addressLine', value)}
-          error={errors.addressLine}
-          placeholder="e.g. Flat No. 101, ABC Building, Baner Road"
-          maxLength={255}
-          autoComplete="street-address"
-        />
-        <div className="grid grid-cols-2 gap-3">
-          <TextField
-            id="city"
-            label="City"
-            required
-            value={form.city}
-            onChange={(value) => onChange('city', value)}
-            error={errors.city}
-            placeholder="e.g. Pune"
-            maxLength={80}
-            autoComplete="address-level2"
-          />
-          <TextField
-            id="state"
-            label="State"
-            required
-            value={form.state}
-            onChange={(value) => onChange('state', value)}
-            error={errors.state}
-            placeholder="e.g. Maharashtra"
-            maxLength={80}
-            autoComplete="address-level1"
-          />
-        </div>
-        <TextField
-          id="pincode"
-          label="Pincode"
-          required
-          value={form.pincode}
-          onChange={(value) => onChange('pincode', digitsOnly(value, 6))}
-          error={errors.pincode}
-          placeholder="e.g. 411045"
-          inputMode="numeric"
-          autoComplete="postal-code"
-        />
-        <div className="grid grid-cols-2 gap-3">
-          <TextField
-            id="latitude"
-            label="Latitude (optional)"
-            value={form.latitude}
-            onChange={(value) => onChange('latitude', value)}
-            error={errors.latitude}
-            placeholder="e.g. 18.5204"
-            inputMode="decimal"
-          />
-          <TextField
-            id="longitude"
-            label="Longitude (optional)"
-            value={form.longitude}
-            onChange={(value) => onChange('longitude', value)}
-            error={errors.longitude}
-            placeholder="e.g. 73.8567"
-            inputMode="decimal"
-          />
-        </div>
-        <TextField
-          id="mapUrl"
-          label="Google Maps link (optional)"
-          value={form.mapUrl}
-          onChange={(value) => onChange('mapUrl', value)}
-          error={errors.mapUrl}
-          placeholder="Paste a Google Maps link"
-          inputMode="url"
-        />
-        <p className="text-[12px] text-text-secondary">
-          Add latitude and longitude, a Google Maps link, or both. Either is enough to open the map.
-        </p>
+        <AddressLocationField form={form} errors={errors} kind={kind} onChange={onChange} />
       </Section>
 
       <Section title="Pricing">
@@ -171,7 +111,8 @@ export function StepDetails({ form, errors, kind, onChange }: StepDetailsProps) 
           id="startingPrice"
           label={kind === 'mess' ? 'Monthly price' : 'Starting price'}
           value={form.startingPrice}
-          suffix={kind === 'mess' ? 'per month' : (option?.priceSuffix ?? 'per month')}
+          basis={form.priceBasis ?? defaultPriceBasis(form.propertyType)}
+          onBasisChange={(value) => onChange('priceBasis', value)}
           error={errors.startingPrice}
           placeholder={kind === 'mess' ? '3500' : '6000'}
           onChange={(value) => onChange('startingPrice', value)}
@@ -203,7 +144,10 @@ export function StepDetails({ form, errors, kind, onChange }: StepDetailsProps) 
 
       {option?.supportsAmenities ? (
         <Section title="Amenities">
-          <AmenityChips selected={form.amenities} onToggle={toggleAmenity} />
+          <AmenityChips
+            selected={form.amenities}
+            onChange={(amenities: AmenityAssignment[]) => onChange('amenities', amenities)}
+          />
         </Section>
       ) : null}
     </div>

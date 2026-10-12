@@ -1,13 +1,19 @@
-import { Heart } from 'lucide-react';
+import { useState } from 'react';
+import { Heart, MapPin, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useAlreadyInquired, useInquirySentVia } from '../../auth/useAlreadyInquired';
+import { useAlreadyInquired, useContactViewed } from '../../auth/useAlreadyInquired';
+import { getPropertyTypeOption } from '../../constants/propertyRegistration';
+import { useIsEnquirySending } from '../../context/EnquiryFeedbackContext';
 import { formatListingAddress } from '../../data/listings/query';
+import { isVerifiedListingImageUrl } from '../../data/listings/representativeImage';
 import type { MessListing } from '../../data/listings/types';
 import { ActionButton } from '../common/ActionButton';
-import { ListingCardMeta } from './ListingCardMeta';
+import { GetContactDetailsButton } from './GetContactDetailsButton';
+import { ListingFacts } from './ListingFacts';
 import { ListingCover } from './ListingCover';
-import { InquirySentBadge, InquirySentButton } from './InquirySentBadge';
+import { ContactViewedButton, InquirySentBadge, InquirySentButton } from './InquirySentBadge';
 import { ListingInfoChips } from './ListingInfoChips';
+import { priceBasisLabel } from '../../lib/priceBasis';
 import { ListingPrice } from './ListingPrice';
 
 type MessCardProps = {
@@ -30,10 +36,14 @@ export function MessCard({
   const { t } = useTranslation();
   const address = formatListingAddress(listing);
   const cta = t('discovery.getContactDetails');
-  const viewLabel = t('discovery.view', { defaultValue: 'View' });
-  const viewDetails = t('discovery.viewDetails', { defaultValue: 'View details' });
+  const viewDetails = t('discovery.viewDetails', { defaultValue: 'View Details' });
   const alreadyInquired = useAlreadyInquired(listing.id);
-  const sentVia = useInquirySentVia(listing.id);
+  const contactViewed = useContactViewed(listing.id);
+  const sendingEnquiry = useIsEnquirySending(listing.id);
+  const typeOption = getPropertyTypeOption('MESS');
+  const photos = listing.listingMetadata.images.filter((url) => isVerifiedListingImageUrl(url));
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const activePhoto = photos.length > 0 ? photos[Math.min(photoIndex, photos.length - 1)] : undefined;
 
   return (
     <article
@@ -41,97 +51,131 @@ export function MessCard({
         selected ? 'border-register ring-2 ring-register/25' : 'border-black/5 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]'
       }`}
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <button type="button" onClick={onSelect} className="block h-full w-full">
+      <div className="relative aspect-[16/10] overflow-hidden bg-[#F3FBF7]">
+        <button type="button" onClick={onSelect} className="absolute inset-0 z-0 block">
           <ListingCover
             listingId={listing.id}
             spaceType="MESS"
-            listingImageUrl={listing.listingMetadata.images[0]}
+            listingImageUrl={activePhoto}
             className="h-full w-full"
           />
         </button>
-        {alreadyInquired ? (
-          <div className="absolute top-3 left-3 max-w-[calc(100%-3.25rem)]">
-            <InquirySentBadge />
-          </div>
-        ) : null}
+        <span className="pointer-events-none absolute top-3 left-3 z-10 inline-flex max-w-[calc(100%-4.75rem)] items-center gap-1 rounded-full border border-black/10 bg-white px-2.5 py-1.5 text-[11px] leading-none font-bold tracking-wide text-[#0F6B4C] uppercase shadow-[0_2px_8px_rgba(15,23,42,0.18)]">
+          <UtensilsCrossed aria-hidden className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{typeOption.title}</span>
+        </span>
         <button
           type="button"
           onClick={onToggleSave}
           aria-pressed={saved}
           aria-label={t(saved ? 'discovery.unsave' : 'discovery.save', { name: listing.name })}
-          className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-navy shadow-sm"
+          className="absolute top-2.5 right-2.5 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-navy shadow-[0_2px_8px_rgba(15,23,42,0.18)]"
         >
           <Heart aria-hidden className={`h-4 w-4 ${saved ? 'fill-coral text-coral' : ''}`} />
         </button>
-      </div>
-      <div className="@container flex flex-1 flex-col p-3.5">
-        <button type="button" onClick={onSelect} className="w-full text-left">
-          <h2 className="line-clamp-2 text-[16px] font-semibold tracking-tight text-navy">{listing.name}</h2>
-          {alreadyInquired ? (
-            <span className="mt-1 block">
-              <InquirySentBadge variant="inline" sentVia={sentVia} />
+        {photos.length > 1 ? (
+          <>
+            <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5">
+              {photos.map((url, index) => (
+                <button
+                  key={`${url}-${index}`}
+                  type="button"
+                  aria-label={`Show photo ${index + 1} of ${photos.length}`}
+                  aria-current={index === Math.min(photoIndex, photos.length - 1)}
+                  onClick={() => setPhotoIndex(index)}
+                  className={`pointer-events-auto h-1.5 w-1.5 rounded-full ${
+                    index === Math.min(photoIndex, photos.length - 1) ? 'bg-white' : 'bg-white/55'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="pointer-events-none absolute right-3 bottom-3 z-10 rounded-md bg-black/55 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+              {`${Math.min(photoIndex, photos.length - 1) + 1}/${photos.length}`}
             </span>
-          ) : null}
+          </>
+        ) : null}
+        {alreadyInquired ? (
+          <div className="pointer-events-none absolute bottom-3 left-3 z-10 max-w-[48%]">
+            <InquirySentBadge />
+          </div>
+        ) : null}
+      </div>
+      <div className="@container flex flex-1 flex-col gap-2.5 p-4">
+        <button type="button" onClick={onSelect} className="block w-full min-w-0 text-left hover:text-primary">
+          <h2 className="line-clamp-2 text-[18px] leading-[1.25] font-extrabold tracking-tight text-navy">
+            {listing.name}
+          </h2>
         </button>
         {address && !alreadyInquired ? (
           <button
             type="button"
             onClick={onEnquire}
-            className="mt-1 line-clamp-2 w-full text-left text-[13px] text-text-secondary underline decoration-black/15 underline-offset-2 hover:text-primary hover:decoration-primary"
+            className="flex min-h-5 w-full min-w-0 items-center gap-1 text-left text-[13px] text-text-secondary hover:text-primary"
             aria-label={`${cta}: ${listing.name}`}
           >
-            {address}
+            <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-[#5F7368]" />
+            <span className="truncate">{address}</span>
           </button>
-        ) : address ? (
-          <p className="mt-1 line-clamp-2 text-[13px] text-text-secondary">{address}</p>
-        ) : null}
-        <button type="button" onClick={onSelect} className="w-full text-left">
-          <p className="mt-2 text-[16px] font-semibold text-navy">
-            <ListingPrice
-              amount={listing.monthlyPrice}
-              suffix={t('discovery.perMonth')}
-              fallback={t('discovery.priceOnRequest')}
-            />
+        ) : (
+          <p className="flex min-h-5 items-center gap-1 text-[13px] text-text-secondary">
+            {address ? (
+              <>
+                <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-[#5F7368]" />
+                <span className="truncate">{address}</span>
+              </>
+            ) : null}
           </p>
-          {listing.mealPrice != null ? (
-            <p className="mt-1 text-[13px] font-medium text-navy">
-              <ListingPrice amount={listing.mealPrice} suffix={t('discovery.perMeal')} fallback={t('discovery.priceOnRequest')} />
-            </p>
-          ) : null}
+        )}
+        <button
+          type="button"
+          onClick={alreadyInquired ? onSelect : onEnquire}
+          className="w-full text-left text-[18px] font-extrabold tracking-tight text-navy hover:text-primary"
+          aria-label={alreadyInquired ? `${viewDetails}: ${listing.name}` : `${cta}: ${listing.name}`}
+        >
+          <ListingPrice
+            amount={listing.monthlyPrice ?? listing.mealPrice}
+            suffix={
+              listing.monthlyPrice != null
+                ? t(`discovery.priceBasis.${listing.priceBasis ?? ''}`, {
+                    defaultValue: priceBasisLabel(listing.priceBasis, 'MESS'),
+                  })
+                : listing.mealPrice != null
+                  ? t('discovery.perMeal')
+                  : t('discovery.perMonth')
+            }
+            fallback={t('discovery.priceOnRequest')}
+          />
         </button>
-        <ListingCardMeta
-          listing={listing}
-          showMaps={false}
-          onEnquire={alreadyInquired ? undefined : onEnquire}
-          chips={
-            <ListingInfoChips
-              listing={{ ...listing, mealsServed: listing.listingMetadata.mealsServed }}
-              variant="card"
-              surface="meals"
-              onEnquire={alreadyInquired ? undefined : onEnquire}
-            />
-          }
-        />
-        <div className="mt-auto flex flex-col gap-2 pt-3 @min-[260px]:flex-row">
+        <ListingFacts appearance="pills" foodAvailability={listing.foodAvailability} />
+        <div className="rounded-[14px] bg-[#F3FBF7] px-3 py-3">
+          <ListingInfoChips
+            listing={{ ...listing, mealsServed: listing.listingMetadata.mealsServed }}
+            variant="card"
+            surface="meals"
+            onViewAll={onSelect}
+            onEnquire={alreadyInquired ? undefined : onEnquire}
+          />
+        </div>
+        <div className="mt-auto flex flex-row items-stretch gap-2 pt-0.5">
           <ActionButton
             variant="outline"
             onClick={onSelect}
-            className="h-10 w-full shrink-0 whitespace-nowrap px-3 text-[13px] @min-[260px]:w-auto"
+            className="!h-11 min-w-0 flex-[0.82] !rounded-xl bg-white !px-2 !text-[13px] whitespace-nowrap"
             aria-label={`${viewDetails}: ${listing.name}`}
           >
-            {viewLabel}
+            {viewDetails}
           </ActionButton>
-          {alreadyInquired ? (
-            <InquirySentButton className="@min-[260px]:w-auto @min-[260px]:grow" />
+          {contactViewed && !sendingEnquiry ? (
+            <ContactViewedButton onClick={onSelect} className="h-11 min-w-0 flex-[1.18]" />
+          ) : alreadyInquired && !sendingEnquiry ? (
+            <InquirySentButton onClick={onSelect} className="h-11 min-w-0 flex-[1.18]" />
           ) : (
-            <ActionButton
+            <GetContactDetailsButton
+              listingId={listing.id}
               onClick={onEnquire}
-              className="h-10 w-full shrink-0 whitespace-nowrap px-3 text-[13px] @min-[260px]:w-auto @min-[260px]:grow"
+              className="!h-11 min-w-0 flex-[1.18] !rounded-xl !px-2 !text-[13px] whitespace-nowrap"
               aria-label={`${cta}: ${listing.name}`}
-            >
-              {cta}
-            </ActionButton>
+            />
           )}
         </div>
       </div>

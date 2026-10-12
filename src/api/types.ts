@@ -30,20 +30,24 @@ export type AmenityAssignment = {
 export type CreatePropertyRegistrationRequest = {
   propertyType: PropertyType;
   propertyName: string;
+  buildingName?: string;
   ownerName: string;
   description?: string;
   mobileNumber: string;
   verificationToken: string;
   addressLine: string;
-  city: string;
-  state: string;
-  pincode: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
   mapUrl?: string;
   latitude?: number;
   longitude?: number;
   startingPrice: number;
+  priceBasis?: PriceBasis;
   capacityEstimate?: number;
   amenities: AmenityAssignment[];
+  /** Data-URL images. Optional. At most 3, each at most 3 MB. */
+  photos?: string[];
 };
 
 export type PropertyRegistrationResponse = {
@@ -54,20 +58,24 @@ export type PropertyRegistrationResponse = {
 
 export type CreateMessRegistrationRequest = {
   messName: string;
+  buildingName?: string;
   ownerName: string;
   description?: string;
   mobileNumber: string;
   verificationToken: string;
   addressLine: string;
-  city: string;
-  state: string;
-  pincode: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
   mapUrl?: string;
   latitude?: number;
   longitude?: number;
   monthlyPrice: number;
+  monthlyPriceBasis?: PriceBasis;
   mealPrice: number;
   capacityEstimate?: number;
+  /** Data-URL images. Optional. At most 3, each at most 3 MB. */
+  photos?: string[];
 };
 
 export type MessRegistrationResponse = {

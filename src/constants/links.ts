@@ -7,6 +7,7 @@ export const APP = {
   register: `${APP_ORIGIN}/register`,
   login: `${APP_ORIGIN}/login`,
   web: `${APP_ORIGIN}/`,
+  enquiries: `${APP_ORIGIN}/my-enquiries`,
   admin: `${APP_ORIGIN}/admin`,
   profile: `${APP_ORIGIN}/profile`,
   privacy: `${APP_ORIGIN}/privacy`,

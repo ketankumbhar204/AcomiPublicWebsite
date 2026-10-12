@@ -21,7 +21,7 @@ export function WhatsAppChat({ children, time = '8:24 AM', caption }: WhatsAppCh
           </div>
           <div className="flex items-center gap-1 bg-[#075e54] px-1.5 pb-2 text-white">
             <ChevronLeft className="h-5 w-5 shrink-0" strokeWidth={2} aria-hidden />
-            <BrandMark size={34} className="!rounded-full !shadow-none" />
+            <BrandMark size={34} className="!rounded-lg !shadow-none" />
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-1 text-[15px] leading-tight font-semibold">
                 ACOMI

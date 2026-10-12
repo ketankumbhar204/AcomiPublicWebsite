@@ -1,6 +1,7 @@
 import { BedDouble, Building2, Home, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { PropertyType } from '../api/types';
+import { PRESET_AMENITY_CODES, PRESET_AMENITY_LABELS } from '../lib/amenities';
 
 export type PropertyTypeOption = {
   id: PropertyType;
@@ -82,30 +83,16 @@ export function getPropertyTypeOption(id: PropertyType): PropertyTypeOption {
 
 /**
  * Codes must exist in the backend AmenityCode enum or the submission is rejected.
- * Labels here are display-only; the backend stores the code.
+ * Labels match the mobile preset list; the backend stores the code.
  */
 export type AmenityOption = {
   code: string;
   label: string;
 };
 
-export const PRIMARY_AMENITIES: readonly AmenityOption[] = [
-  { code: 'WIFI', label: 'Wi-Fi' },
-  { code: 'FOOD_INCLUDED', label: 'Meals' },
-  { code: 'WASHING_MACHINE', label: 'Laundry' },
-  { code: 'PARKING', label: 'Parking' },
-];
-
-export const MORE_AMENITIES: readonly AmenityOption[] = [
-  { code: 'HOUSEKEEPING', label: 'Housekeeping' },
-  { code: 'POWER_BACKUP', label: 'Power backup' },
-  { code: 'RO_WATER', label: 'RO water' },
-  { code: 'CCTV', label: 'CCTV' },
-  { code: 'HOT_WATER', label: 'Hot water' },
-  { code: 'REFRIGERATOR', label: 'Refrigerator' },
-  { code: 'WARDROBE', label: 'Wardrobe' },
-];
-
-export const ALL_AMENITIES: readonly AmenityOption[] = [...PRIMARY_AMENITIES, ...MORE_AMENITIES];
+export const ALL_AMENITIES: readonly AmenityOption[] = PRESET_AMENITY_CODES.map((code) => ({
+  code,
+  label: PRESET_AMENITY_LABELS[code],
+}));
 
 export const REGISTRATION_DRAFT_KEY = 'acomi.propertyRegistrationDraft';

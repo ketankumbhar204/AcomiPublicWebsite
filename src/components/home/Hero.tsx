@@ -35,6 +35,13 @@ export function Hero() {
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(44rem,0.58fr)_minmax(0,1fr)] lg:gap-12">
           <div>
+            <img
+              src="/brand/icon-light.png"
+              alt=""
+              width={112}
+              height={112}
+              className="mb-5 h-24 w-24 rounded-[1.4rem] shadow-md ring-1 ring-black/10 sm:h-28 sm:w-28"
+            />
             <p className="text-[11px] font-semibold tracking-[0.14em] text-muted uppercase sm:text-xs">
               {t('hero.eyebrow', { defaultValue: 'Welcome to ACOMI' })}
             </p>

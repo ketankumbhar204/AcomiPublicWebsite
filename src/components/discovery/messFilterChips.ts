@@ -20,19 +20,58 @@ export function messFilterChips(
       onChange({ ...query, localities: query.localities.filter((item) => item !== locality) }),
   }));
 
+  const mealLabel: Record<string, string> = { BREAKFAST: 'Breakfast', LUNCH: 'Lunch', DINNER: 'Dinner' };
+  const foodLabel: Record<string, string> = {
+    VEG: 'Vegetarian',
+    NON_VEG: 'Non-vegetarian',
+    EGG: 'Egg',
+  };
+  query.mealTypes.forEach((slot) => {
+    chips.push({
+      id: `meal-${slot}`,
+      label: mealLabel[slot] ?? slot,
+      onRemove: () => onChange({ ...query, mealTypes: query.mealTypes.filter((item) => item !== slot) }),
+    });
+  });
+  query.foodTypes.forEach((food) => {
+    chips.push({
+      id: `food-type-${food}`,
+      label: foodLabel[food] ?? food,
+      onRemove: () => onChange({ ...query, foodTypes: query.foodTypes.filter((item) => item !== food) }),
+    });
+  });
+
+  if (query.contactAvailable) {
+    chips.push({
+      id: 'contact',
+      label: 'Contact Available',
+      onRemove: () => onChange({ ...query, contactAvailable: false }),
+    });
+  }
+
   const monthly = MESS_MONTHLY_PRESETS.find(
     (preset) =>
       preset.min === query.minMonthly && preset.max === query.maxMonthly && preset.id !== 'any',
   );
-  if (monthly) {
+  if (query.minMonthly != null || query.maxMonthly != null) {
+    const format = (value: number) => `₹${value.toLocaleString('en-IN')}`;
+    const label = monthly
+      ? t(`discovery.pricePresets.${({
+          any: 'anyMonthly',
+          'under-25': 'under25',
+          '25-30': '25to30',
+          '30-plus': '30plus',
+        } as const)[monthly.id]}`)
+      : query.minMonthly != null && query.maxMonthly != null
+        ? `${format(query.minMonthly)} – ${format(query.maxMonthly)}`
+        : query.minMonthly != null
+          ? `${format(query.minMonthly)}+`
+          : query.maxMonthly != null
+            ? `Under ${format(query.maxMonthly)}`
+            : '';
     chips.push({
       id: 'monthly',
-      label: t(`discovery.pricePresets.${({
-        any: 'anyMonthly',
-        'under-25': 'under25',
-        '25-30': '25to30',
-        '30-plus': '30plus',
-      } as const)[monthly.id]}`),
+      label,
       onRemove: () =>
         onChange({
           ...query,

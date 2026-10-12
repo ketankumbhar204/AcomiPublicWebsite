@@ -14,6 +14,33 @@ const HIDDEN_ON = new Set(['/places', '/meals']);
  * Site-wide listing CTAs, pinned to the right edge below the navbar.
  * Opens the registration drawer in place instead of leaving the current page.
  */
+/** Same registration actions as the home-screen edge buttons, laid out for a page header. */
+export function ListingHeaderActions() {
+  const { t } = useTranslation();
+  const { openListing } = useListingDrawer();
+
+  return (
+    <div className="flex flex-wrap items-center justify-end gap-2">
+      <button
+        type="button"
+        onClick={() => openListing('property')}
+        className="reg-focus inline-flex items-center gap-2 rounded-full bg-register px-3.5 py-2 text-[12px] font-semibold text-white shadow-[var(--shadow-sm)] hover:bg-register-hover sm:text-[13px]"
+      >
+        <Building2 className="h-4 w-4 shrink-0" strokeWidth={1.9} aria-hidden />
+        {t('listing.listProperty')}
+      </button>
+      <button
+        type="button"
+        onClick={() => openListing('mess')}
+        className="reg-focus inline-flex items-center gap-2 rounded-full border border-register bg-white px-3.5 py-2 text-[12px] font-semibold text-text shadow-[var(--shadow-sm)] hover:bg-register-soft sm:text-[13px]"
+      >
+        <UtensilsCrossed className="h-4 w-4 shrink-0 text-orange" strokeWidth={1.9} aria-hidden />
+        {t('listing.listMess')}
+      </button>
+    </div>
+  );
+}
+
 export function PersistentListingActions() {
   const { t } = useTranslation();
   const { pathname } = useLocation();

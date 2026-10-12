@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { SlidersHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { locationsApi } from '../api/locationsApi';
 import { ActionButton } from '../components/common/ActionButton';
+import { ListingHeaderActions } from '../components/common/PersistentListingActions';
 import { ActiveFilterChips } from '../components/discovery/ActiveFilterChips';
 import { DiscoveryPageShell } from '../components/discovery/DiscoveryPageShell';
 import { DiscoverySearchBar } from '../components/discovery/DiscoverySearchBar';
@@ -14,6 +14,7 @@ import { ListingDetailDrawer } from '../components/discovery/ListingDetailDrawer
 import { ListingEmpty } from '../components/discovery/ListingEmpty';
 import { ListingInfiniteSentinel } from '../components/discovery/ListingInfiniteSentinel';
 import { PropertyCard } from '../components/discovery/PropertyCard';
+import type { RevealedOwnerContact } from '../components/discovery/OwnerContactCard';
 import { PropertyDetailPanel } from '../components/discovery/PropertyDetailPanel';
 import { PropertyFilters } from '../components/discovery/PropertyFilters';
 import { propertyFilterChips } from '../components/discovery/propertyFilterChips';
@@ -34,6 +35,26 @@ import type { PropertyQuery } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
 import { readEnquireIntent, takeEnquireResumeIntent } from '../auth/enquireIntent';
 import { useAutoOpenLocationSelect } from '../data/listings/useAutoOpenLocationSelect';
+import { useFavorites } from '../context/FavoritesContext';
+
+/** 19.25rem keeps four readable cards on a 1366px desktop at 100% zoom. */
+const PLACES_RESULTS_GRID =
+  'mt-4 grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,19.25rem),1fr))]';
+
+function activePlaceFilterCount(query: PropertyQuery): number {
+  let count =
+    query.types.length +
+    query.genders.length +
+    query.sharings.length +
+    query.foods.length +
+    query.furnishings.length +
+    query.amenities.length +
+    query.localities.length;
+  if (query.contactAvailable) count += 1;
+  if (query.minPrice != null || query.maxPrice != null) count += 1;
+  if (query.minRating != null) count += 1;
+  return count;
+}
 
 export function PlacesPage() {
   const { t } = useTranslation();
@@ -55,6 +76,12 @@ export function PlacesPage() {
       location: selectedLocation?.location,
       search: debouncedSearch,
       types: query.types,
+      genders: query.genders,
+      sharings: query.sharings,
+      foods: query.foods,
+      furnishings: query.furnishings,
+      contactAvailable: query.contactAvailable,
+      servicedApartment: query.types.includes('SERVICED'),
       minRent: query.minPrice,
       maxRent: query.maxPrice,
       amenities: query.amenities,
@@ -63,8 +90,13 @@ export function PlacesPage() {
     [
       debouncedSearch,
       query.amenities,
+      query.contactAvailable,
+      query.foods,
+      query.furnishings,
+      query.genders,
       query.maxPrice,
       query.minPrice,
+      query.sharings,
       query.sort,
       query.types,
       selectedLocation?.location,
@@ -77,14 +109,16 @@ export function PlacesPage() {
   const skipLocationPrompt = Boolean(
     enquireResume?.resumeAfterAuth && enquireResume.listingKind === 'places',
   );
-  const [locationOpen, setLocationOpen] = useAutoOpenLocationSelect(
-    Boolean(selectedLocation?.location),
-    skipLocationPrompt,
-  );
+  const [locationOpen, setLocationOpen] = useAutoOpenLocationSelect(true, skipLocationPrompt);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [savedIds, setSavedIds] = useState<string[]>([]);
+  const { isSaved, toggleFavorite } = useFavorites();
   const [enquireOpen, setEnquireOpen] = useState(false);
+  const [revealedContact, setRevealedContact] = useState<RevealedOwnerContact | null>(null);
+
+  useEffect(() => {
+    setRevealedContact(null);
+  }, [selectedId]);
   const restoredEnquire = useRef(false);
 
   const writePlacesUrl = useCallback(
@@ -222,16 +256,13 @@ export function PlacesPage() {
     setDetailOpen(true);
   };
 
-  const toggleSaved = (id: string) => {
-    setSavedIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
-  };
-
   return (
     <>
       <DiscoveryPageShell
         eyebrow={t('places.eyebrow')}
         title={t('places.title')}
         description={t('places.description')}
+        headerActions={<ListingHeaderActions />}
         search={
           <DiscoverySearchBar
             searchId="places-search"
@@ -246,44 +277,29 @@ export function PlacesPage() {
             sortId="places-sort"
             sortValue={query.sort}
             onSortChange={(sort) => setQuery({ ...query, sort })}
+            onOpenFilters={() => setSheetOpen(true)}
+            filtersOpen={sheetOpen}
+            activeFilterCount={activePlaceFilterCount(query)}
           />
         }
-        filters={
-          <>
-            <h2 className="text-sm font-semibold text-navy">{t('discovery.filters')}</h2>
-            <div className="mt-4">
-              <PropertyFilters
-                query={query}
-                listings={listings}
-                localities={[]}
-                onChange={updateQuery}
-              />
-            </div>
-          </>
-        }
+        hideSidebar
         toolbar={
-          <>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-text-secondary">
-                {status === 'loading'
-                  ? t('places.loading')
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <p className="text-sm text-text-secondary">
+              {status === 'loading'
+                ? t('places.loading')
+                : !selectedLocation
+                  ? t('places.foundAll', { count: totalElements })
                   : t(totalElements === 1 ? 'places.foundOne' : 'places.foundMany', {
                       count: totalElements,
                     })}
-              </p>
-              <ActionButton onClick={() => setSheetOpen(true)} variant="ghost" className="lg:hidden">
-                <SlidersHorizontal aria-hidden className="h-4 w-4" />
-                {t('discovery.filters')}
-              </ActionButton>
-            </div>
-            <div className="mt-3">
-              <ActiveFilterChips filters={chips} onClearAll={clearFilters} />
-            </div>
-          </>
+            </p>
+            <ActiveFilterChips filters={chips} onClearAll={clearFilters} />
+          </div>
         }
         results={
           status === 'loading' ? (
-            <ListingCardSkeleton />
+            <ListingCardSkeleton gridClassName={PLACES_RESULTS_GRID} compact />
           ) : status === 'error' ? (
             <div className="mt-6">
               <ListingEmpty
@@ -303,15 +319,22 @@ export function PlacesPage() {
             </div>
           ) : (
             <>
-              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className={PLACES_RESULTS_GRID}>
                 {listings.map((listing) => (
                   <PropertyCard
                     key={listing.id}
                     listing={listing}
                     selected={detailOpen && selected?.id === listing.id}
-                    saved={savedIds.includes(listing.id)}
+                    saved={isSaved(listing.id)}
                     onSelect={() => selectListing(listing.id)}
-                    onToggleSave={() => toggleSaved(listing.id)}
+                    onToggleSave={() =>
+                      toggleFavorite({
+                        id: listing.id,
+                        kind: 'places',
+                        name: listing.name,
+                        detail: [listing.locality, listing.city].filter(Boolean).join(', '),
+                      })
+                    }
                     onEnquire={() => {
                       setSelectedId(listing.id);
                       setEnquireOpen(true);
@@ -379,7 +402,13 @@ export function PlacesPage() {
         title={selected?.name ?? t('places.detailFallback')}
         onClose={() => setDetailOpen(false)}
       >
-        {selected ? <PropertyDetailPanel listing={selected} onEnquire={() => setEnquireOpen(true)} /> : null}
+        {selected ? (
+          <PropertyDetailPanel
+            listing={selected}
+            revealedContact={revealedContact}
+            onEnquire={() => setEnquireOpen(true)}
+          />
+        ) : null}
       </ListingDetailDrawer>
 
       <EnquireDialog
@@ -388,6 +417,12 @@ export function PlacesPage() {
         listingName={selected?.name ?? ''}
         listingKind="places"
         onClose={() => setEnquireOpen(false)}
+        onOpen={() => setEnquireOpen(true)}
+        onViewedHere={(contact) => {
+          setRevealedContact(contact);
+          setDetailOpen(true);
+          setEnquireOpen(false);
+        }}
       />
     </>
   );

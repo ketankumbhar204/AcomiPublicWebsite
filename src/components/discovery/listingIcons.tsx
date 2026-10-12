@@ -1,14 +1,17 @@
 import {
+  BatteryCharging,
+  BedDouble,
+  BrushCleaning,
+  Camera,
   Car,
-  Cctv,
   Droplets,
+  GlassWater,
+  Plus,
   Refrigerator,
   Shirt,
-  Sparkles,
-  SquareStack,
   UtensilsCrossed,
+  WashingMachine,
   Wifi,
-  Zap,
   type LucideIcon,
 } from 'lucide-react';
 import type { TFunction } from 'i18next';
@@ -18,19 +21,27 @@ import type { PropertyListing } from '../../data/listings/types';
 const AMENITY_ICONS: Record<string, LucideIcon> = {
   WIFI: Wifi,
   FOOD_INCLUDED: UtensilsCrossed,
-  WASHING_MACHINE: Shirt,
-  PARKING: Car,
-  HOUSEKEEPING: Sparkles,
-  POWER_BACKUP: Zap,
-  RO_WATER: Droplets,
-  CCTV: Cctv,
+  WASHING_MACHINE: WashingMachine,
   HOT_WATER: Droplets,
+  PARKING: Car,
   REFRIGERATOR: Refrigerator,
-  WARDROBE: SquareStack,
+  HOUSEKEEPING: BrushCleaning,
+  CCTV: Camera,
+  POWER_BACKUP: BatteryCharging,
+  RO_WATER: GlassWater,
+  BEDS: BedDouble,
+  WARDROBE: Shirt,
+  CUSTOM: Plus,
 };
 
 export function amenityIcon(code: string): LucideIcon {
-  return AMENITY_ICONS[code] ?? Wifi;
+  return AMENITY_ICONS[code] ?? Plus;
+}
+
+export function amenityDisplayLabel(code: string, label: string | undefined, t: TFunction): string {
+  const stored = label?.trim();
+  if (stored) return stored;
+  return t(`discovery.amenity.${code}`, { defaultValue: code.replaceAll('_', ' ') });
 }
 
 export function propertyAvailabilityLabel(listing: PropertyListing, t: TFunction): string | null {

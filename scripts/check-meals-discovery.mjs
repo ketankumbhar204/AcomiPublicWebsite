@@ -50,7 +50,7 @@ assert.doesNotMatch(meals, /reference\/locations\.json/, 'Meals must not request
 assert.match(hook, /type: 'MESS'/, 'Meals discover requests must send type=MESS');
 assert.match(hook, /DISCOVER_PAGE_SIZE/, 'Paged mess hook must use the shared page size');
 assert.match(hook, /page \+ 1/, 'Load more must request the next page');
-assert.doesNotMatch(hook, /minRent/, 'Meals must not send property rent filters');
+assert.match(hook, /minRent/, 'Meals price filter must use the discover rent range');
 assert.doesNotMatch(hook, /Math\.random/, 'Meals pagination must not use random assignment');
 assert.match(api, /DISCOVER_PAGE_SIZE = 20/, 'Discover page size must be 20');
 assert.match(api, /query\.set\('location'/, 'Discover requests must send location separately');

@@ -1,19 +1,21 @@
 import { Check } from 'lucide-react';
 
-const DEFAULT_STEPS = ['Property', 'Details', 'Verify & Submit'] as const;
+const DEFAULT_STEPS = ['Property', 'Details', 'Verify', 'Photos', 'Review'] as const;
 
 export function RegistrationStepper({
   current,
   steps = DEFAULT_STEPS,
 }: {
   current: number;
-  steps?: readonly [string, string, string];
+  steps?: readonly string[];
 }) {
+  const inset = `${50 / steps.length}%`;
   return (
     <ol className="relative flex" aria-label="Registration progress">
       <span
         aria-hidden
-        className="absolute top-3.5 right-[16.5%] left-[16.5%] h-px bg-border"
+        className="absolute top-3.5 h-px bg-border"
+        style={{ left: inset, right: inset }}
       />
       {steps.map((label, index) => {
         const step = index + 1;

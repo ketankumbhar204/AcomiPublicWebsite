@@ -1,54 +1,77 @@
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useAlreadyInquired, useInquirySentVia } from '../../auth/useAlreadyInquired';
-import { ActionButton } from '../common/ActionButton';
+import { useAlreadyInquired, useContactViewed, useInquiryRecord } from '../../auth/useAlreadyInquired';
+import { useIsEnquirySending } from '../../context/EnquiryFeedbackContext';
+import { GetContactDetailsButton } from './GetContactDetailsButton';
 import { formatListingAddress } from '../../data/listings/query';
 import type { PropertyListing } from '../../data/listings/types';
-import { amenityIcon } from './listingIcons';
-import { InquirySentBadge, InquirySentButton } from './InquirySentBadge';
+import { amenityDisplayLabel, amenityIcon } from './listingIcons';
+import { InquirySentBadge, InquirySentButton, InquirySentDetails } from './InquirySentBadge';
 import { ListingCardMeta } from './ListingCardMeta';
+import { ListingFacts } from './ListingFacts';
 import { ListingGallery } from './ListingGallery';
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
+import { priceBasisLabel } from '../../lib/priceBasis';
 import { ListingUnavailableDetails } from './ListingUnavailableDetails';
+import { PhotoRequestAction } from './PhotoRequestAction';
+import { hasActualListingPhotos } from '../../lib/photoRequest';
+import { OwnerContactCard, type RevealedOwnerContact } from './OwnerContactCard';
+import { usePersistedRevealedContact } from './usePersistedRevealedContact';
 
 type PropertyDetailPanelProps = {
   listing: PropertyListing;
   onEnquire: () => void;
+  revealedContact?: RevealedOwnerContact | null;
 };
 
-export function PropertyDetailPanel({ listing, onEnquire }: PropertyDetailPanelProps) {
+export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: PropertyDetailPanelProps) {
   const { t } = useTranslation();
   const meta = listing.listingMetadata;
   const address = formatListingAddress(listing);
   const cta = t('discovery.getContactDetails');
   const alreadyInquired = useAlreadyInquired(listing.id);
-  const sentVia = useInquirySentVia(listing.id);
+  const contactViewed = useContactViewed(listing.id);
+  const inquiry = useInquiryRecord(listing.id);
+  const contact = usePersistedRevealedContact(listing.id, revealedContact);
+  const sendingEnquiry = useIsEnquirySending(listing.id);
+  const unlocked = Boolean(contact) || contactViewed || alreadyInquired;
 
   return (
     <div className="flex h-full flex-col">
-      <div key={listing.id}>
+      <div key={listing.id} className="relative">
         <ListingGallery
           listingId={listing.id}
           spaceType={listing.type}
           images={meta.images}
           name={listing.name}
         />
+        {alreadyInquired ? (
+          <div className="absolute top-3 left-3">
+            <InquirySentBadge />
+          </div>
+        ) : null}
       </div>
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span className="rounded-md bg-soft px-2 py-1 text-[11px] font-semibold tracking-wide text-navy uppercase">
-          {t(`discovery.propertyTypes.${listing.type}`)}
-        </span>
-        {alreadyInquired ? <InquirySentBadge /> : null}
+      <div className="mt-4">
+        <ListingFacts
+          leading={
+            <span className="inline-flex items-center rounded-md bg-[#F4F7F5] px-2 py-1 text-[11px] leading-none font-semibold tracking-wide text-navy uppercase">
+              {t(`discovery.propertyTypes.${listing.type}`)}
+            </span>
+          }
+          genderPolicy={listing.genderPolicy}
+          sharingNotes={listing.sharingNotes}
+          foodAvailability={listing.foodAvailability ?? (listing.foodIncludedInRent ? 'INCLUDED' : null)}
+        />
       </div>
       <h2 className="mt-2 text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
-      {alreadyInquired ? (
-        <div className="mt-1">
-          <InquirySentBadge variant="inline" sentVia={sentVia} />
-        </div>
+      {contactViewed ? (
+        <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
       ) : null}
-      {address && !alreadyInquired ? (
+      <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+      {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
+      {address && !unlocked ? (
         <button
           type="button"
           onClick={onEnquire}
@@ -67,7 +90,9 @@ export function PropertyDetailPanel({ listing, onEnquire }: PropertyDetailPanelP
       <p className="mt-4 text-[1.35rem] font-semibold text-navy">
         <ListingPrice
           amount={listing.startingPrice}
-          suffix={t(`discovery.priceSuffix.${listing.type}`)}
+          suffix={t(`discovery.priceBasis.${listing.priceBasis ?? ''}`, {
+            defaultValue: priceBasisLabel(listing.priceBasis, listing.type),
+          })}
           fallback={t('discovery.priceOnRequest')}
           size="detail"
         />
@@ -88,32 +113,51 @@ export function PropertyDetailPanel({ listing, onEnquire }: PropertyDetailPanelP
         <div className="mt-5">
           <h3 className="text-sm font-semibold text-navy">{t('discovery.amenities')}</h3>
           <ul className="mt-3 grid grid-cols-2 gap-2">
-            {listing.amenityCodes.map((code) => {
+            {listing.amenityCodes.map((code, index) => {
+              const label = amenityDisplayLabel(code, listing.amenityLabels?.[index], t);
               const Icon = amenityIcon(code);
               return (
-                <li key={code} className="inline-flex items-center gap-2 text-[12px] text-text-secondary">
-                  <Icon aria-hidden className="h-4 w-4 text-register" />
-                  {t(`discovery.amenity.${code}`)}
+                <li key={`${code}-${label}-${index}`} className="inline-flex min-w-0 items-center gap-2 text-[12px] text-text-secondary">
+                  <Icon aria-hidden className="h-4 w-4 shrink-0 text-register" />
+                  <span className="truncate">{label}</span>
                 </li>
               );
             })}
           </ul>
         </div>
       ) : null}
-      <ListingUnavailableDetails />
+      <ListingUnavailableDetails hidePhotos={hasActualListingPhotos(meta.images)} />
+      <PhotoRequestAction
+        kind="property"
+        name={listing.name}
+        spaceType={listing.type}
+        location={address}
+        photoUrls={meta.images}
+        phones={
+          contact
+            ? [contact.mobileNumber, contact.alternateMobileNumber, contact.additionalMobileNumber]
+            : []
+        }
+        contactAuthorized={Boolean(contact)}
+        onNeedContact={contact || contactViewed ? undefined : onEnquire}
+      />
       <div className="mt-auto pt-5">
         <ListingCardMeta
           listing={listing}
           showMaps={Boolean(listing.mapUrl?.trim())}
-          onEnquire={alreadyInquired ? undefined : onEnquire}
-          chips={<ListingInfoChips listing={listing} variant="detail" onEnquire={alreadyInquired ? undefined : onEnquire} />}
+          mapHref={unlocked ? listing.mapUrl : undefined}
+          onEnquire={unlocked ? undefined : onEnquire}
+          chips={<ListingInfoChips listing={listing} variant="detail" />}
         />
-        {alreadyInquired ? (
-          <InquirySentButton className="mt-4" />
+        {contactViewed && !sendingEnquiry ? null : alreadyInquired && !sendingEnquiry ? (
+          <InquirySentButton email={inquiry?.sentToEmail} className="mt-4" />
         ) : (
-          <ActionButton onClick={onEnquire} className="mt-4 w-full" aria-label={`${cta}: ${listing.name}`}>
-            {cta}
-          </ActionButton>
+          <GetContactDetailsButton
+            listingId={listing.id}
+            onClick={onEnquire}
+            className="mt-4 w-full"
+            aria-label={`${cta}: ${listing.name}`}
+          />
         )}
         <Link to={`/places/${listing.id}`} className="mt-3 block text-center text-[13px] font-semibold text-primary hover:underline">
           {t('discovery.openFullPage')}

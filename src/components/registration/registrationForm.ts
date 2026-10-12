@@ -1,13 +1,13 @@
 import type {
   CreateMessRegistrationRequest,
   CreatePropertyRegistrationRequest,
+  PriceBasis,
   PropertyType,
 } from '../../api/types';
-import {
-  ALL_AMENITIES,
-  REGISTRATION_DRAFT_KEY,
-  getPropertyTypeOption,
-} from '../../constants/propertyRegistration';
+import { normalizeAmenityAssignments, type AmenityAssignment } from '../../lib/amenities';
+import { defaultPriceBasis, isPriceBasis } from '../../lib/priceBasis';
+import { REGISTRATION_DRAFT_KEY, getPropertyTypeOption } from '../../constants/propertyRegistration';
+import { googleMapsLink } from '../../data/listings/locationAutocomplete';
 import { isValidMobile, isValidPincode } from '../../lib/indianMobile';
 import { readStored, removeStored, writeStored } from '../../lib/storage';
 
@@ -16,9 +16,16 @@ export const DESCRIPTION_MAX = 200;
 export type RegistrationForm = {
   propertyType: PropertyType | null;
   propertyName: string;
+  buildingName: string;
+  /** True after the visitor edits the building name, so a later property-name change does not overwrite it. */
+  buildingNameEdited: boolean;
   ownerName: string;
   description: string;
   addressLine: string;
+  locationQuery: string;
+  locationSelected: boolean;
+  locality: string;
+  district: string;
   city: string;
   state: string;
   pincode: string;
@@ -26,10 +33,11 @@ export type RegistrationForm = {
   latitude: string;
   longitude: string;
   startingPrice: string;
+  priceBasis: PriceBasis | null;
   mealPrice: string;
   capacityEstimate: string;
-  /** Backend amenity codes. */
-  amenities: string[];
+  /** Selected preset and custom amenities. Rental and mess leave this empty. */
+  amenities: AmenityAssignment[];
   mobileNumber: string;
 };
 
@@ -38,9 +46,15 @@ export type FieldErrors = Partial<Record<keyof RegistrationForm, string>>;
 export const EMPTY_FORM: RegistrationForm = {
   propertyType: null,
   propertyName: '',
+  buildingName: '',
+  buildingNameEdited: false,
   ownerName: '',
   description: '',
   addressLine: '',
+  locationQuery: '',
+  locationSelected: false,
+  locality: '',
+  district: '',
   city: '',
   state: '',
   pincode: '',
@@ -48,6 +62,7 @@ export const EMPTY_FORM: RegistrationForm = {
   latitude: '',
   longitude: '',
   startingPrice: '',
+  priceBasis: null,
   mealPrice: '',
   capacityEstimate: '',
   amenities: [],
@@ -60,8 +75,7 @@ export function validatePropertyStep(form: RegistrationForm): FieldErrors {
     errors.propertyType = 'Select a property type.';
   }
   if (!form.propertyName.trim()) {
-    errors.propertyName =
-      form.propertyType === 'MESS' ? 'Mess name is required.' : 'Property name is required.';
+    errors.propertyName = form.propertyType === 'MESS' ? 'Mess name is required.' : 'Property name is required.';
   }
   if (!form.ownerName.trim()) {
     errors.ownerName = 'Owner name is required.';
@@ -71,16 +85,14 @@ export function validatePropertyStep(form: RegistrationForm): FieldErrors {
 
 export function validateDetailsStep(form: RegistrationForm): FieldErrors {
   const errors: FieldErrors = {};
-  if (!form.addressLine.trim()) {
-    errors.addressLine = 'Address is required.';
+  if (!form.buildingName.trim()) {
+    errors.buildingName = 'Property / Apartment / Building name is required.';
   }
-  if (!form.city.trim()) {
-    errors.city = 'City is required.';
+  const locationText = (form.locationSelected ? form.addressLine : form.locationQuery).trim();
+  if (!locationText) {
+    errors.locationQuery = 'Enter a location.';
   }
-  if (!form.state.trim()) {
-    errors.state = 'State is required.';
-  }
-  if (!isValidPincode(form.pincode)) {
+  if (form.pincode.trim() && !isValidPincode(form.pincode)) {
     errors.pincode = 'Enter a valid 6-digit pincode.';
   }
 
@@ -124,6 +136,29 @@ export function validateDetailsStep(form: RegistrationForm): FieldErrors {
   return errors;
 }
 
+function storedAddress(form: RegistrationForm): string {
+  if (form.locationSelected) return form.addressLine.trim().slice(0, 255);
+  let line = form.locationQuery.trim();
+  for (const extra of [form.locality.trim(), form.district.trim()]) {
+    if (!extra || line.toLowerCase().includes(extra.toLowerCase())) continue;
+    line = line ? `${line}, ${extra}` : extra;
+  }
+  return line.slice(0, 255);
+}
+
+export function locationSummary(form: RegistrationForm): string {
+  if (form.locationSelected) return form.addressLine.trim() || form.locationQuery.trim();
+  const parts = [form.locationQuery, form.locality, form.city, form.district, form.state, form.pincode]
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const unique: string[] = [];
+  for (const part of parts) {
+    if (unique.some((item) => item.toLowerCase().includes(part.toLowerCase()))) continue;
+    unique.push(part);
+  }
+  return unique.join(', ');
+}
+
 function optionalCoordinate(value: string): number | undefined {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
@@ -137,13 +172,10 @@ export function validateMobile(form: RegistrationForm): FieldErrors {
     : { mobileNumber: 'Enter a valid 10-digit mobile number.' };
 }
 
-function amenityLabel(code: string): string {
-  return ALL_AMENITIES.find((amenity) => amenity.code === code)?.label ?? code;
-}
-
 export function buildRequest(
   form: RegistrationForm,
   verificationToken: string,
+  photos: string[] = [],
 ): CreatePropertyRegistrationRequest {
   if (!form.propertyType) {
     throw new Error('Property type is required before submitting');
@@ -154,57 +186,70 @@ export function buildRequest(
   const longitude = optionalCoordinate(form.longitude);
   const capacity = form.capacityEstimate.trim();
   const description = form.description.trim();
+  const city = form.city.trim();
+  const state = form.state.trim();
+  const pincode = form.pincode.trim();
+  const addressLine = storedAddress(form);
 
   return {
     propertyType: form.propertyType,
     propertyName: form.propertyName.trim(),
+    ...(form.buildingName.trim() ? { buildingName: form.buildingName.trim() } : {}),
     ownerName: form.ownerName.trim(),
     ...(description ? { description } : {}),
     mobileNumber: form.mobileNumber,
     verificationToken,
-    addressLine: form.addressLine.trim(),
-    city: form.city.trim(),
-    state: form.state.trim(),
-    pincode: form.pincode.trim(),
+    addressLine,
+    ...(city ? { city } : {}),
+    ...(state ? { state } : {}),
+    ...(pincode ? { pincode } : {}),
     ...(mapUrl ? { mapUrl } : {}),
     ...(latitude !== undefined ? { latitude } : {}),
     ...(longitude !== undefined ? { longitude } : {}),
     startingPrice: Number(form.startingPrice),
+    priceBasis: form.priceBasis ?? defaultPriceBasis(form.propertyType),
     ...(capacity ? { capacityEstimate: Number(capacity) } : {}),
     // The backend ignores amenities for types that do not support them; not sending
     // them keeps the payload honest about what the visitor actually chose.
-    amenities: option.supportsAmenities
-      ? form.amenities.map((code) => ({ code, label: amenityLabel(code) }))
-      : [],
+    amenities: option.supportsAmenities ? normalizeAmenityAssignments(form.amenities) : [],
+    photos,
   };
 }
 
 export function buildMessRequest(
   form: RegistrationForm,
   verificationToken: string,
+  photos: string[] = [],
 ): CreateMessRegistrationRequest {
   const mapUrl = form.mapUrl.trim();
   const latitude = optionalCoordinate(form.latitude);
   const longitude = optionalCoordinate(form.longitude);
   const capacity = form.capacityEstimate.trim();
   const description = form.description.trim();
+  const state = form.state.trim();
+  const city = form.city.trim();
+  const pincode = form.pincode.trim();
+  const addressLine = storedAddress(form);
 
   return {
     messName: form.propertyName.trim(),
+    ...(form.buildingName.trim() ? { buildingName: form.buildingName.trim() } : {}),
     ownerName: form.ownerName.trim(),
     ...(description ? { description } : {}),
     mobileNumber: form.mobileNumber,
     verificationToken,
-    addressLine: form.addressLine.trim(),
-    city: form.city.trim(),
-    state: form.state.trim(),
-    pincode: form.pincode.trim(),
+    addressLine,
+    ...(city ? { city } : {}),
+    ...(state ? { state } : {}),
+    ...(pincode ? { pincode } : {}),
     ...(mapUrl ? { mapUrl } : {}),
     ...(latitude !== undefined ? { latitude } : {}),
     ...(longitude !== undefined ? { longitude } : {}),
     monthlyPrice: Number(form.startingPrice),
+    monthlyPriceBasis: form.priceBasis ?? 'PER_UNIT',
     mealPrice: Number(form.mealPrice),
     ...(capacity ? { capacityEstimate: Number(capacity) } : {}),
+    photos,
   };
 }
 
@@ -238,11 +283,41 @@ export function readDraft(key: string = REGISTRATION_DRAFT_KEY): Draft {
     const parsed = JSON.parse(raw) as Partial<Draft>;
     const form = { ...EMPTY_FORM, ...parsed.form };
     // Drop anything that is not a string field we recognise, and keep amenities an array.
-    form.amenities = Array.isArray(form.amenities)
-      ? form.amenities.filter((code) => ALL_AMENITIES.some((amenity) => amenity.code === code))
-      : [];
+    form.amenities = normalizeAmenityAssignments(form.amenities);
     form.latitude = typeof form.latitude === 'string' ? form.latitude : '';
     form.longitude = typeof form.longitude === 'string' ? form.longitude : '';
+    form.locationQuery = typeof form.locationQuery === 'string' ? form.locationQuery : '';
+    form.buildingName = typeof form.buildingName === 'string' ? form.buildingName : '';
+    form.buildingNameEdited = form.buildingNameEdited === true;
+    form.priceBasis = isPriceBasis(form.priceBasis)
+      ? form.priceBasis
+      : form.propertyType
+        ? defaultPriceBasis(form.propertyType)
+        : null;
+    if (!form.buildingName.trim() && form.propertyName.trim()) {
+      form.buildingName = form.propertyName;
+    }
+    form.locality = typeof form.locality === 'string' ? form.locality : '';
+    form.district = typeof form.district === 'string' ? form.district : '';
+    form.locationSelected =
+      form.locationSelected === true ||
+      Boolean(
+        form.addressLine.trim() &&
+          form.city.trim() &&
+          form.state.trim() &&
+          form.latitude.trim() &&
+          form.longitude.trim(),
+      );
+    if (!form.locationQuery.trim() && form.addressLine.trim()) {
+      form.locationQuery = form.addressLine;
+    }
+    if (form.locationSelected && !form.mapUrl.trim()) {
+      const latitude = Number(form.latitude);
+      const longitude = Number(form.longitude);
+      if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+        form.mapUrl = googleMapsLink(latitude, longitude);
+      }
+    }
     const step = parsed.step === 2 || parsed.step === 3 ? parsed.step : 1;
     return { form, step };
   } catch {

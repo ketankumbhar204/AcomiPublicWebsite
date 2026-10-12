@@ -1,8 +1,9 @@
 import type { DiscoverSpaceCard, DiscoverSpaceDetail } from '../../auth/types';
+import { isPriceBasis } from '../../lib/priceBasis';
 import { firstVerifiedListingImageUrl } from './representativeImage';
-import type { MessListing, PropertyListing, PropertyListingType } from './types';
+import type { FoodFilter, GenderFilter, MessListing, PropertyListing, PropertyListingType } from './types';
 
-const PROPERTY_TYPES = new Set<PropertyListingType>(['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING']);
+const PROPERTY_TYPES = new Set<PropertyListingType>(['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING', 'MESS']);
 
 function text(value?: string | null): string {
   return value?.trim() ?? '';
@@ -14,12 +15,25 @@ function toNumber(value?: number | string | null): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-function amenityCodesOf(detail: DiscoverSpaceCard): string[] {
+function genderPolicyOf(value?: string | null): GenderFilter | null {
+  if (value === 'MALE' || value === 'FEMALE' || value === 'MIXED') return value;
+  return null;
+}
+
+function foodAvailabilityOf(value?: string | null): FoodFilter | null {
+  if (value === 'INCLUDED' || value === 'AVAILABLE' || value === 'NONE') return value;
+  return null;
+}
+
+function listedAmenities(detail: DiscoverSpaceCard): { codes: string[]; labels: string[] } {
   const codes = [...(detail.amenityCodes ?? [])];
+  const labels = [...(detail.amenityLabels ?? [])];
+  while (labels.length < codes.length) labels.push('');
   if (detail.foodIncludedInRent && !codes.includes('FOOD_INCLUDED')) {
     codes.push('FOOD_INCLUDED');
+    labels.push('Food');
   }
-  return codes;
+  return { codes, labels: labels.slice(0, codes.length) };
 }
 
 function localityAndCity(detail: DiscoverSpaceCard & Partial<DiscoverSpaceDetail>): { locality: string; city: string } {
@@ -52,6 +66,7 @@ export function toPropertyListing(detail: DiscoverSpaceCard & Partial<DiscoverSp
     return null;
   }
   const { locality, city } = localityAndCity(detail);
+  const amenities = listedAmenities(detail);
   return {
     id: detail.spaceId,
     type: detail.type as PropertyListingType,
@@ -65,10 +80,14 @@ export function toPropertyListing(detail: DiscoverSpaceCard & Partial<DiscoverSp
     mapUrl: text(detail.mapUrl) || undefined,
     latitude: toNumber(detail.latitude),
     longitude: toNumber(detail.longitude),
-    startingPrice: toNumber(detail.startingPrice),
+    startingPrice: toNumber(detail.startingPrice) ?? toNumber(detail.monthlyPrice),
+    priceBasis: isPriceBasis(detail.priceBasis) ? detail.priceBasis : null,
     capacityEstimate: null,
-    amenityCodes: amenityCodesOf(detail),
+    amenityCodes: amenities.codes,
+    amenityLabels: amenities.labels,
     foodIncludedInRent: detail.foodIncludedInRent === true,
+    foodAvailability: foodAvailabilityOf(detail.foodAvailability),
+    genderPolicy: genderPolicyOf(detail.genderPolicy),
     hasContact: detail.hasContact === true,
     hasMobileContact: detail.hasMobileContact === true,
     sharingNotes: text(detail.sharingNotes) || undefined,
@@ -83,6 +102,7 @@ export function toMessListing(detail: DiscoverSpaceCard & Partial<DiscoverSpaceD
     return null;
   }
   const { locality, city } = localityAndCity(detail);
+  const amenities = listedAmenities(detail);
   return {
     id: detail.spaceId,
     name: detail.name,
@@ -97,8 +117,11 @@ export function toMessListing(detail: DiscoverSpaceCard & Partial<DiscoverSpaceD
     longitude: toNumber(detail.longitude),
     monthlyPrice: toNumber(detail.monthlyPrice),
     mealPrice: toNumber(detail.mealPrice),
-    amenityCodes: amenityCodesOf(detail),
+    priceBasis: isPriceBasis(detail.priceBasis) ? detail.priceBasis : null,
+    amenityCodes: amenities.codes,
     foodIncludedInRent: detail.foodIncludedInRent === true,
+    foodAvailability:
+      foodAvailabilityOf(detail.foodAvailability) ?? (detail.foodIncludedInRent ? 'INCLUDED' : null),
     hasContact: detail.hasContact === true,
     hasMobileContact: detail.hasMobileContact === true,
     capacityEstimate: null,

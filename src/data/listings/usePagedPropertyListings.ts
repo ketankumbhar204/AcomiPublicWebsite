@@ -9,6 +9,12 @@ export type PagedPropertyFilters = {
   location?: string;
   search?: string;
   types: string[];
+  genders: string[];
+  sharings: string[];
+  foods: string[];
+  furnishings: string[];
+  contactAvailable: boolean;
+  servicedApartment: boolean;
   minRent: number | null;
   maxRent: number | null;
   amenities: string[];
@@ -33,6 +39,12 @@ export function placesDiscoverFilterKey(filters: PagedPropertyFilters): string {
     location: filters.location?.trim() ?? '',
     search: filters.search?.trim() ?? '',
     types: [...filters.types].sort(),
+    genders: [...filters.genders].sort(),
+    sharings: [...filters.sharings].sort(),
+    foods: [...filters.foods].sort(),
+    furnishings: [...filters.furnishings].sort(),
+    contactAvailable: filters.contactAvailable,
+    servicedApartment: filters.servicedApartment,
     minRent: filters.minRent,
     maxRent: filters.maxRent,
     amenities: [...filters.amenities].sort(),
@@ -42,26 +54,45 @@ export function placesDiscoverFilterKey(filters: PagedPropertyFilters): string {
 }
 
 const pendingPages = new Map<string, ReturnType<typeof discoverSpaces>>();
+const PAGE_CACHE_MS = 30_000;
+const pageCache = new Map<string, { at: number; response: Awaited<ReturnType<typeof discoverSpaces>> }>();
 
 function discoverPage(filters: PagedPropertyFilters, page: number) {
   const key = `${placesDiscoverFilterKey(filters)}:${page}`;
+  const cached = pageCache.get(key);
+  if (cached && Date.now() - cached.at < PAGE_CACHE_MS) {
+    return Promise.resolve(cached.response);
+  }
   const existing = pendingPages.get(key);
   if (existing) {
     return existing;
   }
-  const request = discoverSpaces(toDiscoverParams(filters, page)).finally(() => {
-    pendingPages.delete(key);
-  });
+  const request = discoverSpaces(toDiscoverParams(filters, page))
+    .then((response) => {
+      pageCache.set(key, { at: Date.now(), response });
+      return response;
+    })
+    .finally(() => {
+      pendingPages.delete(key);
+    });
   pendingPages.set(key, request);
   return request;
 }
 
 function toDiscoverParams(filters: PagedPropertyFilters, page: number) {
-  const types = filters.types.length > 0 ? filters.types : [...PROPERTY_TYPES];
+  const servicedApartment = filters.servicedApartment || filters.types.includes('SERVICED');
+  const selectedTypes = filters.types.filter((type) => type !== 'SERVICED');
+  const types = selectedTypes.length > 0 ? selectedTypes : servicedApartment ? [] : [...PROPERTY_TYPES];
   return {
     location: filters.location?.trim() || undefined,
     search: filters.search?.trim() || undefined,
     types,
+    genders: filters.genders,
+    sharings: filters.sharings,
+    foods: filters.foods,
+    furnishings: filters.furnishings,
+    contactAvailable: filters.contactAvailable,
+    servicedApartment,
     minRent: filters.minRent,
     maxRent: filters.maxRent,
     amenities: filters.amenities,

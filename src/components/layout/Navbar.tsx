@@ -12,6 +12,7 @@ import { UserTypeSwitcher } from '../onboarding/UserTypeSwitcher';
 import { AccountMenu } from './AccountMenu';
 import { Container } from './Container';
 import { ExploreMenu } from './ExploreMenu';
+import { FavoritesMenu } from './FavoritesMenu';
 import { NotificationBell } from './NotificationBell';
 
 export function Navbar() {
@@ -31,7 +32,7 @@ export function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur-xl">
-      <Container className="flex h-16 !max-w-none items-center justify-between gap-4">
+      <Container className="flex h-[4.5rem] !max-w-none items-center justify-between gap-4">
         <NavLink
           to="/"
           className="flex items-center gap-2.5 font-bold text-text"
@@ -39,8 +40,8 @@ export function Navbar() {
           title={t('nav.home')}
           onClick={() => setOpen(false)}
         >
-          <BrandMark size={30} className="!rounded-md" />
-          <span className="text-[15px] tracking-tight">{t('brand')}</span>
+          <BrandMark size={52} className="!rounded-xl shadow-sm ring-1 ring-black/10" />
+          <span className="text-xl tracking-tight">{t('brand')}</span>
         </NavLink>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label={t('nav.primary')}>
@@ -62,6 +63,8 @@ export function Navbar() {
               <UserTypeSwitcher />
             </div>
           ) : null}
+
+          <FavoritesMenu />
 
           {isAuthenticated ? (
             <>

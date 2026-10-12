@@ -1,12 +1,13 @@
-import { publicApi } from '../lib/apiClient';
+import { PublicApiError, publicApi } from '../lib/apiClient';
 import { getDiscoverSpaceDetail } from '../data/listings/discoverApi';
 import type { DiscoverSpaceCard, DiscoverSpaceDetail, SpaceEnquiryResponse } from './types';
+import type { RevealedOwnerContact } from '../components/discovery/OwnerContactCard';
 
 type Paged<T> = {
   content: T[];
 };
 
-export type EnquiryDeliveryChannel = 'APP' | 'EMAIL';
+export type EnquiryDeliveryChannel = 'APP' | 'EMAIL' | 'VIEW_HERE';
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -51,6 +52,21 @@ export async function createSpaceEnquiry(
   return publicApi<SpaceEnquiryResponse>(`/spaces/${spaceId}/enquiries`, {
     method: 'POST',
     body,
+  });
+}
+
+export async function fetchRevealedContact(spaceId: string): Promise<RevealedOwnerContact | null> {
+  try {
+    return await publicApi<RevealedOwnerContact>(`/spaces/${spaceId}/revealed-contact`);
+  } catch (err) {
+    if (err instanceof PublicApiError && err.status === 404) return null;
+    return null;
+  }
+}
+
+export async function sendEnquiryAgain(spaceId: string): Promise<SpaceEnquiryResponse> {
+  return publicApi<SpaceEnquiryResponse>(`/spaces/${spaceId}/enquiries/send-again`, {
+    method: 'POST',
   });
 }
 
