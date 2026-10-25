@@ -138,7 +138,7 @@ export function validateDetailsStep(form: RegistrationForm): FieldErrors {
   return errors;
 }
 
-function storedAddress(form: RegistrationForm): string {
+export function registrationAddress(form: RegistrationForm): string {
   if (form.locationSelected) return form.addressLine.trim().slice(0, 255);
   let line = form.locationQuery.trim();
   for (const extra of [form.locality.trim(), form.district.trim()]) {
@@ -161,7 +161,7 @@ export function locationSummary(form: RegistrationForm): string {
   return unique.join(', ');
 }
 
-function optionalCoordinate(value: string): number | undefined {
+export function formCoordinate(value: string): number | undefined {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
   const numeric = Number(trimmed);
@@ -184,14 +184,14 @@ export function buildRequest(
   }
   const option = getPropertyTypeOption(form.propertyType);
   const mapUrl = form.mapUrl.trim();
-  const latitude = optionalCoordinate(form.latitude);
-  const longitude = optionalCoordinate(form.longitude);
+  const latitude = formCoordinate(form.latitude);
+  const longitude = formCoordinate(form.longitude);
   const capacity = form.capacityEstimate.trim();
   const description = form.description.trim();
   const city = form.city.trim();
   const state = form.state.trim();
   const pincode = form.pincode.trim();
-  const addressLine = storedAddress(form);
+  const addressLine = registrationAddress(form);
 
   return {
     propertyType: form.propertyType,
@@ -224,14 +224,14 @@ export function buildMessRequest(
   photos: string[] = [],
 ): CreateMessRegistrationRequest {
   const mapUrl = form.mapUrl.trim();
-  const latitude = optionalCoordinate(form.latitude);
-  const longitude = optionalCoordinate(form.longitude);
+  const latitude = formCoordinate(form.latitude);
+  const longitude = formCoordinate(form.longitude);
   const capacity = form.capacityEstimate.trim();
   const description = form.description.trim();
   const state = form.state.trim();
   const city = form.city.trim();
   const pincode = form.pincode.trim();
-  const addressLine = storedAddress(form);
+  const addressLine = registrationAddress(form);
 
   return {
     messName: form.propertyName.trim(),

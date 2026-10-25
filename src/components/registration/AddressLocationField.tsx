@@ -20,6 +20,7 @@ type AddressLocationFieldProps = {
   form: RegistrationForm;
   errors: FieldErrors;
   kind: ListingKind;
+  requireBuilding?: boolean;
   onChange: <K extends keyof RegistrationForm>(key: K, value: RegistrationForm[K]) => void;
 };
 
@@ -67,7 +68,13 @@ function ReadOnly({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function AddressLocationField({ form, errors, kind, onChange }: AddressLocationFieldProps) {
+export function AddressLocationField({
+  form,
+  errors,
+  kind,
+  requireBuilding = true,
+  onChange,
+}: AddressLocationFieldProps) {
   const copy = LISTING_COPY[kind];
   const listId = useId();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -203,7 +210,7 @@ export function AddressLocationField({ form, errors, kind, onChange }: AddressLo
       <TextField
         id="buildingName"
         label={copy.buildingLabel}
-        required
+        required={requireBuilding}
         value={form.buildingName}
         onChange={(next) => {
           onChange('buildingName', next);

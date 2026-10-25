@@ -13,17 +13,20 @@ export type RevealedOwnerContact = {
 type OwnerContactCardProps = {
   contact: RevealedOwnerContact | null | undefined;
   mapUrl?: string | null;
+  loading?: boolean;
+  error?: boolean;
+  onRetry?: () => void;
 };
 
-export function OwnerContactCard({ contact, mapUrl }: OwnerContactCardProps) {
+export function OwnerContactCard({ contact, mapUrl, loading = false, error = false, onRetry }: OwnerContactCardProps) {
   const { t } = useTranslation();
-  if (!contact) return null;
+  if (!contact && !loading && !error) return null;
 
-  const phones = [contact.mobileNumber, contact.alternateMobileNumber, contact.additionalMobileNumber].filter(
+  const phones = [contact?.mobileNumber, contact?.alternateMobileNumber, contact?.additionalMobileNumber].filter(
     (value): value is string => Boolean(value && value.trim()),
   );
-  const email = contact.email?.trim() ?? '';
-  const name = contact.ownerName?.trim() ?? '';
+  const email = contact?.email?.trim() ?? '';
+  const name = contact?.ownerName?.trim() ?? '';
   const mapHref = mapUrl?.trim() ?? '';
   const hasDetails = phones.length > 0 || email.length > 0 || name.length > 0 || mapHref.length > 0;
 
@@ -32,7 +35,32 @@ export function OwnerContactCard({ contact, mapUrl }: OwnerContactCardProps) {
       <h3 className="text-[13px] font-bold uppercase tracking-wide text-sky-800">
         {t('discovery.viewHereContactTitle')}
       </h3>
-      {hasDetails ? (
+      {loading ? (
+        <p className="mt-3 flex items-center gap-2 text-[13px] text-sky-800" role="status">
+          <span
+            className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-sky-200 border-t-sky-700"
+            aria-hidden
+          />
+          {t('discovery.viewHereContactLoading', { defaultValue: 'Loading contact details…' })}
+        </p>
+      ) : error ? (
+        <div className="mt-3" role="alert">
+          <p className="text-[13px] text-text-secondary">
+            {t('discovery.viewHereContactFailed', {
+              defaultValue: 'Contact details could not be loaded. Try again.',
+            })}
+          </p>
+          {onRetry ? (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="mt-2 text-[13px] font-semibold text-[#0F6B4C] underline underline-offset-2"
+            >
+              {t('discovery.viewHereContactRetry', { defaultValue: 'Try again' })}
+            </button>
+          ) : null}
+        </div>
+      ) : hasDetails ? (
         <dl className="mt-3 space-y-2 text-[14px] text-navy">
           {name ? (
             <div>

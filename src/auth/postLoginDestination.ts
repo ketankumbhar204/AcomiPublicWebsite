@@ -35,6 +35,14 @@ export function getPostLoginDestination(input: {
   return { kind: 'public' };
 }
 
+/**
+ * Send owners and admins to the operations app only when login started on the
+ * public homepage. Every other page finishes login and stays put.
+ */
+export function shouldOpenOperationsWorkspace(pathname: string): boolean {
+  return pathname === '/';
+}
+
 /** Only the compile-time APP admin/root URLs are valid operational destinations. */
 export function trustedOperationsHref(
   href: string,

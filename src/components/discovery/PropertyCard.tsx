@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Heart, Home, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAlreadyInquired, useContactViewed } from '../../auth/useAlreadyInquired';
@@ -26,6 +26,8 @@ type PropertyCardProps = {
   onOpenSection?: (section: ListingSection) => void;
   onToggleSave: () => void;
   onEnquire: () => void;
+  /** Replaces the detail and contact buttons. The rest of the card stays the same. */
+  actions?: ReactNode;
 };
 
 export function PropertyCard({
@@ -36,6 +38,7 @@ export function PropertyCard({
   onOpenSection,
   onToggleSave,
   onEnquire,
+  actions,
 }: PropertyCardProps) {
   const { t } = useTranslation();
   const formatted = formatListingAddress(listing);
@@ -55,11 +58,13 @@ export function PropertyCard({
 
   return (
     <article
-      className={`flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border bg-white shadow-[var(--shadow-sm)] transition ${
+      className={`flex h-full min-w-0 flex-col rounded-2xl border bg-white shadow-[var(--shadow-sm)] transition ${
+        actions ? 'overflow-visible' : 'overflow-hidden'
+      } ${
         selected ? 'border-register ring-2 ring-register/25' : 'border-black/5 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]'
       }`}
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-[#F3FBF7]">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-t-2xl bg-[#F3FBF7]">
         <button type="button" onClick={onSelect} className="absolute inset-0 z-0 block">
           <ListingCover
             listingId={listing.id}
@@ -168,6 +173,8 @@ export function PropertyCard({
           />
         </div>
         <div className="mt-auto flex flex-row items-stretch gap-2 pt-0.5">
+          {actions ?? (
+          <>
           <ActionButton
             variant="outline"
             onClick={onSelect}
@@ -187,6 +194,8 @@ export function PropertyCard({
               className="!h-11 min-w-0 flex-[1.18] !rounded-xl !px-2 !text-[13px] whitespace-nowrap"
               aria-label={`${cta}: ${listing.name}`}
             />
+          )}
+          </>
           )}
         </div>
       </div>

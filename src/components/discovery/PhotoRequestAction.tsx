@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../common/Modal';
 import {
@@ -21,6 +21,10 @@ type PhotoRequestActionProps = {
   /** True only after the existing contact-reveal flow has authorized this viewer. */
   contactAuthorized: boolean;
   onNeedContact?: () => void;
+  /** Return false to keep the WhatsApp dialog closed, for example while payment is required. */
+  onBeforeOpen?: () => boolean;
+  /** Increment to open the dialog after payment is confirmed. */
+  openToken?: number;
 };
 
 export function PhotoRequestAction({
@@ -32,6 +36,8 @@ export function PhotoRequestAction({
   phones,
   contactAuthorized,
   onNeedContact,
+  onBeforeOpen,
+  openToken = 0,
 }: PhotoRequestActionProps) {
   const { t } = useTranslation();
   const hasPhotos = hasActualListingPhotos(photoUrls);
@@ -43,17 +49,29 @@ export function PhotoRequestAction({
   const label = photoRequestActionLabel(hasPhotos);
   const title = photoRequestTitle(hasPhotos);
 
-  function openRequest() {
-    if (!contactAuthorized) {
-      onNeedContact?.();
-      return;
-    }
+  function openComposer() {
     setMessage(
       buildPhotoRequestMessage({ kind, hasPhotos, name, spaceType, location }),
     );
     setNotice('');
     setOpen(true);
   }
+
+  function openRequest() {
+    if (onBeforeOpen && !onBeforeOpen()) return;
+    if (!contactAuthorized && onNeedContact) {
+      onNeedContact();
+      return;
+    }
+    openComposer();
+  }
+
+  const seenOpenToken = useRef(0);
+  useEffect(() => {
+    if (!openToken || openToken === seenOpenToken.current) return;
+    seenOpenToken.current = openToken;
+    openComposer();
+  }, [hasPhotos, kind, location, name, openToken, spaceType]);
 
   async function openWhatsApp() {
     const url = phone ? whatsAppChatUrl(phone, message) : null;

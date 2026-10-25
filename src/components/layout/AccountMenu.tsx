@@ -11,6 +11,8 @@ import {
   UserRound,
 } from 'lucide-react';
 import { useAuth } from '../../auth/AuthProvider';
+import { listMyEnquiries } from '../../auth/inboxApi';
+import { listMyListings } from '../../auth/mySpacesApi';
 import { APP } from '../../constants/links';
 import {
   changeAppLanguage,
@@ -33,6 +35,8 @@ export function AccountMenu({ onNavigate }: AccountMenuProps) {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const [spaceCount, setSpaceCount] = useState<number | null>(null);
+  const [enquiryCount, setEnquiryCount] = useState<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const current = (i18n.language?.split('-')[0] ?? 'en') as AppLanguage;
@@ -55,6 +59,32 @@ export function AccountMenu({ onNavigate }: AccountMenuProps) {
       document.removeEventListener('keydown', onKey);
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!user?.id) {
+      setSpaceCount(null);
+      setEnquiryCount(null);
+      return undefined;
+    }
+    let cancelled = false;
+    void listMyListings()
+      .then((rows) => {
+        if (!cancelled) setSpaceCount(rows.length);
+      })
+      .catch(() => {
+        if (!cancelled) setSpaceCount(null);
+      });
+    void listMyEnquiries(0, 1)
+      .then((page) => {
+        if (!cancelled) setEnquiryCount(page.totalElements ?? page.content?.length ?? 0);
+      })
+      .catch(() => {
+        if (!cancelled) setEnquiryCount(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id, open]);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -129,15 +159,19 @@ export function AccountMenu({ onNavigate }: AccountMenuProps) {
                 {t('nav.dashboard')}
               </a>
 
-              <NavLink to="/my-spaces" role="menuitem" className={itemClass} onClick={close}>
-                <Building2 className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
-                {t('nav.mySpaces')}
-              </NavLink>
+              {spaceCount != null && spaceCount > 0 ? (
+                <NavLink to="/my-spaces" role="menuitem" className={itemClass} onClick={close}>
+                  <Building2 className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
+                  {t('nav.mySpaces')}
+                </NavLink>
+              ) : null}
 
-              <a href={APP.enquiries} role="menuitem" className={itemClass} onClick={close}>
-                <Inbox className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
-                {t('nav.myEnquiries')}
-              </a>
+              {enquiryCount != null && enquiryCount > 0 ? (
+                <a href={APP.enquiries} role="menuitem" className={itemClass} onClick={close}>
+                  <Inbox className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
+                  {t('nav.myEnquiries')}
+                </a>
+              ) : null}
 
               <a href={APP.profile} role="menuitem" className={itemClass} onClick={close}>
                 <UserRound className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />

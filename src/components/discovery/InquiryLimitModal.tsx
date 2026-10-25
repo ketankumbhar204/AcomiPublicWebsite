@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,8 +7,10 @@ import {
   Check,
   CreditCard,
   Headset,
+  Image as ImageIcon,
   Loader2,
   Mail,
+  Map,
   MessageCircle,
   X,
 } from 'lucide-react';
@@ -18,6 +20,7 @@ import { getPublicAccessToken } from '../../lib/apiClient';
 import { openAcomiAndroidApp } from '../../lib/openAcomiAndroidApp';
 import {
   fetchInquiryPaymentConfig,
+  fetchMyPurchaseRequests,
   createPurchaseRequest,
 } from '../../auth/inquiryCreditsApi';
 import type {
@@ -42,6 +45,9 @@ type InquiryLimitModalProps = {
   freeUsedToday?: number;
   /** Lets the parent widen the dialog only while payment is showing. */
   onPaymentActive?: (active: boolean) => void;
+  /** Map and photo requests stay closed until this purchase is approved. */
+  purpose?: 'enquiry' | 'map' | 'photos';
+  onPaymentConfirmed?: () => void;
 };
 
 // ─── Small helpers ────────────────────────────────────────────────────────
@@ -424,8 +430,12 @@ export function InquiryLimitModal({
   availableCredits = 0,
   onContinueWithCredits,
   onPaymentActive,
+  purpose = 'enquiry',
+  onPaymentConfirmed,
 }: InquiryLimitModalProps) {
   const { t } = useTranslation();
+  const confirmedRef = useRef(false);
+  const [purchaseRejected, setPurchaseRejected] = useState(false);
 
   const [mobileBrowser, setMobileBrowser] = useState(isMobileBrowserNow);
   const [choice, setChoice] = useState<'credits' | 'app'>(() =>
@@ -457,6 +467,32 @@ export function InquiryLimitModal({
       .catch(() => setConfigError(true))
       .finally(() => setConfigLoading(false));
   }, [config, configLoading]);
+
+  useEffect(() => {
+    if (!purchaseDone || purpose === 'enquiry' || !onPaymentConfirmed) return undefined;
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const rows = await fetchMyPurchaseRequests();
+        const row = rows.find((item) => item.id === purchaseDone.id);
+        if (cancelled || !row || confirmedRef.current) return;
+        if (row.status === 'APPROVED') {
+          confirmedRef.current = true;
+          onPaymentConfirmed();
+          return;
+        }
+        if (row.status === 'REJECTED') setPurchaseRejected(true);
+      } catch {
+        // Keep checking until the payment is confirmed.
+      }
+    };
+    void check();
+    const timer = window.setInterval(() => void check(), 4000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [onPaymentConfirmed, purchaseDone, purpose]);
 
   const pkg = firstEnabledPackage(config);
   const paymentAvailable = config !== null && config.enabled && pkg !== null;
@@ -503,14 +539,29 @@ export function InquiryLimitModal({
         ) : purchaseDone ? (
           <div className="px-1 py-4 text-center">
             <h2 id="enquire-title" className="text-[1.25rem] font-bold text-navy">
-              {t('discovery.limitPaySuccessTitle')}
+              {purchaseRejected
+                ? t('discovery.limitPayRejectedTitle')
+                : t('discovery.limitPaySuccessTitle')}
             </h2>
             <p id="enquire-body" className="mt-2 text-[14px] text-text-secondary">
-              {t('discovery.limitPaySuccessBody')}
+              {purchaseRejected
+                ? t('discovery.limitPayRejectedBody')
+                : purpose === 'map'
+                  ? t('discovery.limitMapPendingBody')
+                  : purpose === 'photos'
+                    ? t('discovery.limitPhotosPendingBody')
+                    : t('discovery.limitPaySuccessBody')}
             </p>
-            <ActionButton className="mt-5 w-full !rounded-full" onClick={onClose}>
-              {t('discovery.enquireDone')}
-            </ActionButton>
+            {purpose !== 'enquiry' && !purchaseRejected ? (
+              <p className="mt-3 inline-flex items-center justify-center gap-2 text-[13px] font-semibold text-primary">
+                <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
+                {t('auth.pleaseWait')}
+              </p>
+            ) : (
+              <ActionButton className="mt-5 w-full !rounded-full" onClick={onClose}>
+                {t('discovery.enquireDone')}
+              </ActionButton>
+            )}
           </div>
         ) : configError || !paymentAvailable || !config || !pkg ? (
           <div className="px-1 py-4 text-center">
@@ -528,23 +579,41 @@ export function InquiryLimitModal({
             config={config}
             pkg={pkg}
             onBack={leavePayment}
-            onSuccess={(req) => setPurchaseDone(req)}
+            onSuccess={(req) => {
+              confirmedRef.current = false;
+              setPurchaseRejected(false);
+              setPurchaseDone(req);
+            }}
           />
         )
       ) : (
         <>
       <div className="px-1 text-center">
         <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F6EE] text-primary">
-          <Mail aria-hidden className="h-5 w-5" />
+          {purpose === 'map' ? (
+            <Map aria-hidden className="h-5 w-5" />
+          ) : purpose === 'photos' ? (
+            <ImageIcon aria-hidden className="h-5 w-5" />
+          ) : (
+            <Mail aria-hidden className="h-5 w-5" />
+          )}
         </div>
         <h2 id="enquire-title" className="text-[1.35rem] font-bold tracking-tight text-navy">
-          {t('discovery.limitUsedTodayTitle')}
+          {purpose === 'map'
+            ? t('discovery.limitMapTitle')
+            : purpose === 'photos'
+              ? t('discovery.limitPhotosTitle')
+              : t('discovery.limitUsedTodayTitle')}
         </h2>
         <p
           id="enquire-body"
           className="mx-auto mt-3 max-w-[22rem] rounded-xl border border-primary/25 bg-[#E7F6EE] px-3 py-2 text-[14px] font-semibold leading-snug text-primary"
         >
-          {mobileBrowser ? (
+          {purpose === 'map' ? (
+            t('discovery.limitMapBody')
+          ) : purpose === 'photos' ? (
+            t('discovery.limitPhotosBody')
+          ) : mobileBrowser ? (
             t('discovery.limitMobileBody')
           ) : (
             <>
@@ -624,7 +693,11 @@ export function InquiryLimitModal({
                 </span>
                 <span className="mt-0.5 block text-[13px] leading-snug text-text-secondary">
                   {offerReady
-                    ? t('discovery.limitPackageBody', { count: creditCount })
+                    ? purpose === 'map'
+                      ? t('discovery.limitPackageBodyMap', { count: creditCount })
+                      : purpose === 'photos'
+                        ? t('discovery.limitPackageBodyPhotos', { count: creditCount })
+                        : t('discovery.limitPackageBody', { count: creditCount })
                     : configError
                       ? t('discovery.limitPaymentUnavailable')
                       : null}
@@ -655,7 +728,7 @@ export function InquiryLimitModal({
           >
             {t('discovery.limitNotNow')}
           </button>
-          {availableCredits > 0 && onContinueWithCredits ? (
+          {purpose === 'enquiry' && availableCredits > 0 && onContinueWithCredits ? (
             <button
               type="button"
               onClick={onContinueWithCredits}

@@ -6,10 +6,12 @@ import { clearEnquireIntent } from '../../auth/enquireIntent';
 import { listMySpaceMemberships } from '../../auth/mySpacesApi';
 import {
   getPostLoginDestination,
+  shouldOpenOperationsWorkspace,
   trustedOperationsHref,
 } from '../../auth/postLoginDestination';
 import type { PublicUser } from '../../auth/types';
 import { useAuth } from '../../auth/AuthProvider';
+import { useEnquiryFeedback } from '../../context/EnquiryFeedbackContext';
 import { APP } from '../../constants/links';
 import {
   isValidIndianMobile,
@@ -28,6 +30,7 @@ const fieldClass =
 export function AuthModal() {
   const { t } = useTranslation();
   const { authOpen, authMode, closeAuth, setSession, openAuth, user } = useAuth();
+  const { showToast } = useEnquiryFeedback();
   const [step, setStep] = useState<Step>('credentials');
   const [method, setMethod] = useState<'password' | 'otp'>('password');
   const [fullName, setFullName] = useState('');
@@ -56,6 +59,17 @@ export function AuthModal() {
     }
   }, [authOpen, authMode]);
 
+  useEffect(() => {
+    function onPageShow(event: PageTransitionEvent) {
+      if (!event.persisted) return;
+      setOpeningWorkspace(false);
+      setWorkspaceLookupFailed(false);
+      closeAuth();
+    }
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
+  }, [closeAuth]);
+
   function mapError(err: unknown): string {
     if (err instanceof PublicApiError) {
       if (err.status === 401) return t('auth.invalidCredentials');
@@ -65,7 +79,16 @@ export function AuthModal() {
     return t('auth.genericError');
   }
 
+  function staySignedIn() {
+    showToast({ title: t('auth.signedIn') });
+    closeAuth();
+  }
+
   async function routeAfterLogin(user: PublicUser) {
+    if (!shouldOpenOperationsWorkspace(window.location.pathname)) {
+      staySignedIn();
+      return;
+    }
     const allowed = { adminHref: APP.admin, operationsHref: APP.web };
     const membershipRoles =
       user.systemRole === 'ADMIN'
@@ -89,7 +112,7 @@ export function AuthModal() {
       window.location.assign(href);
       return;
     }
-    closeAuth();
+    staySignedIn();
   }
 
   async function finishAuthenticatedSession(user: PublicUser, accessToken: string) {

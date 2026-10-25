@@ -34,6 +34,10 @@ function getPostLoginDestination(input) {
   return { kind: 'public' };
 }
 
+function shouldOpenOperationsWorkspace(pathname) {
+  return pathname === '/';
+}
+
 function trustedOperationsHref(href, allowed) {
   if (href === allowed.adminHref || href === allowed.operationsHref) {
     return href;
@@ -92,6 +96,11 @@ assert(
   'manager + tenant should go to operations',
 );
 
+assert(shouldOpenOperationsWorkspace('/'), 'homepage login may open the operations app');
+assert(!shouldOpenOperationsWorkspace('/places'), 'places login must stay on the public page');
+assert(!shouldOpenOperationsWorkspace('/meals'), 'meals login must stay on the public page');
+assert(!shouldOpenOperationsWorkspace('/places/abc'), 'listing login must stay on the public page');
+
 assert(trustedOperationsHref(adminHref, allowed) === adminHref, 'admin href must be trusted');
 assert(trustedOperationsHref(operationsHref, allowed) === operationsHref, 'operations href must be trusted');
 assert(trustedOperationsHref('https://evil.example/admin', allowed) === null, 'untrusted href must be rejected');
@@ -106,9 +115,14 @@ assert(source.includes("systemRole === 'ADMIN'"), 'helper must use systemRole AD
 assert(source.includes("new Set(['OWNER', 'MANAGER', 'STAFF'])"), 'helper must use space membership roles');
 assert(!source.includes("systemRole === 'OWNER'"), 'OWNER is not a systemRole');
 assert(source.includes('trustedOperationsHref'), 'trusted href helper missing');
+assert(source.includes('shouldOpenOperationsWorkspace'), 'homepage-only redirect helper missing');
+assert(source.includes("pathname === '/'"), 'operations redirect must be limited to the homepage');
 
 const modal = read('src/components/auth/AuthModal.tsx');
 assert(modal.includes('getPostLoginDestination'), 'AuthModal must use centralized destination helper');
+assert(modal.includes('shouldOpenOperationsWorkspace'), 'AuthModal must redirect only from the homepage');
+assert(modal.includes("t('auth.signedIn')"), 'staying on the public site must confirm login');
+assert(modal.includes('pageshow'), 'returning from the operations app must dismiss the workspace popup');
 assert(modal.includes('listMySpaceMemberships'), 'AuthModal must load GET /spaces/my');
 assert(modal.includes('clearEnquireIntent'), 'operational login must drop enquire intent');
 assert(modal.includes('trustedOperationsHref'), 'AuthModal must allowlist operational URLs');

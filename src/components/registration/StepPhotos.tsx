@@ -11,9 +11,10 @@ export type SelectedListingPhoto = {
 type StepPhotosProps = {
   photos: SelectedListingPhoto[];
   onChange: (photos: SelectedListingPhoto[]) => void;
+  note?: string;
 };
 
-export function StepPhotos({ photos, onChange }: StepPhotosProps) {
+export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const atLimit = photos.length >= MAX_LISTING_PHOTOS;
@@ -57,6 +58,7 @@ export function StepPhotos({ photos, onChange }: StepPhotosProps) {
       <div>
         <h3 className="text-[15px] font-semibold text-text">Upload photos</h3>
         <p className="mt-1 text-[13px] text-muted">Add up to 3 photos. Maximum 3 MB per photo.</p>
+        {note ? <p className="mt-1 text-[13px] text-muted">{note}</p> : null}
       </div>
 
       <button

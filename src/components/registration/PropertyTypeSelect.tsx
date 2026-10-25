@@ -6,6 +6,7 @@ type PropertyTypeSelectProps = {
   value: PropertyType | null;
   onChange: (value: PropertyType) => void;
   error?: string;
+  locked?: boolean;
 };
 
 const CARD_TONE: Record<
@@ -53,9 +54,9 @@ const CARD_TONE: Record<
  * Native radios inside labels: arrow-key navigation, grouping and the required state all
  * come from the platform rather than hand-rolled key handling.
  */
-export function PropertyTypeSelect({ value, onChange, error }: PropertyTypeSelectProps) {
+export function PropertyTypeSelect({ value, onChange, error, locked = false }: PropertyTypeSelectProps) {
   return (
-    <fieldset>
+    <fieldset disabled={locked}>
       <legend className="text-[15px] font-semibold text-text">
         What type of property do you manage?
       </legend>
@@ -66,15 +67,16 @@ export function PropertyTypeSelect({ value, onChange, error }: PropertyTypeSelec
           return (
             <label
               key={option.id}
-              className={`relative flex cursor-pointer items-center gap-2.5 rounded-2xl border px-3 py-3 transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-register ${
-                selected ? tone.selected : `${tone.idle} ${tone.hover}`
-              }`}
+              className={`relative flex items-center gap-2.5 rounded-2xl border px-3 py-3 transition has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-register ${
+                locked ? 'cursor-default' : 'cursor-pointer'
+              } ${selected ? tone.selected : `${tone.idle} ${locked ? '' : tone.hover}`}`}
             >
               <input
                 type="radio"
                 name="propertyType"
                 value={option.id}
                 checked={selected}
+                disabled={locked}
                 onChange={() => onChange(option.id)}
                 aria-describedby={error ? 'propertyType-error' : undefined}
                 className="sr-only"

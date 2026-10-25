@@ -32,6 +32,13 @@ export type MeListing = {
   monthlyPrice?: number | string | null;
   mealPrice?: number | string | null;
   priceBasis?: string | null;
+  ownerName?: string | null;
+  buildingName?: string | null;
+  sharingNotes?: string | null;
+  capacityEstimate?: number | null;
+  latitude?: number | string | null;
+  longitude?: number | string | null;
+  amenities?: MeListingAmenity[] | null;
   publication: MeListingPublication;
   registrationReference?: string | null;
   registrationStatus?: string | null;
@@ -60,6 +67,20 @@ export type ListingCatalogUpdate = {
   mealPrice?: number;
   priceBasis?: string;
   monthlyPriceBasis?: string;
+  mapUrl?: string;
+  latitude?: number;
+  longitude?: number;
+  ownerName?: string;
+  buildingName?: string;
+  capacityEstimate?: number;
+  amenities?: Array<{ code: string; label: string }>;
+  /** Omitted leaves the current gallery. A list replaces it. */
+  photos?: string[];
+};
+
+export type MeListingAmenity = {
+  code: string;
+  label?: string | null;
 };
 
 export async function listMyListings(params?: {

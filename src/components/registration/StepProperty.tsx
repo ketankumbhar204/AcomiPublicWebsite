@@ -9,10 +9,20 @@ type StepPropertyProps = {
   errors: FieldErrors;
   copy: ListingCopy;
   showTypeSelect: boolean;
+  ownerRequired?: boolean;
+  typeLocked?: boolean;
   onChange: <K extends keyof RegistrationForm>(key: K, value: RegistrationForm[K]) => void;
 };
 
-export function StepProperty({ form, errors, copy, showTypeSelect, onChange }: StepPropertyProps) {
+export function StepProperty({
+  form,
+  errors,
+  copy,
+  showTypeSelect,
+  ownerRequired = true,
+  typeLocked = false,
+  onChange,
+}: StepPropertyProps) {
   return (
     <div className="space-y-5">
       {showTypeSelect ? (
@@ -20,6 +30,7 @@ export function StepProperty({ form, errors, copy, showTypeSelect, onChange }: S
           value={form.propertyType}
           onChange={(value) => onChange('propertyType', value)}
           error={errors.propertyType}
+          locked={typeLocked}
         />
       ) : null}
 
@@ -38,7 +49,7 @@ export function StepProperty({ form, errors, copy, showTypeSelect, onChange }: S
       <TextField
         id="ownerName"
         label="Owner name"
-        required
+        required={ownerRequired}
         value={form.ownerName}
         onChange={(value) => onChange('ownerName', value)}
         error={errors.ownerName}

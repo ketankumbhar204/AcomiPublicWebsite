@@ -38,19 +38,15 @@ export function ListingContactCta({
 
   return (
     <>
-      {phase === 'disabled' || phase === 'exhausted' || phase === 'error' ? (
+      {phase === 'disabled' || phase === 'exhausted' ? (
         <p className="mt-4 text-[13px] text-text-secondary">
           {phase === 'exhausted'
             ? t('discovery.viewHereExhausted', {
                 defaultValue: 'You have used all instant contact views for today.',
               })
-            : phase === 'error'
-              ? t('discovery.viewHereFailed', {
-                  defaultValue: 'Contact details could not be loaded. Try again.',
-                })
-              : t('discovery.viewHereDisabled', {
-                  defaultValue: 'Instant contact viewing is turned off. You can still request details.',
-                })}
+            : t('discovery.viewHereDisabled', {
+                defaultValue: 'Instant contact viewing is turned off. You can still request details.',
+              })}
         </p>
       ) : null}
       {revealing || (contactViewed && !sendingEnquiry) ? null : alreadyInquired && !sendingEnquiry ? (

@@ -524,6 +524,10 @@ export function EnquireDialog({
 
   function onChooseEmail() {
     if (busyRef.current) return;
+    if (quota != null && !isUnlimitedQuota(quota) && quota.freeRemainingToday <= 0) {
+      setStep('limit');
+      return;
+    }
     if (needsInquiryPayment(quota)) {
       setStep('limit');
       return;
@@ -791,15 +795,13 @@ export function EnquireDialog({
   const dailyLimit = quota?.dailyFreeLimit ?? 5;
   const remainingKnown = quota != null && !isUnlimitedQuota(quota);
   const remainingToday = quota?.freeRemainingToday ?? dailyLimit;
-  const paidLeft = paidCreditsOf(quota);
-  const remainingExhausted = needsInquiryPayment(quota);
+  const freeDailyExhausted = remainingKnown && remainingToday <= 0;
   const offerCount = offerPkg?.credits;
   const offerAmount = offerPkg
     ? offerPkg.currency === 'INR'
       ? `₹${Number(offerPkg.priceAmount)}`
       : `${offerPkg.currency} ${Number(offerPkg.priceAmount)}`
     : null;
-  const showPaidRemaining = remainingKnown && remainingToday <= 0 && paidLeft > 0;
   const viewHereLimit = quota?.viewHereDailyLimit ?? 0;
   const viewHereRemaining = quota?.viewHereRemainingToday ?? 0;
   const showViewHere = canViewContactDirectly(quota);
@@ -1018,32 +1020,21 @@ export function EnquireDialog({
             <button
               type="button"
               disabled={busy}
-              onClick={() => {
-                if (remainingExhausted) {
-                  setStep('limit');
-                  return;
-                }
-                onChooseEmail();
-              }}
+              onClick={() => onChooseEmail()}
               className="w-full rounded-2xl border border-amber-300/70 bg-[#FFF4EC] p-3 text-left transition hover:border-amber-400 disabled:opacity-60"
             >
               <div className="flex items-start gap-2.5">
                 <span className="relative mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/90 text-amber-700 shadow-sm ring-1 ring-amber-200/80">
                   <Mail className="h-4 w-4" aria-hidden />
-                  {remainingKnown && !showPaidRemaining ? (
+                  {remainingKnown ? (
                     <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1 text-[10px] font-bold text-white">
                       {remainingToday}
-                    </span>
-                  ) : null}
-                  {showPaidRemaining ? (
-                    <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
-                      {paidLeft}
                     </span>
                   ) : null}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-[12px] font-semibold text-navy/80">
-                    {remainingExhausted
+                    {freeDailyExhausted
                       ? offerCount
                         ? t('discovery.enquireEmailCtaExhausted', { count: offerCount })
                         : t('discovery.enquireEmailCtaExhaustedPending')
@@ -1051,37 +1042,33 @@ export function EnquireDialog({
                   </span>
                   {remainingKnown ? (
                     <span className="mt-1 inline-block max-w-full whitespace-nowrap rounded-md bg-amber-100/90 px-1.5 py-0.5 text-[13px] font-bold leading-tight text-amber-900">
-                      {showPaidRemaining
-                        ? t('discovery.enquireEmailPaidRemaining', { count: paidLeft })
-                        : remainingToday === 1
-                          ? t('discovery.enquireEmailRemainingOne', {
-                              remaining: remainingToday,
-                              limit: dailyLimit,
-                            })
-                          : t('discovery.enquireEmailRemaining', {
-                              remaining: remainingToday,
-                              limit: dailyLimit,
-                            })}
+                      {remainingToday === 1
+                        ? t('discovery.enquireEmailRemainingOne', {
+                            remaining: remainingToday,
+                            limit: dailyLimit,
+                          })
+                        : t('discovery.enquireEmailRemaining', {
+                            remaining: remainingToday,
+                            limit: dailyLimit,
+                          })}
                     </span>
                   ) : null}
-                  {remainingKnown && !showPaidRemaining && !remainingExhausted ? (
+                  {remainingKnown && !freeDailyExhausted ? (
                     <span className="mt-1 block text-[12px] font-semibold text-navy/55">
                       {t('discovery.enquireEmailDailyLimit', { count: dailyLimit })}
                     </span>
                   ) : null}
-                  {remainingExhausted && offerCount && offerAmount ? (
+                  {freeDailyExhausted && offerCount && offerAmount ? (
                     <span className="mt-1 block text-[12px] font-semibold text-navy/55">
                       {t('discovery.limitCreditsCta', { count: offerCount, amount: offerAmount })}
                     </span>
                   ) : null}
                   <span className="mt-1.5 block text-[12px] text-navy/60">
-                    {remainingExhausted
+                    {freeDailyExhausted
                       ? offerAmount
                         ? t('discovery.enquireEmailExhaustedHint', { amount: offerAmount })
                         : null
-                      : showPaidRemaining
-                        ? t('discovery.enquireEmailPaidHint')
-                        : t('discovery.enquireEmailCardHint')}
+                      : t('discovery.enquireEmailCardHint')}
                   </span>
                 </span>
                 <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-amber-700/60" aria-hidden />

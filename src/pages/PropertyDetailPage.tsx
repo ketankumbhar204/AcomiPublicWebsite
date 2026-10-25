@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -19,9 +19,11 @@ import { priceBasisLabel } from '../lib/priceBasis';
 import { amenityDisplayLabel, amenityIcon } from '../components/discovery/listingIcons';
 import { ListingGallery } from '../components/discovery/ListingGallery';
 import { ListingSaveButton } from '../components/discovery/ListingSaveButton';
+import { OwnerListingActions, useMyListing } from '../components/discovery/OwnerListingActions';
 import { ListingInfoChips } from '../components/discovery/ListingInfoChips';
 import { ListingUnavailableDetails } from '../components/discovery/ListingUnavailableDetails';
 import { PhotoRequestAction } from '../components/discovery/PhotoRequestAction';
+import { useListingExtrasGate } from '../components/discovery/useListingExtrasGate';
 import { hasActualListingPhotos } from '../lib/photoRequest';
 import { ListingPrice } from '../components/discovery/ListingPrice';
 import { Container } from '../components/layout/Container';
@@ -42,23 +44,36 @@ export function PropertyDetailPage() {
   const focusSection = isListingSection(requestedSection) ? requestedSection : null;
   const [listing, setListing] = useState<PropertyListing | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
+  const [listingVersion, setListingVersion] = useState(0);
   const [enquireOpen, setEnquireOpen] = useState(false);
   const [revealedContact, setRevealedContact] = useState<RevealedOwnerContact | null>(null);
   const alreadyInquired = useAlreadyInquired(listing?.id);
   const contactViewed = useContactViewed(listing?.id);
   const inquiry = useInquiryRecord(listing?.id);
   const reveal = useDirectContactReveal(listing?.id, status === 'ready');
-  const contact = usePersistedRevealedContact(listing?.id ?? '', reveal.contact ?? revealedContact);
-  const isOwnListing = reveal.phase === 'own';
+  const persistedContact = usePersistedRevealedContact(listing?.id ?? '', reveal.contact ?? revealedContact);
+  const contact = persistedContact.contact;
+  const contactLoading =
+    persistedContact.loading || ((reveal.phase === 'checking' || reveal.phase === 'revealing') && !contact);
+  const mine = useMyListing(listing?.id);
+  const isOwnListing = reveal.phase === 'own' || Boolean(mine);
   const unlocked = Boolean(contact) || contactViewed || alreadyInquired || isOwnListing;
+  const extras = useListingExtrasGate(listing?.id ?? '', Boolean(contact) || contactViewed || alreadyInquired);
+  extras.mapHrefRef.current = listing?.mapUrl ?? '';
   const sendingEnquiry = useIsEnquirySending(listing?.id ?? '');
   useScrollToListingSection(focusSection, status === 'ready' && Boolean(listing));
 
+  const listingRequest = useRef('');
+
   useEffect(() => {
     let cancelled = false;
-    setStatus('loading');
-    setListing(null);
-    setRevealedContact(null);
+    const switchingListing = listingRequest.current !== id;
+    listingRequest.current = id;
+    if (switchingListing || listingVersion === 0) {
+      setStatus('loading');
+      setListing(null);
+      setRevealedContact(null);
+    }
     void getDiscoverSpaceDetail(id)
       .then((detail) => {
         if (cancelled) return;
@@ -74,7 +89,7 @@ export function PropertyDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, listingVersion]);
 
   useEffect(() => {
     if (!listing?.id) return;
@@ -171,11 +186,21 @@ export function PropertyDetailPage() {
               <h1 className="text-[1.75rem] font-semibold tracking-tight text-navy">{listing.name}</h1>
               <ListingSaveButton id={listing.id} name={listing.name} kind="places" detail={address} />
             </div>
+            <OwnerListingActions
+              listing={mine}
+              onUpdated={() => setListingVersion((current) => current + 1)}
+            />
             <div id={listingSectionElementId('contact')}>
             {contactViewed ? (
               <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
             ) : null}
-            <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+            <OwnerContactCard
+              contact={contact}
+              mapUrl={listing.mapUrl}
+              loading={contactLoading}
+              error={persistedContact.error || (reveal.phase === 'error' && !contact)}
+              onRetry={persistedContact.error ? persistedContact.retry : reveal.retry}
+            />
             </div>
             {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
             <div id={listingSectionElementId('address')}>
@@ -215,14 +240,14 @@ export function PropertyDetailPage() {
               <ListingCardMeta
                 listing={listing}
                 showMaps={Boolean(listing.mapUrl?.trim())}
-                mapHref={unlocked ? listing.mapUrl : undefined}
-                onEnquire={unlocked ? undefined : () => setEnquireOpen(true)}
+                mapHref={extras.allowed ? listing.mapUrl : undefined}
+                onEnquire={extras.allowed ? undefined : () => extras.hold('map')}
                 chips={<ListingInfoChips listing={listing} variant="detail" onSelect={scrollToListingSection} />}
               />
               <ListingContactCta
                 listingId={listing.id}
                 listingName={listing.name}
-                phase={reveal.phase}
+                phase={isOwnListing ? 'own' : reveal.phase}
                 alreadyInquired={alreadyInquired}
                 contactViewed={contactViewed}
                 sendingEnquiry={sendingEnquiry}
@@ -261,6 +286,7 @@ export function PropertyDetailPage() {
             className="space-y-1"
             hidePhotos={hasActualListingPhotos(listing.listingMetadata.images)}
           />
+          {isOwnListing ? null : (
           <PhotoRequestAction
             kind="property"
             name={listing.name}
@@ -273,8 +299,11 @@ export function PropertyDetailPage() {
                 : []
             }
             contactAuthorized={Boolean(contact)}
-            onNeedContact={contact || contactViewed || isOwnListing ? undefined : () => setEnquireOpen(true)}
+            onBeforeOpen={() => extras.hold('photos')}
+            openToken={extras.photoOpenToken}
+            onNeedContact={contact || contactViewed ? undefined : () => setEnquireOpen(true)}
           />
+          )}
         </div>
 
         {listing.description ? (
@@ -287,7 +316,7 @@ export function PropertyDetailPage() {
         {listing.mapUrl ? (
           <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h2 className="text-lg font-semibold text-navy">{t('discovery.location')}</h2>
-            {unlocked ? (
+            {extras.allowed ? (
               <div className="mt-3">
                 <ListingMapLink listing={listing} />
               </div>
@@ -296,9 +325,9 @@ export function PropertyDetailPage() {
                 <p className="mt-3 text-[15px] text-text-secondary">{t('discovery.enquireForMap', { defaultValue: 'Map and exact location are shared after you send an enquiry.' })}</p>
                 <GetContactDetailsButton
                   listingId={listing.id}
-                  onClick={() => setEnquireOpen(true)}
+                  onClick={() => extras.hold('map')}
                   className="mt-4"
-                  aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
+                  aria-label={`${t('discovery.openMaps')}: ${listing.name}`}
                 />
               </>
             )}
@@ -317,6 +346,7 @@ export function PropertyDetailPage() {
           setEnquireOpen(false);
         }}
       />
+      {extras.dialog}
     </section>
   );
 }

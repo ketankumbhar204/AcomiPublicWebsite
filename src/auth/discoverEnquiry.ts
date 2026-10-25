@@ -60,7 +60,7 @@ export async function fetchRevealedContact(spaceId: string): Promise<RevealedOwn
     return await publicApi<RevealedOwnerContact>(`/spaces/${spaceId}/revealed-contact`);
   } catch (err) {
     if (err instanceof PublicApiError && err.status === 404) return null;
-    return null;
+    throw err;
   }
 }
 

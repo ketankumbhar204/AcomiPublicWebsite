@@ -62,6 +62,7 @@ assert(authModal.includes('publicAuthApi.register'), 'Auth modal must use existi
 assert(authModal.includes('loginWithOtp'), 'Auth modal must reuse OTP login');
 assert(authModal.includes('sendOtp'), 'Auth modal must reuse send-otp');
 assert(authModal.includes('getPostLoginDestination'), 'Auth modal must route by existing ACOMI roles');
+assert(authModal.includes('shouldOpenOperationsWorkspace'), 'operations redirect must be homepage-only');
 assert(authModal.includes('listMySpaceMemberships'), 'Auth modal must load space memberships after login');
 assert(authModal.includes('trustedOperationsHref'), 'operational redirect must use trusted APP URLs only');
 assert(authModal.includes('clearEnquireIntent'), 'operational login must not continue customer enquire');

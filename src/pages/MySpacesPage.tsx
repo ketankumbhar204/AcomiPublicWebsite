@@ -1,37 +1,34 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Building2, UtensilsCrossed } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Building2, ChevronLeft, ChevronRight, MoreHorizontal, Pencil, UtensilsCrossed, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { listMyListings, type MeListing } from '../auth/mySpacesApi';
+import { appHref, showsAccommodation, showsManage, showsMeals, showsPublicListing } from '../auth/mySpacesActions';
 import {
-  listMyListings,
-  updateLiveListing,
-  updateMessLead,
-  updatePropertyLead,
-  type ListingCatalogUpdate,
-  type MeListing,
-  type MeListingKind,
-  type MeListingPublication,
-} from '../auth/mySpacesApi';
-import {
-  appHref,
-  listingAddress,
-  showsAccommodation,
-  showsManage,
-  showsMeals,
-  showsPublicListing,
-} from '../auth/mySpacesActions';
-import { getPublicAccessToken, PublicApiError } from '../lib/apiClient';
+  applyListingFilters,
+  listingFacetCounts,
+  paginateListings,
+  type KindFilter,
+  type ListingSort,
+  type StatusFilter,
+} from '../auth/mySpacesView';
+import { PublicApiError } from '../lib/apiClient';
 import { API_BASE_URL } from '../config/env';
 import { RequireAuth } from '../components/auth/RequireAuth';
 import { ActionButton } from '../components/common/ActionButton';
+import { ListingCardSkeleton } from '../components/discovery/ListingCardSkeleton';
+import { MessCard } from '../components/discovery/MessCard';
+import { PropertyCard } from '../components/discovery/PropertyCard';
 import { Container } from '../components/layout/Container';
 import { APP } from '../constants/links';
+import { useFavorites } from '../context/FavoritesContext';
 import { useListingDrawer } from '../context/ListingDrawerContext';
+import type { MessListing, PropertyListing } from '../data/listings/types';
+import type { PropertyType } from '../api/types';
+import { isPriceBasis } from '../lib/priceBasis';
 import { applySeo } from '../lib/seo';
 
-type KindFilter = 'ALL' | MeListingKind;
-type StatusFilter = 'ALL' | MeListingPublication;
-
+/** Same track as Places and Meals: four readable cards on a 1366px desktop. */
 const RESULTS_GRID =
   'mt-4 grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,19.25rem),1fr))]';
 
@@ -40,23 +37,6 @@ function mediaUrl(path: string | null | undefined): string | null {
   if (/^https?:\/\//i.test(path)) return path;
   const origin = API_BASE_URL.replace(/\/api\/v1\/?$/, '');
   return `${origin}${path.startsWith('/') ? path : `/${path}`}`;
-}
-
-function coverSource(listing: MeListing): string | null {
-  if (listing.coverImageUrl) return mediaUrl(listing.coverImageUrl);
-  if (listing.photoFileId) return mediaUrl(`/api/v1/files/${listing.photoFileId}/content`);
-  return null;
-}
-
-function priceText(listing: MeListing): string | null {
-  if (listing.kind === 'MESS') {
-    const parts: string[] = [];
-    if (listing.monthlyPrice != null && listing.monthlyPrice !== '') parts.push(`₹${listing.monthlyPrice}`);
-    if (listing.mealPrice != null && listing.mealPrice !== '') parts.push(`₹${listing.mealPrice} / meal`);
-    return parts.length ? parts.join(' · ') : null;
-  }
-  if (listing.startingPrice == null || listing.startingPrice === '') return null;
-  return `₹${listing.startingPrice}`;
 }
 
 export function MySpacesPage() {
@@ -69,34 +49,29 @@ export function MySpacesPage() {
 
 function MySpacesView() {
   const { t } = useTranslation();
-  const { openListing } = useListingDrawer();
+  const { openListing, openListingEdit, subscribeListingSaved } = useListingDrawer();
   const [items, setItems] = useState<MeListing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [kind, setKind] = useState<KindFilter>('ALL');
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [search, setSearch] = useState('');
-  const [query, setQuery] = useState('');
-  const [editing, setEditing] = useState<MeListing | null>(null);
+  const [city, setCity] = useState('');
+  const [spaceType, setSpaceType] = useState('');
+  const [sort, setSort] = useState<ListingSort>('updated');
+  const [page, setPage] = useState(1);
   const [notice, setNotice] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
     try {
-      setItems(
-        await listMyListings({
-          kind: kind === 'ALL' ? undefined : kind,
-          status: status === 'ALL' ? undefined : status,
-          search: query,
-        }),
-      );
+      setItems(await listMyListings());
     } catch (err) {
-      setItems([]);
       setError(err instanceof PublicApiError ? err.message : t('mySpaces.loadFailed'));
     } finally {
       setLoading(false);
     }
-  }, [kind, query, status, t]);
+  }, [t]);
 
   useEffect(() => {
     applySeo({
@@ -107,45 +82,124 @@ function MySpacesView() {
   }, [t]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setQuery(search.trim()), 300);
-    return () => window.clearTimeout(timer);
-  }, [search]);
-
-  useEffect(() => {
     setLoading(true);
     void load();
   }, [load]);
 
-  const emptyAccount = !loading && !error && items.length === 0 && !query && kind === 'ALL' && status === 'ALL';
+  useEffect(() => {
+    setPage(1);
+  }, [kind, status, search, city, spaceType, sort]);
+
+  useEffect(
+    () =>
+      subscribeListingSaved(() => {
+        setNotice(t('mySpaces.saved'));
+        setLoading(true);
+        void load();
+      }),
+    [load, subscribeListingSaved, t],
+  );
+
+  const filters = { kind, status, search, city, spaceType, sort };
+  const counts = useMemo(
+    () => listingFacetCounts(items, { search, city, spaceType }),
+    [city, items, search, spaceType],
+  );
+  const filtered = useMemo(() => applyListingFilters(items, filters), [city, items, kind, search, sort, spaceType, status]);
+  const pageView = paginateListings(filtered, page);
+  const cities = useMemo(
+    () => [...new Set(items.map((item) => item.city?.trim()).filter((value): value is string => Boolean(value)))].sort(),
+    [items],
+  );
+  const types = useMemo(
+    () => [...new Set(items.map((item) => item.spaceType).filter((value): value is string => Boolean(value)))].sort(),
+    [items],
+  );
+  const filtersActive = Boolean(search.trim() || city || spaceType || kind !== 'ALL' || status !== 'ALL');
+  const emptyAccount = !loading && !error && items.length === 0;
+
+  function clearFilters() {
+    setKind('ALL');
+    setStatus('ALL');
+    setSearch('');
+    setCity('');
+    setSpaceType('');
+    setSort('updated');
+  }
 
   return (
     <section className="bg-background py-8 sm:py-10">
       <Container>
-        <h1 className="text-2xl font-semibold tracking-tight text-navy">{t('mySpaces.title')}</h1>
-        <p className="mt-1 text-sm text-text-secondary">{t('mySpaces.subtitle')}</p>
-
-        <div className="mt-4 flex flex-wrap gap-2" role="tablist" aria-label={t('mySpaces.title')}>
-          <FilterChip label={t('mySpaces.all')} selected={kind === 'ALL'} onClick={() => setKind('ALL')} />
-          <FilterChip label={t('mySpaces.properties')} selected={kind === 'PROPERTY'} onClick={() => setKind('PROPERTY')} />
-          <FilterChip label={t('mySpaces.messes')} selected={kind === 'MESS'} onClick={() => setKind('MESS')} />
-          <FilterChip label={t('mySpaces.live')} selected={status === 'LIVE'} onClick={() => setStatus(status === 'LIVE' ? 'ALL' : 'LIVE')} />
-          <FilterChip label={t('mySpaces.pending')} selected={status === 'PENDING'} onClick={() => setStatus(status === 'PENDING' ? 'ALL' : 'PENDING')} />
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-navy sm:text-3xl">{t('mySpaces.title')}</h1>
+          <p className="mt-1 max-w-2xl text-sm text-text-secondary">{t('mySpaces.subtitle')}</p>
         </div>
 
-        <label className="mt-3 block">
-          <span className="sr-only">{t('mySpaces.search')}</span>
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder={t('mySpaces.search')}
-            className="h-11 w-full rounded-2xl border border-black/10 bg-white px-4 text-sm text-navy outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          />
-        </label>
+        <div className="mt-5 flex flex-wrap gap-2" role="tablist" aria-label={t('mySpaces.title')}>
+          <FilterChip label={`${t('mySpaces.all')} (${counts.all})`} selected={kind === 'ALL'} onClick={() => setKind('ALL')} />
+          <FilterChip label={`${t('mySpaces.properties')} (${counts.properties})`} selected={kind === 'PROPERTY'} onClick={() => setKind('PROPERTY')} />
+          <FilterChip label={`${t('mySpaces.messes')} (${counts.messes})`} selected={kind === 'MESS'} onClick={() => setKind('MESS')} />
+          <FilterChip label={`${t('mySpaces.live')} (${counts.live})`} selected={status === 'LIVE'} onClick={() => setStatus(status === 'LIVE' ? 'ALL' : 'LIVE')} />
+          <FilterChip label={`${t('mySpaces.pending')} (${counts.pending})`} selected={status === 'PENDING'} onClick={() => setStatus(status === 'PENDING' ? 'ALL' : 'PENDING')} />
+        </div>
 
-        {notice ? <p className="mt-3 text-sm font-medium text-primary">{notice}</p> : null}
+        <div className="mt-3 flex flex-col gap-2 lg:flex-row lg:items-center">
+          <label className="relative block min-w-0 flex-1">
+            <span className="sr-only">{t('mySpaces.search')}</span>
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={t('mySpaces.search')}
+              className="h-11 w-full rounded-2xl border border-black/10 bg-white px-4 pr-10 text-sm text-navy outline-none focus-visible:ring-2 focus-visible:ring-register"
+            />
+            {search ? (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                aria-label={t('mySpaces.clearSearch')}
+                className="absolute top-1/2 right-2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-text-secondary hover:bg-soft"
+              >
+                <X aria-hidden className="h-4 w-4" />
+              </button>
+            ) : null}
+          </label>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:flex">
+            <FilterSelect label={t('mySpaces.location')} value={city} onChange={setCity}>
+              <option value="">{t('mySpaces.allLocations')}</option>
+              {cities.map((value) => (
+                <option key={value} value={value}>{value}</option>
+              ))}
+            </FilterSelect>
+            <FilterSelect label={t('mySpaces.type')} value={spaceType} onChange={setSpaceType}>
+              <option value="">{t('mySpaces.allTypes')}</option>
+              {types.map((value) => (
+                <option key={value} value={value}>
+                  {t(`discovery.propertyTypes.${value}`, { defaultValue: value.replaceAll('_', ' ') })}
+                </option>
+              ))}
+            </FilterSelect>
+            <FilterSelect label={t('mySpaces.status')} value={status === 'ALL' ? '' : status} onChange={(value) => setStatus(value === 'LIVE' || value === 'PENDING' ? value : 'ALL')}>
+              <option value="">{t('mySpaces.allStatuses')}</option>
+              <option value="LIVE">{t('mySpaces.live')}</option>
+              <option value="PENDING">{t('mySpaces.pending')}</option>
+            </FilterSelect>
+            <FilterSelect label={t('mySpaces.sort')} value={sort} onChange={(value) => setSort(value as ListingSort)}>
+              <option value="updated">{t('mySpaces.sortUpdated')}</option>
+              <option value="name">{t('mySpaces.sortName')}</option>
+              <option value="priceAsc">{t('mySpaces.sortPriceAsc')}</option>
+              <option value="priceDesc">{t('mySpaces.sortPriceDesc')}</option>
+            </FilterSelect>
+          </div>
+        </div>
+
+        {notice ? <p className="mt-3 text-sm font-medium text-register">{notice}</p> : null}
+        {error && items.length > 0 ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
 
         {loading && items.length === 0 ? (
-          <p className="mt-8 text-sm text-text-secondary">{t('mySpaces.loading')}</p>
+          <div aria-busy="true" aria-live="polite">
+            <span className="sr-only">{t('mySpaces.loading')}</span>
+            <ListingCardSkeleton gridClassName={RESULTS_GRID} compact />
+          </div>
         ) : null}
 
         {error && items.length === 0 ? (
@@ -172,344 +226,260 @@ function MySpacesView() {
             <p className="mt-2 text-sm text-text-secondary">{t('mySpaces.emptyBody')}</p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               <ActionButton onClick={() => openListing('property')}>{t('mySpaces.listProperty')}</ActionButton>
-              <ActionButton variant="ghost" onClick={() => openListing('mess')}>
+              <ActionButton variant="outline" className="!text-register !ring-register hover:!bg-register-soft" onClick={() => openListing('mess')}>
                 {t('mySpaces.listMess')}
               </ActionButton>
             </div>
           </div>
         ) : null}
 
-        {!loading && !error && !emptyAccount && items.length === 0 ? (
-          <p className="mt-8 text-sm text-text-secondary">{t('mySpaces.noMatches')}</p>
+        {!loading && !error && !emptyAccount && filtered.length === 0 ? (
+          <div className="mt-8 text-center">
+            <p className="text-sm text-text-secondary">{t('mySpaces.noMatches')}</p>
+            {filtersActive ? (
+              <button type="button" onClick={clearFilters} className="mt-3 text-sm font-semibold text-register">
+                {t('mySpaces.clearFilters')}
+              </button>
+            ) : null}
+          </div>
         ) : null}
 
-        {items.length > 0 ? (
+        {pageView.slice.length > 0 ? (
           <div className={RESULTS_GRID}>
-            {items.map((listing) => (
+            {pageView.slice.map((listing) => (
               <ListingCard
                 key={listing.spaceId ?? listing.registrationId}
                 listing={listing}
                 onEdit={() => {
                   setNotice(null);
-                  setEditing(listing);
+                  openListingEdit(listing);
                 }}
               />
             ))}
           </div>
         ) : null}
 
-        {editing ? (
-          <ListingEditor
-            listing={editing}
-            onClose={() => setEditing(null)}
-            onSaved={async () => {
-              setEditing(null);
-              setNotice(t('mySpaces.saved'));
-              setLoading(true);
-              await load();
-            }}
-          />
+        {filtered.length > 0 ? (
+          <div className="mt-5 flex flex-col gap-3 text-sm text-text-secondary sm:flex-row sm:items-center sm:justify-between">
+            <p>{t('mySpaces.showing', { from: pageView.from, to: pageView.to, count: filtered.length })}</p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label={t('mySpaces.previous')}
+                disabled={pageView.page <= 1}
+                onClick={() => setPage((value) => Math.max(1, value - 1))}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-navy disabled:opacity-40"
+              >
+                <ChevronLeft aria-hidden className="h-4 w-4" />
+              </button>
+              <span className="inline-flex h-9 min-w-9 items-center justify-center rounded-full bg-register px-3 font-semibold text-white">
+                {pageView.page}
+              </span>
+              <button
+                type="button"
+                aria-label={t('mySpaces.next')}
+                disabled={pageView.page >= pageView.pages}
+                onClick={() => setPage((value) => value + 1)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-navy disabled:opacity-40"
+              >
+                <ChevronRight aria-hidden className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         ) : null}
+
       </Container>
     </section>
   );
 }
 
+const PROPERTY_TYPES: readonly PropertyType[] = ['PG', 'HOSTEL', 'CO_LIVING', 'RENTAL', 'CORPORATE_STAY', 'MESS'];
+
+function mediaAmount(value: number | string | null | undefined): number | null {
+  if (value == null || value === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function listingImages(listing: MeListing): string[] {
+  const gallery = (listing.gallery ?? [])
+    .map((photo) => mediaUrl(photo.contentUrl))
+    .filter((url): url is string => Boolean(url));
+  if (gallery.length > 0) return gallery;
+  const cover = mediaUrl(listing.coverImageUrl);
+  if (cover) return [cover];
+  if (listing.photoFileId) {
+    const file = mediaUrl(`/api/v1/files/${listing.photoFileId}/content`);
+    return file ? [file] : [];
+  }
+  return [];
+}
+
+function toPropertyCardListing(listing: MeListing): PropertyListing {
+  const type = PROPERTY_TYPES.find((item) => item === listing.spaceType) ?? 'PG';
+  const gender = listing.genderPolicy === 'MALE' || listing.genderPolicy === 'FEMALE' || listing.genderPolicy === 'MIXED'
+    ? listing.genderPolicy
+    : null;
+  return {
+    id: listing.spaceId ?? listing.registrationId ?? listing.name,
+    type,
+    name: listing.name,
+    description: listing.description ?? '',
+    addressLine: listing.address ?? '',
+    locality: '',
+    city: listing.city ?? '',
+    state: listing.state ?? '',
+    pincode: listing.pincode ?? '',
+    mapUrl: listing.mapUrl ?? undefined,
+    latitude: mediaAmount(listing.latitude),
+    longitude: mediaAmount(listing.longitude),
+    startingPrice: mediaAmount(listing.startingPrice),
+    priceBasis: isPriceBasis(listing.priceBasis) ? listing.priceBasis : null,
+    capacityEstimate: listing.capacityEstimate ?? null,
+    amenityCodes: (listing.amenities ?? []).map((item) => item.code),
+    foodIncludedInRent: listing.foodIncluded === true,
+    foodAvailability: listing.foodIncluded ? 'INCLUDED' : null,
+    genderPolicy: gender,
+    hasContact: Boolean(listing.contactNumber?.trim()),
+    hasMobileContact: Boolean(listing.contactNumber?.trim()),
+    sharingNotes: listing.sharingNotes ?? undefined,
+    listingMetadata: { images: listingImages(listing) },
+  };
+}
+
+function toMessCardListing(listing: MeListing): MessListing {
+  return {
+    id: listing.spaceId ?? listing.registrationId ?? listing.name,
+    name: listing.name,
+    description: listing.description ?? '',
+    addressLine: listing.address ?? '',
+    locality: '',
+    city: listing.city ?? '',
+    state: listing.state ?? '',
+    pincode: listing.pincode ?? '',
+    mapUrl: listing.mapUrl ?? undefined,
+    latitude: mediaAmount(listing.latitude),
+    longitude: mediaAmount(listing.longitude),
+    monthlyPrice: mediaAmount(listing.monthlyPrice),
+    mealPrice: mediaAmount(listing.mealPrice),
+    priceBasis: isPriceBasis(listing.priceBasis) ? listing.priceBasis : null,
+    amenityCodes: (listing.amenities ?? []).map((item) => item.code),
+    foodIncludedInRent: listing.foodIncluded === true,
+    foodAvailability: listing.foodIncluded ? 'INCLUDED' : null,
+    hasContact: Boolean(listing.contactNumber?.trim()),
+    hasMobileContact: Boolean(listing.contactNumber?.trim()),
+    capacityEstimate: listing.capacityEstimate ?? null,
+    listingMetadata: { images: listingImages(listing), mealsServed: [] },
+  };
+}
+
 function ListingCard({ listing, onEdit }: { listing: MeListing; onEdit: () => void }) {
   const { t } = useTranslation();
-  const address = listingAddress(listing);
-  const price = priceText(listing);
-  const live = listing.publication === 'LIVE';
+  const navigate = useNavigate();
+  const { isSaved, toggleFavorite } = useFavorites();
   const manage = showsManage(listing) ? appHref(APP.web, listing.managePath) : null;
   const accommodation = showsAccommodation(listing) ? appHref(APP.web, listing.accommodationPath) : null;
   const meals = showsMeals(listing) ? appHref(APP.web, listing.mealsPath) : null;
-  const publicHref = showsPublicListing(listing) ? listing.publicPath : null;
-
-  return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[var(--shadow-sm)]">
-      <ListingImage listing={listing} />
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <div className="flex items-start justify-between gap-2">
-          <h2 className="text-base font-semibold text-navy">{listing.name}</h2>
-          <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${live ? 'bg-primary/10 text-primary' : 'bg-amber-100 text-amber-800'}`}>
-            {live ? t('mySpaces.live') : t('mySpaces.pending')}
-          </span>
-        </div>
-        <p className="text-xs font-medium uppercase tracking-wide text-text-secondary">
-          {listing.spaceType || listing.kind}
-          {listing.registrationStatus && !live ? ` · ${listing.registrationStatus}` : ''}
-        </p>
-        {address ? <p className="text-sm text-text-secondary">{address}</p> : null}
-        {price ? <p className="text-sm font-semibold text-navy">{price}</p> : null}
-        {!live && listing.registrationReference ? (
-          <p className="text-xs text-text-secondary">
-            {t('mySpaces.reference')}: {listing.registrationReference}
-          </p>
-        ) : null}
-        <div className="mt-auto flex flex-wrap gap-2 pt-2">
-          {publicHref ? (
-            <Link to={publicHref} className="text-sm font-semibold text-coral">
-              {t('mySpaces.viewPublic')}
-            </Link>
-          ) : null}
-          <button type="button" className="text-sm font-semibold text-navy" onClick={onEdit}>
-            {t('mySpaces.edit')}
-          </button>
-          {manage ? (
-            <a href={manage} className="text-sm font-semibold text-primary">
-              {t('mySpaces.manage')}
-            </a>
-          ) : null}
-          {accommodation ? (
-            <a href={accommodation} className="text-sm font-semibold text-primary">
-              {t('mySpaces.accommodation')}
-            </a>
-          ) : null}
-          {meals ? (
-            <a href={meals} className="text-sm font-semibold text-primary">
-              {t('mySpaces.meals')}
-            </a>
-          ) : null}
-        </div>
-      </div>
-    </article>
+  const publicHref = showsPublicListing(listing) ? listing.publicPath ?? null : null;
+  const primary = accommodation
+    ? { href: accommodation, label: t('mySpaces.accommodation'), Icon: Building2 }
+    : meals
+      ? { href: meals, label: t('mySpaces.mealManagement'), Icon: UtensilsCrossed }
+      : null;
+  const openPublic = () => {
+    if (publicHref) navigate(publicHref);
+  };
+  const cardId = listing.spaceId ?? listing.registrationId ?? listing.name;
+  const actions = (
+    <>
+      <ActionButton
+        variant="outline"
+        onClick={onEdit}
+        className="!h-11 min-w-0 flex-[0.82] !rounded-xl bg-white !px-2 !text-[13px] whitespace-nowrap"
+      >
+        <Pencil aria-hidden className="h-4 w-4" />
+        {t('mySpaces.edit')}
+      </ActionButton>
+      {primary ? (
+        <a
+          href={primary.href}
+          className="inline-flex h-11 min-w-0 flex-[1.18] items-center justify-center gap-1.5 rounded-xl bg-register px-2 text-[13px] font-semibold whitespace-nowrap text-white hover:bg-register-hover"
+        >
+          <primary.Icon aria-hidden className="h-4 w-4" />
+          {primary.label}
+        </a>
+      ) : null}
+      <ListingMenu publicHref={publicHref} manage={manage} />
+    </>
   );
-}
-
-function ListingImage({ listing }: { listing: MeListing }) {
-  const src = coverSource(listing);
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    if (!src) {
-      setUrl(null);
-      return;
-    }
-    let cancelled = false;
-    let objectUrl: string | null = null;
-    const token = getPublicAccessToken();
-    void fetch(src, {
-      credentials: 'include',
-      headers: {
-        Accept: 'image/*',
-        'X-ACOMI-CLIENT': 'WEB',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-    })
-      .then(async (response) => {
-        if (!response.ok) return null;
-        return response.blob();
-      })
-      .then((blob) => {
-        if (!blob || cancelled || !blob.type.startsWith('image/')) return;
-        objectUrl = URL.createObjectURL(blob);
-        setUrl(objectUrl);
-      })
-      .catch(() => {
-        if (!cancelled) setUrl(null);
-      });
-    return () => {
-      cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
-  }, [src]);
-
-  return (
-    <div className="flex h-36 items-center justify-center bg-soft">
-      {url ? (
-        <img src={url} alt="" className="h-full w-full object-cover" />
-      ) : listing.kind === 'MESS' ? (
-        <UtensilsCrossed className="h-7 w-7 text-text-secondary" aria-hidden />
-      ) : (
-        <Building2 className="h-7 w-7 text-text-secondary" aria-hidden />
-      )}
-    </div>
-  );
-}
-
-function ListingEditor({
-  listing,
-  onClose,
-  onSaved,
-}: {
-  listing: MeListing;
-  onClose: () => void;
-  onSaved: () => Promise<void>;
-}) {
-  const { t } = useTranslation();
-  const mess = listing.kind === 'MESS';
-  const [name, setName] = useState(listing.name ?? '');
-  const [address, setAddress] = useState(listing.address ?? '');
-  const [city, setCity] = useState(listing.city ?? '');
-  const [state, setState] = useState(listing.state ?? '');
-  const [pincode, setPincode] = useState(listing.pincode ?? '');
-  const [description, setDescription] = useState(listing.description ?? '');
-  const [contact, setContact] = useState(listing.contactNumber ?? '');
-  const [gender, setGender] = useState(listing.genderPolicy ?? '');
-  const [food, setFood] = useState(Boolean(listing.foodIncluded));
-  const [startingPrice, setStartingPrice] = useState(listing.startingPrice != null ? String(listing.startingPrice) : '');
-  const [monthlyPrice, setMonthlyPrice] = useState(listing.monthlyPrice != null ? String(listing.monthlyPrice) : '');
-  const [mealPrice, setMealPrice] = useState(listing.mealPrice != null ? String(listing.mealPrice) : '');
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function save() {
-    setSaving(true);
-    setError(null);
-    const price = (value: string) => {
-      const trimmed = value.trim();
-      if (!trimmed) return undefined;
-      const parsed = Number(trimmed);
-      return Number.isFinite(parsed) ? parsed : undefined;
-    };
-    try {
-      if (listing.publication === 'LIVE' && listing.spaceId) {
-        const body: ListingCatalogUpdate = {
-          name: name.trim(),
-          address: address.trim(),
-          city: city.trim(),
-          state: state.trim(),
-          pincode: pincode.trim(),
-          description: description.trim(),
-          genderPolicy: gender || undefined,
-          foodIncludedInRent: food,
-        };
-        if (listing.publication === 'LIVE') {
-          body.contactNumber = contact.trim();
-        }
-        if (mess) {
-          const monthly = price(monthlyPrice);
-          const meal = price(mealPrice);
-          if (monthly != null) body.monthlyPrice = monthly;
-          if (meal != null) body.mealPrice = meal;
-        } else {
-          const starting = price(startingPrice);
-          if (starting != null) body.startingPrice = starting;
-        }
-        await updateLiveListing(listing.spaceId, body);
-      } else if (listing.registrationId && mess) {
-        await updateMessLead(listing.registrationId, {
-          messName: name.trim(),
-          addressLine: address.trim(),
-          city: city.trim(),
-          state: state.trim(),
-          pincode: pincode.trim(),
-          description: description.trim(),
-          genderPolicy: gender || undefined,
-          foodIncludedListing: food,
-          monthlyPrice: price(monthlyPrice),
-          mealPrice: price(mealPrice),
-        });
-      } else if (listing.registrationId) {
-        await updatePropertyLead(listing.registrationId, {
-          propertyName: name.trim(),
-          addressLine: address.trim(),
-          city: city.trim(),
-          state: state.trim(),
-          pincode: pincode.trim(),
-          description: description.trim(),
-          genderPolicy: gender || undefined,
-          foodIncludedListing: food,
-          startingPrice: price(startingPrice),
-        });
-      }
-      await onSaved();
-    } catch (err) {
-      setError(err instanceof PublicApiError ? err.message : t('mySpaces.saveFailed'));
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  return (
-    <form
-      className="mt-6 rounded-[24px] border border-black/5 bg-white p-5"
-      onSubmit={(event) => {
-        event.preventDefault();
-        void save();
-      }}
-    >
-      <h2 className="text-lg font-semibold text-navy">{t('mySpaces.edit')}</h2>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <Field label={t('mySpaces.name')} value={name} onChange={setName} required />
-        <Field label={t('mySpaces.address')} value={address} onChange={setAddress} />
-        <Field label={t('mySpaces.city')} value={city} onChange={setCity} />
-        <Field label={t('mySpaces.state')} value={state} onChange={setState} />
-        <Field label={t('mySpaces.pincode')} value={pincode} onChange={setPincode} />
-        {listing.publication === 'LIVE' ? (
-          <Field label={t('mySpaces.contact')} value={contact} onChange={setContact} />
-        ) : null}
-        {mess ? (
-          <>
-            <Field label={t('mySpaces.monthlyPrice')} value={monthlyPrice} onChange={setMonthlyPrice} inputMode="decimal" />
-            <Field label={t('mySpaces.mealPrice')} value={mealPrice} onChange={setMealPrice} inputMode="decimal" />
-          </>
-        ) : (
-          <Field label={t('mySpaces.startingPrice')} value={startingPrice} onChange={setStartingPrice} inputMode="decimal" />
-        )}
-        <label className="block text-sm">
-          <span className="font-medium text-navy">{t('mySpaces.gender')}</span>
-          <select
-            value={gender}
-            onChange={(event) => setGender(event.target.value)}
-            className="mt-1 h-11 w-full rounded-xl border border-black/10 bg-white px-3"
-          >
-            <option value="">—</option>
-            <option value="MALE">MALE</option>
-            <option value="FEMALE">FEMALE</option>
-            <option value="MIXED">MIXED</option>
-          </select>
-        </label>
-        <label className="flex items-center gap-2 self-end text-sm font-medium text-navy">
-          <input type="checkbox" checked={food} onChange={(event) => setFood(event.target.checked)} />
-          {t('mySpaces.foodIncluded')}
-        </label>
-        <label className="block text-sm sm:col-span-2">
-          <span className="font-medium text-navy">{t('mySpaces.description')}</span>
-          <textarea
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            rows={3}
-            className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2"
-          />
-        </label>
-      </div>
-      {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
-      <div className="mt-4 flex gap-2">
-        <ActionButton type="submit" disabled={saving}>
-          {t('mySpaces.save')}
-        </ActionButton>
-        <ActionButton variant="ghost" onClick={onClose} disabled={saving}>
-          {t('mySpaces.cancel')}
-        </ActionButton>
-      </div>
-    </form>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  required,
-  inputMode,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  required?: boolean;
-  inputMode?: 'decimal' | 'text';
-}) {
-  return (
-    <label className="block text-sm">
-      <span className="font-medium text-navy">{label}</span>
-      <input
-        required={required}
-        inputMode={inputMode}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="mt-1 h-11 w-full rounded-xl border border-black/10 px-3"
+  if (listing.kind === 'MESS') {
+    const card = toMessCardListing(listing);
+    return (
+      <MessCard
+        listing={card}
+        saved={isSaved(card.id)}
+        onSelect={openPublic}
+        onOpenSection={openPublic}
+        onToggleSave={() => {
+          if (!listing.spaceId) return;
+          toggleFavorite({
+            id: cardId,
+            kind: 'meals',
+            name: listing.name,
+            detail: [listing.city, listing.state].filter(Boolean).join(', '),
+          });
+        }}
+        onEnquire={openPublic}
+        actions={actions}
       />
-    </label>
+    );
+  }
+  const card = toPropertyCardListing(listing);
+  return (
+    <PropertyCard
+      listing={card}
+      saved={isSaved(card.id)}
+      onSelect={openPublic}
+      onOpenSection={openPublic}
+      onToggleSave={() => {
+        if (!listing.spaceId) return;
+        toggleFavorite({
+          id: cardId,
+          kind: 'places',
+          name: listing.name,
+          detail: [listing.city, listing.state].filter(Boolean).join(', '),
+        });
+      }}
+      onEnquire={openPublic}
+      actions={actions}
+    />
+  );
+}
+
+function ListingMenu({ publicHref, manage }: { publicHref: string | null; manage: string | null }) {
+  const { t } = useTranslation();
+  if (!publicHref && !manage) return null;
+  return (
+    <details className="relative shrink-0">
+      <summary
+        aria-label={t('mySpaces.moreActions')}
+        className="inline-flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-xl border border-black/10 text-navy [&::-webkit-details-marker]:hidden"
+      >
+        <MoreHorizontal aria-hidden className="h-4 w-4" />
+      </summary>
+      <div className="absolute right-0 bottom-12 z-10 min-w-44 rounded-xl border border-black/10 bg-white p-1 shadow-[var(--shadow-sm)]">
+        {publicHref ? (
+          <Link to={publicHref} className="block rounded-lg px-3 py-2 text-sm font-semibold text-navy hover:bg-soft">
+            {t('mySpaces.viewPublic')}
+          </Link>
+        ) : null}
+        {manage ? (
+          <a href={manage} className="block rounded-lg px-3 py-2 text-sm font-semibold text-navy hover:bg-soft">
+            {t('mySpaces.manage')}
+          </a>
+        ) : null}
+      </div>
+    </details>
   );
 }
 
@@ -528,11 +498,37 @@ function FilterChip({
       role="tab"
       aria-selected={selected}
       onClick={onClick}
-      className={`rounded-full border px-3 py-1.5 text-sm font-semibold ${
-        selected ? 'border-primary bg-primary text-white' : 'border-black/10 bg-white text-navy'
+      className={`min-h-11 rounded-full border px-3.5 text-sm font-semibold ${
+        selected ? 'border-register bg-register text-white hover:bg-register-hover' : 'border-black/10 bg-white text-navy'
       }`}
     >
       {label}
     </button>
+  );
+}
+
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  children: ReactNode;
+}) {
+  return (
+    <label className="block min-w-0 lg:min-w-36">
+      <span className="sr-only">{label}</span>
+      <select
+        aria-label={label}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-11 w-full rounded-xl border border-black/10 bg-white px-3 text-sm font-medium text-navy outline-none focus-visible:ring-2 focus-visible:ring-register"
+      >
+        {children}
+      </select>
+    </label>
   );
 }

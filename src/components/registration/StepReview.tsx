@@ -10,6 +10,7 @@ type StepReviewProps = {
   form: RegistrationForm;
   kind: ListingKind;
   photos: SelectedListingPhoto[];
+  keepCurrentPhotos?: boolean;
   onEditStep: (step: number) => void;
 };
 
@@ -41,7 +42,7 @@ function ReviewRow({
   );
 }
 
-export function StepReview({ form, kind, photos, onEditStep }: StepReviewProps) {
+export function StepReview({ form, kind, photos, keepCurrentPhotos = false, onEditStep }: StepReviewProps) {
   const option = form.propertyType ? getPropertyTypeOption(form.propertyType) : null;
   const price = Number(form.startingPrice);
   const mealPrice = Number(form.mealPrice);
@@ -76,7 +77,13 @@ export function StepReview({ form, kind, photos, onEditStep }: StepReviewProps) 
         {form.capacityEstimate ? <ReviewRow label="Capacity" value={form.capacityEstimate} /> : null}
         <ReviewRow
           label="Photos"
-          value={photos.length === 0 ? 'None' : `${photos.length} of 3`}
+          value={
+            photos.length === 0
+              ? keepCurrentPhotos
+                ? 'Current photos kept'
+                : 'None'
+              : `${photos.length} of 3`
+          }
           onEdit={() => onEditStep(4)}
         />
       </dl>

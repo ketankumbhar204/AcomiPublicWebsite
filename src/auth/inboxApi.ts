@@ -9,6 +9,7 @@ import type {
 
 type Paged<T> = {
   content: T[];
+  totalElements?: number;
 };
 
 export function listMyNotifications(page = 0, size = 20): Promise<UserNotificationList> {

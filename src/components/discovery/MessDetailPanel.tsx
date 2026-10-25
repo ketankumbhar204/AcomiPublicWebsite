@@ -18,7 +18,9 @@ import { ListingPrice } from './ListingPrice';
 import { priceBasisLabel } from '../../lib/priceBasis';
 import { ListingUnavailableDetails } from './ListingUnavailableDetails';
 import { PhotoRequestAction } from './PhotoRequestAction';
+import { useListingExtrasGate } from './useListingExtrasGate';
 import { hasActualListingPhotos } from '../../lib/photoRequest';
+import { OwnerListingActions, useMyListing } from './OwnerListingActions';
 import { OwnerContactCard, type RevealedOwnerContact } from './OwnerContactCard';
 import { usePersistedRevealedContact } from './usePersistedRevealedContact';
 import { scrollToListingSection, useScrollToListingSection } from '../../lib/scrollToListingSection';
@@ -47,10 +49,16 @@ export function MessDetailPanel({
   const contactViewed = useContactViewed(listing.id);
   const inquiry = useInquiryRecord(listing.id);
   const reveal = useDirectContactReveal(listing.id, true);
-  const contact = usePersistedRevealedContact(listing.id, reveal.contact ?? revealedContact);
+  const persistedContact = usePersistedRevealedContact(listing.id, reveal.contact ?? revealedContact);
+  const contact = persistedContact.contact;
+  const contactLoading =
+    persistedContact.loading || ((reveal.phase === 'checking' || reveal.phase === 'revealing') && !contact);
   const sendingEnquiry = useIsEnquirySending(listing.id);
-  const isOwnListing = reveal.phase === 'own';
+  const mine = useMyListing(listing.id);
+  const isOwnListing = reveal.phase === 'own' || Boolean(mine);
   const unlocked = Boolean(contact) || contactViewed || alreadyInquired || isOwnListing;
+  const extras = useListingExtrasGate(listing.id, Boolean(contact) || contactViewed || alreadyInquired);
+  extras.mapHrefRef.current = listing.mapUrl ?? '';
   const amenityCodes = listing.amenityCodes ?? [];
   useScrollToListingSection(focusSection, true, focusToken);
 
@@ -68,11 +76,18 @@ export function MessDetailPanel({
         <h2 className="text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
         <ListingSaveButton id={listing.id} name={listing.name} kind="meals" detail={address} />
       </div>
+      <OwnerListingActions listing={mine} />
       <div id={listingSectionElementId('contact')}>
         {contactViewed ? (
           <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
         ) : null}
-        <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+        <OwnerContactCard
+          contact={contact}
+          mapUrl={listing.mapUrl}
+          loading={contactLoading}
+          error={persistedContact.error || (reveal.phase === 'error' && !contact)}
+          onRetry={persistedContact.error ? persistedContact.retry : reveal.retry}
+        />
       </div>
       {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
       <div id={listingSectionElementId('address')}>
@@ -162,6 +177,7 @@ export function MessDetailPanel({
         ) : null}
       </div>
       <ListingUnavailableDetails hidePhotos={hasActualListingPhotos(meta.images)} />
+      {isOwnListing ? null : (
       <PhotoRequestAction
         kind="mess"
         name={listing.name}
@@ -174,14 +190,17 @@ export function MessDetailPanel({
             : []
         }
         contactAuthorized={Boolean(contact)}
-        onNeedContact={contact || contactViewed || isOwnListing ? undefined : onEnquire}
+        onBeforeOpen={() => extras.hold('photos')}
+        openToken={extras.photoOpenToken}
+        onNeedContact={contact || contactViewed ? undefined : onEnquire}
       />
+      )}
       <div className="mt-auto pt-5">
         <ListingCardMeta
           listing={listing}
           showMaps={Boolean(listing.mapUrl?.trim())}
-          mapHref={unlocked ? listing.mapUrl : undefined}
-          onEnquire={unlocked ? undefined : onEnquire}
+          mapHref={extras.allowed ? listing.mapUrl : undefined}
+          onEnquire={extras.allowed ? undefined : () => extras.hold('map')}
           chips={
             <ListingInfoChips
               listing={{ ...listing, mealsServed: meals }}
@@ -194,7 +213,7 @@ export function MessDetailPanel({
         <ListingContactCta
           listingId={listing.id}
           listingName={listing.name}
-          phase={reveal.phase}
+          phase={isOwnListing ? 'own' : reveal.phase}
           alreadyInquired={alreadyInquired}
           contactViewed={contactViewed}
           sendingEnquiry={sendingEnquiry}
@@ -205,6 +224,7 @@ export function MessDetailPanel({
           {t('discovery.openFullPage')}
         </Link>
       </div>
+      {extras.dialog}
     </div>
   );
 }
