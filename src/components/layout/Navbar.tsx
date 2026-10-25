@@ -119,6 +119,9 @@ export function Navbar() {
             <NavLink to="/meals" className="px-1 py-3 text-sm font-medium text-text" onClick={() => setOpen(false)}>
               {t('nav.meals', { defaultValue: 'Meals' })}
             </NavLink>
+            <NavLink to="/favorites" className="px-1 py-3 text-sm font-medium text-text" onClick={() => setOpen(false)}>
+              {t('favorites.open', { defaultValue: 'Favorites' })}
+            </NavLink>
             <p className="mt-2 px-1 text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">
               {t('nav.explore')}
             </p>

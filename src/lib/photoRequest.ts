@@ -50,6 +50,7 @@ export function friendlySpaceType(type: string | null | undefined): string | nul
   if (key === 'HOSTEL') return 'Hostel';
   if (key === 'CO_LIVING' || key === 'COLIVING') return 'Co-living';
   if (key === 'RENTAL') return 'Rental';
+  if (key === 'CORPORATE_STAY') return 'Corporate Stay';
   return null;
 }
 

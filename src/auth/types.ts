@@ -103,6 +103,7 @@ export type ReceivedEnquiry = {
   requesterName?: string | null;
   requesterEmail?: string | null;
   requesterMobile?: string | null;
+  requesterType?: 'MEMBER' | 'OWNER' | null;
   status: string;
   requestedAt: string;
   expiresAt?: string | null;

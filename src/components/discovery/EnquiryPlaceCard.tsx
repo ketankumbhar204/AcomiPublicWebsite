@@ -34,7 +34,7 @@ function highlightAmenity(enquiry: SpaceEnquiryResponse, mealsIncluded: string):
 
 export function EnquiryPlaceCard({ enquiry, active = false, onOpen }: EnquiryPlaceCardProps) {
   const { t, i18n } = useTranslation();
-  const typeKey = enquiry.spaceType && ['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING', 'MESS'].includes(enquiry.spaceType)
+  const typeKey = enquiry.spaceType && ['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING', 'CORPORATE_STAY', 'MESS'].includes(enquiry.spaceType)
     ? enquiry.spaceType
     : 'PG';
   const typeLabel = t(`enquiries.placeType.${typeKey}`);

@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test:auth": "node scripts/check-public-auth.mjs && node scripts/test-post-login-destination.mjs",
     "test:auth-flows": "node scripts/test-public-auth-flows.mjs",
-    "test:location": "node scripts/check-location-selector.mjs && node scripts/check-places-location.mjs && node scripts/check-places-pagination.mjs && node scripts/check-listing-info.mjs && node scripts/check-representative-images.mjs && node scripts/check-meals-discovery.mjs"
+    "test:location": "node scripts/check-location-selector.mjs && node scripts/check-places-location.mjs && node scripts/check-places-pagination.mjs && node scripts/check-listing-info.mjs && node scripts/check-representative-images.mjs && node scripts/check-meals-discovery.mjs",
+    "test:my-spaces": "node scripts/check-my-spaces.mjs"
   },
   "dependencies": {
     "i18next": "^26.4.2",

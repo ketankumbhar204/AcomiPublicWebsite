@@ -1,4 +1,7 @@
 import { publicApi } from '../lib/apiClient';
+import { canViewContactDirectly } from './contactViewQuota';
+
+export { canViewContactDirectly };
 
 // ─── Types (mirroring backend DTOs) ────────────────────────────────────────
 

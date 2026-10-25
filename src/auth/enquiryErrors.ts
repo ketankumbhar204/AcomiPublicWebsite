@@ -19,6 +19,9 @@ export function enquiryErrorMessage(error: unknown, fallback: string, listingUna
     return listingUnavailable;
   }
   if (error instanceof PublicApiError) {
+    if (error.errorCode === 'SELF_ENQUIRY_NOT_ALLOWED') {
+      return error.message?.trim() || 'This is your Space. Contact enquiry is not available for your own listing.';
+    }
     if (error.errorCode === 'WEB_FREE_LIMIT_REACHED' || error.errorCode === 'INQUIRY_CREDITS_REQUIRED') {
       return error.message?.trim() || 'Your free enquiries are used. Purchase credits or use the ACOMI app.';
     }

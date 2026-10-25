@@ -12,9 +12,10 @@ const LABELS: Record<PriceBasis, string> = {
   PER_UNIT: 'per month',
 };
 
-export function defaultPriceBasis(type: PropertyType | null | undefined): PriceBasis {
+export function defaultPriceBasis(type: PropertyType | null | undefined): PriceBasis | null {
   if (type === 'PG' || type === 'HOSTEL') return 'PER_BED';
   if (type === 'CO_LIVING') return 'PER_ROOM';
+  if (type === 'CORPORATE_STAY') return null;
   return 'PER_UNIT';
 }
 
@@ -26,5 +27,6 @@ export function priceBasisLabel(value: string | null | undefined, type?: string 
   if (isPriceBasis(value)) return LABELS[value];
   if (type === 'PG' || type === 'HOSTEL') return LABELS.PER_BED;
   if (type === 'CO_LIVING') return LABELS.PER_ROOM;
+  if (type === 'CORPORATE_STAY') return 'choose per bed, room, or unit';
   return LABELS.PER_UNIT;
 }

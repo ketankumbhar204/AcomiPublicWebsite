@@ -14,3 +14,6 @@ export const API_BASE_URL = readApiBaseUrl();
 /** Local Vite + local API only — never shown in production builds. */
 export const IS_LOCAL_DEV =
   import.meta.env.DEV && /localhost|127\.0\.0\.1/.test(API_BASE_URL);
+
+/** Listing OTP skip marker. Backend accepts this only when skip-registration-otp is on. */
+export const LOCAL_LISTING_OTP_SKIP_TOKEN = 'local-dev-listing-otp-skip';

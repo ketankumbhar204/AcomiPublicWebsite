@@ -25,6 +25,10 @@ type StepVerifyProps = {
   /** Called with the freshly typed code on autofill, and with nothing from the button. */
   onVerifyOtp: (value?: string) => void;
   onChangeNumber: () => void;
+  /** Local Vite + local API only. Never rendered in production builds. */
+  allowLocalSkip?: boolean;
+  localSkipChecked?: boolean;
+  onLocalSkipChange?: (checked: boolean) => void;
 };
 
 export function StepVerify({
@@ -43,6 +47,9 @@ export function StepVerify({
   onSendOtp,
   onVerifyOtp,
   onChangeNumber,
+  allowLocalSkip = false,
+  localSkipChecked = false,
+  onLocalSkipChange,
 }: StepVerifyProps) {
   const locked = phase !== 'idle';
 
@@ -144,6 +151,21 @@ export function StepVerify({
           <CheckCircle2 aria-hidden className="h-4 w-4" />
           Mobile verified
         </p>
+      ) : null}
+
+      {allowLocalSkip ? (
+        <label className="flex items-start gap-2.5 rounded-lg bg-background px-3 py-2.5 text-[13px] text-text-secondary">
+          <input
+            type="checkbox"
+            checked={localSkipChecked}
+            onChange={(event) => onLocalSkipChange?.(event.target.checked)}
+            className="mt-0.5 h-4 w-4 accent-register"
+          />
+          <span>
+            <span className="font-semibold text-text">Local test</span>
+            {' — '}skip OTP for this listing. Uses the number above (logged-in or test). Never shown in production.
+          </span>
+        </label>
       ) : null}
     </div>
   );

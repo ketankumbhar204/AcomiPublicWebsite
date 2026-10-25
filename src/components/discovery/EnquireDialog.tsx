@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   AlertCircle,
@@ -28,16 +28,15 @@ import type { RevealedOwnerContact } from './OwnerContactCard';
 import type { EnquireListingKind } from '../../constants/links';
 import { openAcomiAndroidApp } from '../../lib/openAcomiAndroidApp';
 import {
+  canViewContactDirectly,
   fetchInquiryPaymentConfig,
   fetchInquiryQuota,
-  resetInquiryQuota,
-  type InquiryCreditPackage,
-  type InquiryQuota,
-} from '../../auth/inquiryCreditsApi';
-import {
   isUnlimitedQuota,
   needsInquiryPayment,
   paidCreditsOf,
+  resetInquiryQuota,
+  type InquiryCreditPackage,
+  type InquiryQuota,
 } from '../../auth/inquiryCreditsApi';
 import { IS_LOCAL_DEV } from '../../config/env';
 import type { PublicUser, SpaceEnquiryResponse } from '../../auth/types';
@@ -301,19 +300,27 @@ export function EnquireDialog({
   const [pendingIntent, setPendingIntent] = useState<SubmitIntent | null>(null);
   const [bootLoading, setBootLoading] = useState(false);
   const [quota, setQuota] = useState<InquiryQuota | null>(null);
+  const [quotaSettled, setQuotaSettled] = useState(false);
   const [offerPkg, setOfferPkg] = useState<InquiryCreditPackage | null>(null);
   const busyRef = useRef(false);
   const preserveOnCloseRef = useRef(false);
   const initKeyRef = useRef<string | null>(null);
+  const directViewRef = useRef(false);
+  const quotaGenRef = useRef(0);
 
   async function refreshQuota() {
     if (!isAuthenticated) {
+      setQuotaSettled(true);
       return;
     }
+    const gen = ++quotaGenRef.current;
     try {
-      setQuota(await fetchInquiryQuota());
+      const next = await fetchInquiryQuota();
+      if (gen === quotaGenRef.current) setQuota(next);
     } catch {
       // Keep the last known remaining rather than pretending the daily quota is full.
+    } finally {
+      if (gen === quotaGenRef.current) setQuotaSettled(true);
     }
   }
 
@@ -492,7 +499,7 @@ export function EnquireDialog({
           setStep('limit');
           return;
         }
-        if (err.errorCode === 'VIEW_HERE_LIMIT_REACHED') {
+        if (err.errorCode === 'VIEW_HERE_LIMIT_REACHED' || err.errorCode === 'VIEW_HERE_DISABLED') {
           void refreshQuota();
           setStep('choose');
           return;
@@ -718,6 +725,9 @@ export function EnquireDialog({
       setDeliveredAtLabel('');
       setResultEmail('');
       setStep('gate');
+      setQuota(null);
+      setQuotaSettled(false);
+      directViewRef.current = false;
       return;
     }
 
@@ -726,6 +736,21 @@ export function EnquireDialog({
       return;
     }
     setBootLoading(false);
+
+    const initKey = `${listingId}|${isAuthenticated ? user?.id ?? 'auth' : 'anon'}`;
+    const isNewOpen = initKeyRef.current !== initKey;
+    if (isNewOpen) {
+      initKeyRef.current = initKey;
+      directViewRef.current = false;
+      setQuotaSettled(false);
+      setSubmitted(null);
+      setPendingIntent(null);
+      setError(null);
+      setDeliveredAtLabel('');
+      setResultEmail('');
+      setEmail(savedEmails[0] ?? user?.email?.trim() ?? '');
+      setStep(isAuthenticated ? 'choose' : 'gate');
+    }
 
     if (isAuthenticated) {
       void refreshQuota();
@@ -742,21 +767,9 @@ export function EnquireDialog({
             // Leave the offer blank until the configured package can be loaded.
           });
       }
+    } else if (isNewOpen) {
+      setQuotaSettled(true);
     }
-
-    const initKey = `${listingId}|${isAuthenticated ? user?.id ?? 'auth' : 'anon'}`;
-    if (initKeyRef.current === initKey) {
-      return;
-    }
-    initKeyRef.current = initKey;
-
-    setSubmitted(null);
-    setPendingIntent(null);
-    setError(null);
-    setDeliveredAtLabel('');
-    setResultEmail('');
-    setEmail(savedEmails[0] ?? user?.email?.trim() ?? '');
-    setStep(isAuthenticated ? 'choose' : 'gate');
   }, [open, listingId, isAuthenticated, isBootstrapping, user?.id, savedEmails, user?.email]);
 
   useEffect(() => {
@@ -789,8 +802,16 @@ export function EnquireDialog({
   const showPaidRemaining = remainingKnown && remainingToday <= 0 && paidLeft > 0;
   const viewHereLimit = quota?.viewHereDailyLimit ?? 0;
   const viewHereRemaining = quota?.viewHereRemainingToday ?? 0;
-  const showViewHere = viewHereLimit > 0 && viewHereRemaining > 0 && !remainingExhausted;
-  const showViewHereExhausted = viewHereLimit > 0 && viewHereRemaining <= 0 && !remainingExhausted;
+  const showViewHere = canViewContactDirectly(quota);
+  const showViewHereExhausted = viewHereLimit > 0 && viewHereRemaining <= 0;
+
+  useLayoutEffect(() => {
+    if (!open || !isAuthenticated || step !== 'choose' || !quotaSettled || !showViewHere || directViewRef.current) {
+      return;
+    }
+    directViewRef.current = true;
+    void onViewHere();
+  }, [open, isAuthenticated, step, quotaSettled, showViewHere]);
 
   return (
     <Modal
@@ -887,6 +908,10 @@ export function EnquireDialog({
               {t('auth.continueBrowsing')}
             </ActionButton>
           </div>
+        </div>
+      ) : step === 'choose' && isAuthenticated && !quotaSettled ? (
+        <div className="py-4 text-center" role="status" aria-live="polite" aria-busy="true">
+          <RequestLoader intent="view" />
         </div>
       ) : step === 'choose' ? (
         <div className="text-center">

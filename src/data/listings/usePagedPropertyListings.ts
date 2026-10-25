@@ -32,7 +32,7 @@ export type PagedPropertyListings = {
   reload: () => void;
 };
 
-const PROPERTY_TYPES = ['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING'] as const;
+const PROPERTY_TYPES = ['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING', 'CORPORATE_STAY'] as const;
 
 export function placesDiscoverFilterKey(filters: PagedPropertyFilters): string {
   return JSON.stringify({

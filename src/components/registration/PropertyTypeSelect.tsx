@@ -33,6 +33,13 @@ const CARD_TONE: Record<
     iconWrap: 'bg-white/80 text-[#2F62B8]',
     icon: 'text-[#2F62B8]',
   },
+  CORPORATE_STAY: {
+    idle: 'border-[#B7E4DE] bg-[#F0FDFA]',
+    hover: 'hover:border-[#0F766E]/45 hover:bg-[#CCFBF1]',
+    selected: 'border-[#0F766E] bg-[#CCFBF1] shadow-[0_0_0_1px_#0F766E]',
+    iconWrap: 'bg-white/80 text-[#0F766E]',
+    icon: 'text-[#0F766E]',
+  },
   CO_LIVING: {
     idle: 'border-[#F5D9B8] bg-[#FFF4EA]',
     hover: 'hover:border-[#E09A4A]/50 hover:bg-[#FFEDD9]',

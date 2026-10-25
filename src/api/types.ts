@@ -9,6 +9,10 @@ export type SendOtpResponse = {
   /** Seconds the visitor must wait before a resend is accepted. */
   resendAfter: number;
   message?: string;
+  /** True only when the local API skipped SMS and issued a token. */
+  otpSkipped?: boolean;
+  /** Present only when otpSkipped is true. */
+  verificationToken?: string;
 };
 
 export type VerifyOtpResponse = {
@@ -18,7 +22,7 @@ export type VerifyOtpResponse = {
   expiresIn: number;
 };
 
-export type PropertyType = 'PG' | 'HOSTEL' | 'CO_LIVING' | 'RENTAL' | 'MESS';
+export type PropertyType = 'PG' | 'HOSTEL' | 'CO_LIVING' | 'RENTAL' | 'CORPORATE_STAY' | 'MESS';
 
 export type PriceBasis = 'PER_BED' | 'PER_ROOM' | 'PER_UNIT';
 

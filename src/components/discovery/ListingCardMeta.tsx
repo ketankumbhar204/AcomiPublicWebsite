@@ -28,6 +28,7 @@ export function ListingCardMeta({ chips, showMaps = true, mapHref, compact = fal
 
   return (
     <div className={`rounded-2xl bg-[#EAF8F2] ${compact ? 'mt-1.5 p-2' : 'mt-2 p-2.5'}`}>
+      <div id="listing-section-map">
       {showMaps ? (
         mapHref?.trim() ? (
           <a
@@ -79,6 +80,7 @@ export function ListingCardMeta({ chips, showMaps = true, mapHref, compact = fal
           </div>
         )
       ) : null}
+      </div>
       <div className={showMaps ? 'mt-2' : undefined}>
         <p className={`inline-flex items-center gap-1 text-[10px] font-semibold tracking-[0.12em] text-[#0F6B4C] uppercase ${compact ? 'mb-1' : 'mb-1.5'}`}>
           <BadgeCheck aria-hidden className="h-3.5 w-3.5" />

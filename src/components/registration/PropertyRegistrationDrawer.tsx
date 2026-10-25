@@ -3,6 +3,9 @@ import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { sendOtp, verifyOtp } from '../../api/authApi';
 import { createMessRegistration } from '../../api/messRegistrationApi';
 import { createPropertyRegistration } from '../../api/propertyRegistrationApi';
+import { useAuth } from '../../auth/AuthProvider';
+import { IS_LOCAL_DEV, LOCAL_LISTING_OTP_SKIP_TOKEN } from '../../config/env';
+import { normalizeMobile } from '../../lib/indianMobile';
 import {
   isVerificationExpired,
   sendOtpErrorMessage,
@@ -100,6 +103,7 @@ function formForKind(kind: ListingKind, form: RegistrationForm): RegistrationFor
 
 export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegistrationDrawerProps) {
   const copy = LISTING_COPY[kind];
+  const { user } = useAuth();
   const restored = useRef(readDraft(copy.draftKey)).current;
 
   const [step, setStep] = useState(restored.step);
@@ -120,6 +124,7 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
 
   const [photos, setPhotos] = useState<SelectedListingPhoto[]>([]);
   const [result, setResult] = useState<{ reference: string } | null>(null);
+  const [localSkipChecked, setLocalSkipChecked] = useState(false);
   const otpPurpose = kind === 'mess' ? MESS_OTP_PURPOSE : PROPERTY_OTP_PURPOSE;
 
   const bodyRef = useRef<HTMLDivElement | null>(null);
@@ -225,8 +230,13 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
     }
     skipPersist.current = true;
     const restoredDraft = readDraft(copy.draftKey);
-    setForm(formForKind(kind, restoredDraft.form));
+    const nextForm = formForKind(kind, restoredDraft.form);
+    if (!nextForm.mobileNumber && user?.mobileNumber) {
+      nextForm.mobileNumber = normalizeMobile(user.mobileNumber);
+    }
+    setForm(nextForm);
     setStep(kind === kindRef.current ? Math.min(restoredDraft.step, 3) : 1);
+    setLocalSkipChecked(false);
     setPhotos((current) => {
       current.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
       return [];
@@ -235,7 +245,7 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
     setResult(null);
     resetVerification();
     kindRef.current = kind;
-  }, [open, kind, copy.draftKey]);
+  }, [open, kind, copy.draftKey, user?.mobileNumber]);
 
   async function handleSendOtp() {
     const found = validateMobile(form);
@@ -257,6 +267,23 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
     } finally {
       setSending(false);
     }
+  }
+
+  function handleSkipOtp() {
+    if (!IS_LOCAL_DEV || !localSkipChecked) {
+      return;
+    }
+    const found = validateMobile(form);
+    if (Object.keys(found).length > 0) {
+      setErrors(found);
+      return;
+    }
+    setSendError(null);
+    setVerifyError(null);
+    setOtp('');
+    setVerificationToken(LOCAL_LISTING_OTP_SKIP_TOKEN);
+    setPhase('verified');
+    goToStep(4);
   }
 
   async function handleVerifyOtp(candidate = otp) {
@@ -402,6 +429,9 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
                 onSendOtp={handleSendOtp}
                 onVerifyOtp={handleVerifyOtp}
                 onChangeNumber={resetVerification}
+                allowLocalSkip={IS_LOCAL_DEV}
+                localSkipChecked={localSkipChecked}
+                onLocalSkipChange={setLocalSkipChecked}
               />
             ) : null}
             {step === 4 && phase === 'verified' ? (
@@ -423,6 +453,14 @@ export function PropertyRegistrationDrawer({ open, kind, onClose }: PropertyRegi
                 <SecondaryButton onClick={() => goToStep(step - 1)}>
                   <ArrowLeft aria-hidden className="h-4 w-4" />
                   Back
+                </SecondaryButton>
+              ) : null}
+              {IS_LOCAL_DEV && step === 3 && phase !== 'verified' ? (
+                <SecondaryButton
+                  onClick={handleSkipOtp}
+                  disabled={!localSkipChecked || form.mobileNumber.length !== 10}
+                >
+                  Skip OTP
                 </SecondaryButton>
               ) : null}
               {step < LAST_STEP ? (

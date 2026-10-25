@@ -1,4 +1,4 @@
-import { BedDouble, Building2, Home, Users } from 'lucide-react';
+import { BedDouble, Briefcase, Building2, Home, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { PropertyType } from '../api/types';
 import { PRESET_AMENITY_CODES, PRESET_AMENITY_LABELS } from '../lib/amenities';
@@ -46,6 +46,16 @@ export const PROPERTY_TYPE_OPTIONS: readonly PropertyTypeOption[] = [
     capacityLabel: 'Units',
     capacityPlaceholder: 'e.g. 4',
     supportsAmenities: false,
+  },
+  {
+    id: 'CORPORATE_STAY',
+    title: 'Corporate Stay',
+    subtitle: 'Company accommodation',
+    Icon: Briefcase,
+    priceSuffix: 'choose a unit',
+    capacityLabel: 'Units',
+    capacityPlaceholder: 'e.g. 4',
+    supportsAmenities: true,
   },
   {
     id: 'CO_LIVING',

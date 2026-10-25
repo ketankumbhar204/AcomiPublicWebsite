@@ -3,7 +3,14 @@ import { isPriceBasis } from '../../lib/priceBasis';
 import { firstVerifiedListingImageUrl } from './representativeImage';
 import type { FoodFilter, GenderFilter, MessListing, PropertyListing, PropertyListingType } from './types';
 
-const PROPERTY_TYPES = new Set<PropertyListingType>(['PG', 'HOSTEL', 'RENTAL', 'CO_LIVING', 'MESS']);
+const PROPERTY_TYPES = new Set<PropertyListingType>([
+  'PG',
+  'HOSTEL',
+  'RENTAL',
+  'CO_LIVING',
+  'CORPORATE_STAY',
+  'MESS',
+]);
 
 function text(value?: string | null): string {
   return value?.trim() ?? '';

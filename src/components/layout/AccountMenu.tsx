@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import {
   ChevronDown,
+  Building2,
   Home,
   Inbox,
   LayoutDashboard,
@@ -127,6 +128,11 @@ export function AccountMenu({ onNavigate }: AccountMenuProps) {
                 <LayoutDashboard className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
                 {t('nav.dashboard')}
               </a>
+
+              <NavLink to="/my-spaces" role="menuitem" className={itemClass} onClick={close}>
+                <Building2 className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
+                {t('nav.mySpaces')}
+              </NavLink>
 
               <a href={APP.enquiries} role="menuitem" className={itemClass} onClick={close}>
                 <Inbox className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden />

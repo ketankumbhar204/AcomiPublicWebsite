@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ButtonLink } from '../components/common/ButtonLink';
 import { useAlreadyInquired, useContactViewed, useInquiryRecord } from '../auth/useAlreadyInquired';
+import { useDirectContactReveal } from '../auth/useDirectContactReveal';
 import { useIsEnquirySending } from '../context/EnquiryFeedbackContext';
 import { GetContactDetailsButton } from '../components/discovery/GetContactDetailsButton';
+import { ListingContactCta } from '../components/discovery/ListingContactCta';
 import { EnquireDialog } from '../components/discovery/EnquireDialog';
 import { OwnerContactCard, type RevealedOwnerContact } from '../components/discovery/OwnerContactCard';
 import { usePersistedRevealedContact } from '../components/discovery/usePersistedRevealedContact';
-import { InquirySentBadge, InquirySentButton, InquirySentDetails } from '../components/discovery/InquirySentBadge';
+import { InquirySentBadge, InquirySentDetails } from '../components/discovery/InquirySentBadge';
 import { ListingCardMeta } from '../components/discovery/ListingCardMeta';
 import { ListingMapLink } from '../components/discovery/ListingMapLink';
 import { ListingFacts } from '../components/discovery/ListingFacts';
 import { priceBasisLabel } from '../lib/priceBasis';
 import { amenityDisplayLabel, amenityIcon } from '../components/discovery/listingIcons';
 import { ListingGallery } from '../components/discovery/ListingGallery';
+import { ListingSaveButton } from '../components/discovery/ListingSaveButton';
 import { ListingInfoChips } from '../components/discovery/ListingInfoChips';
 import { ListingUnavailableDetails } from '../components/discovery/ListingUnavailableDetails';
 import { PhotoRequestAction } from '../components/discovery/PhotoRequestAction';
@@ -24,14 +27,19 @@ import { ListingPrice } from '../components/discovery/ListingPrice';
 import { Container } from '../components/layout/Container';
 import { getDiscoverSpaceDetail } from '../data/listings/discoverApi';
 import { formatListingAddress } from '../data/listings';
+import { isListingSection, listingSectionElementId } from '../data/listings/listingInfo';
 import { toPropertyListing } from '../data/listings/mapDiscoverListing';
 import type { PropertyListing } from '../data/listings/types';
 import { applySeo } from '../lib/seo';
 import { takeEnquireResumeIntentForListing } from '../auth/enquireIntent';
+import { scrollToListingSection, useScrollToListingSection } from '../lib/scrollToListingSection';
 
 export function PropertyDetailPage() {
   const { t } = useTranslation();
   const { id = '' } = useParams();
+  const [searchParams] = useSearchParams();
+  const requestedSection = searchParams.get('section');
+  const focusSection = isListingSection(requestedSection) ? requestedSection : null;
   const [listing, setListing] = useState<PropertyListing | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
   const [enquireOpen, setEnquireOpen] = useState(false);
@@ -39,9 +47,12 @@ export function PropertyDetailPage() {
   const alreadyInquired = useAlreadyInquired(listing?.id);
   const contactViewed = useContactViewed(listing?.id);
   const inquiry = useInquiryRecord(listing?.id);
-  const contact = usePersistedRevealedContact(listing?.id ?? '', revealedContact);
-  const unlocked = Boolean(contact) || contactViewed || alreadyInquired;
+  const reveal = useDirectContactReveal(listing?.id, status === 'ready');
+  const contact = usePersistedRevealedContact(listing?.id ?? '', reveal.contact ?? revealedContact);
+  const isOwnListing = reveal.phase === 'own';
+  const unlocked = Boolean(contact) || contactViewed || alreadyInquired || isOwnListing;
   const sendingEnquiry = useIsEnquirySending(listing?.id ?? '');
+  useScrollToListingSection(focusSection, status === 'ready' && Boolean(listing));
 
   useEffect(() => {
     let cancelled = false;
@@ -143,6 +154,7 @@ export function PropertyDetailPage() {
           />
 
           <div className="rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
+            <div id={listingSectionElementId('food')}>
             <ListingFacts
               leading={
                 <span className="inline-flex items-center rounded-md bg-[#F4F7F5] px-2 py-1 text-[11px] leading-none font-semibold tracking-wide text-navy uppercase">
@@ -153,13 +165,20 @@ export function PropertyDetailPage() {
               sharingNotes={listing.sharingNotes}
               foodAvailability={listing.foodAvailability ?? (listing.foodIncludedInRent ? 'INCLUDED' : null)}
             />
+            </div>
             {alreadyInquired ? <InquirySentBadge /> : null}
-            <h1 className="mt-3 text-[1.75rem] font-semibold tracking-tight text-navy">{listing.name}</h1>
+            <div className="mt-3 flex items-start justify-between gap-3">
+              <h1 className="text-[1.75rem] font-semibold tracking-tight text-navy">{listing.name}</h1>
+              <ListingSaveButton id={listing.id} name={listing.name} kind="places" detail={address} />
+            </div>
+            <div id={listingSectionElementId('contact')}>
             {contactViewed ? (
               <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
             ) : null}
             <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+            </div>
             {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
+            <div id={listingSectionElementId('address')}>
             {address && !unlocked ? (
               <button
                 type="button"
@@ -176,6 +195,8 @@ export function PropertyDetailPage() {
                 {address}
               </p>
             ) : null}
+            </div>
+            <div id={listingSectionElementId('rent')}>
             <p className="mt-5 text-[1.5rem] font-semibold text-navy">
               <ListingPrice
                 amount={listing.startingPrice}
@@ -186,6 +207,7 @@ export function PropertyDetailPage() {
                 size="detail"
               />
             </p>
+            </div>
             {listing.sharingNotes ? (
               <p className="mt-2 text-[14px] text-text-secondary">{listing.sharingNotes}</p>
             ) : null}
@@ -195,22 +217,23 @@ export function PropertyDetailPage() {
                 showMaps={Boolean(listing.mapUrl?.trim())}
                 mapHref={unlocked ? listing.mapUrl : undefined}
                 onEnquire={unlocked ? undefined : () => setEnquireOpen(true)}
-                chips={<ListingInfoChips listing={listing} variant="detail" />}
+                chips={<ListingInfoChips listing={listing} variant="detail" onSelect={scrollToListingSection} />}
               />
-              {contactViewed && !sendingEnquiry ? null : alreadyInquired && !sendingEnquiry ? (
-                <InquirySentButton email={inquiry?.sentToEmail} className="mt-4" />
-              ) : (
-                <GetContactDetailsButton
-                  listingId={listing.id}
-                  onClick={() => setEnquireOpen(true)}
-                  className="mt-4 w-full"
-                  aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
-                />
-              )}
+              <ListingContactCta
+                listingId={listing.id}
+                listingName={listing.name}
+                phase={reveal.phase}
+                alreadyInquired={alreadyInquired}
+                contactViewed={contactViewed}
+                sendingEnquiry={sendingEnquiry}
+                sentToEmail={inquiry?.sentToEmail}
+                onEnquire={() => setEnquireOpen(true)}
+              />
             </div>
           </div>
         </div>
 
+        <div id={listingSectionElementId('amenities')}>
         {listing.amenityCodes.length > 0 ? (
           <div className="mt-8 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h2 className="text-lg font-semibold text-navy">{t('discovery.amenities')}</h2>
@@ -231,6 +254,7 @@ export function PropertyDetailPage() {
             </ul>
           </div>
         ) : null}
+        </div>
 
         <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
           <ListingUnavailableDetails
@@ -249,7 +273,7 @@ export function PropertyDetailPage() {
                 : []
             }
             contactAuthorized={Boolean(contact)}
-            onNeedContact={contact || contactViewed ? undefined : () => setEnquireOpen(true)}
+            onNeedContact={contact || contactViewed || isOwnListing ? undefined : () => setEnquireOpen(true)}
           />
         </div>
 

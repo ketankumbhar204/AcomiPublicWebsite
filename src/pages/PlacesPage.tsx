@@ -36,6 +36,7 @@ import { applySeo } from '../lib/seo';
 import { readEnquireIntent, takeEnquireResumeIntent } from '../auth/enquireIntent';
 import { useAutoOpenLocationSelect } from '../data/listings/useAutoOpenLocationSelect';
 import { useFavorites } from '../context/FavoritesContext';
+import type { ListingSection } from '../data/listings/listingInfo';
 
 /** 19.25rem keeps four readable cards on a 1366px desktop at 100% zoom. */
 const PLACES_RESULTS_GRID =
@@ -112,6 +113,8 @@ export function PlacesPage() {
   const [locationOpen, setLocationOpen] = useAutoOpenLocationSelect(true, skipLocationPrompt);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [focusSection, setFocusSection] = useState<ListingSection | null>(null);
+  const [focusToken, setFocusToken] = useState(0);
   const { isSaved, toggleFavorite } = useFavorites();
   const [enquireOpen, setEnquireOpen] = useState(false);
   const [revealedContact, setRevealedContact] = useState<RevealedOwnerContact | null>(null);
@@ -251,8 +254,10 @@ export function PlacesPage() {
     writePlacesUrl(null, query.query);
   };
 
-  const selectListing = (id: string) => {
+  const selectListing = (id: string, section?: ListingSection | null) => {
     setSelectedId(id);
+    setFocusSection(section ?? null);
+    setFocusToken((value) => value + 1);
     setDetailOpen(true);
   };
 
@@ -327,6 +332,7 @@ export function PlacesPage() {
                     selected={detailOpen && selected?.id === listing.id}
                     saved={isSaved(listing.id)}
                     onSelect={() => selectListing(listing.id)}
+                    onOpenSection={(section) => selectListing(listing.id, section)}
                     onToggleSave={() =>
                       toggleFavorite({
                         id: listing.id,
@@ -406,6 +412,8 @@ export function PlacesPage() {
           <PropertyDetailPanel
             listing={selected}
             revealedContact={revealedContact}
+            focusSection={focusSection}
+            focusToken={focusToken}
             onEnquire={() => setEnquireOpen(true)}
           />
         ) : null}

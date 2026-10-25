@@ -2,15 +2,18 @@ import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAlreadyInquired, useContactViewed, useInquiryRecord } from '../../auth/useAlreadyInquired';
+import { useDirectContactReveal } from '../../auth/useDirectContactReveal';
 import { useIsEnquirySending } from '../../context/EnquiryFeedbackContext';
-import { GetContactDetailsButton } from './GetContactDetailsButton';
+import { ListingContactCta } from './ListingContactCta';
 import { formatListingAddress } from '../../data/listings/query';
+import { listingSectionElementId, type ListingSection } from '../../data/listings/listingInfo';
 import type { PropertyListing } from '../../data/listings/types';
 import { amenityDisplayLabel, amenityIcon } from './listingIcons';
-import { InquirySentBadge, InquirySentButton, InquirySentDetails } from './InquirySentBadge';
+import { InquirySentBadge, InquirySentDetails } from './InquirySentBadge';
 import { ListingCardMeta } from './ListingCardMeta';
 import { ListingFacts } from './ListingFacts';
 import { ListingGallery } from './ListingGallery';
+import { ListingSaveButton } from './ListingSaveButton';
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
 import { priceBasisLabel } from '../../lib/priceBasis';
@@ -19,14 +22,23 @@ import { PhotoRequestAction } from './PhotoRequestAction';
 import { hasActualListingPhotos } from '../../lib/photoRequest';
 import { OwnerContactCard, type RevealedOwnerContact } from './OwnerContactCard';
 import { usePersistedRevealedContact } from './usePersistedRevealedContact';
+import { scrollToListingSection, useScrollToListingSection } from '../../lib/scrollToListingSection';
 
 type PropertyDetailPanelProps = {
   listing: PropertyListing;
   onEnquire: () => void;
   revealedContact?: RevealedOwnerContact | null;
+  focusSection?: ListingSection | null;
+  focusToken?: number;
 };
 
-export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: PropertyDetailPanelProps) {
+export function PropertyDetailPanel({
+  listing,
+  onEnquire,
+  revealedContact,
+  focusSection = null,
+  focusToken = 0,
+}: PropertyDetailPanelProps) {
   const { t } = useTranslation();
   const meta = listing.listingMetadata;
   const address = formatListingAddress(listing);
@@ -34,9 +46,12 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
   const alreadyInquired = useAlreadyInquired(listing.id);
   const contactViewed = useContactViewed(listing.id);
   const inquiry = useInquiryRecord(listing.id);
-  const contact = usePersistedRevealedContact(listing.id, revealedContact);
+  const reveal = useDirectContactReveal(listing.id, true);
+  const contact = usePersistedRevealedContact(listing.id, reveal.contact ?? revealedContact);
   const sendingEnquiry = useIsEnquirySending(listing.id);
-  const unlocked = Boolean(contact) || contactViewed || alreadyInquired;
+  const isOwnListing = reveal.phase === 'own';
+  const unlocked = Boolean(contact) || contactViewed || alreadyInquired || isOwnListing;
+  useScrollToListingSection(focusSection, true, focusToken);
 
   return (
     <div className="flex h-full flex-col">
@@ -53,7 +68,7 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
           </div>
         ) : null}
       </div>
-      <div className="mt-4">
+      <div id={listingSectionElementId('food')} className="mt-4">
         <ListingFacts
           leading={
             <span className="inline-flex items-center rounded-md bg-[#F4F7F5] px-2 py-1 text-[11px] leading-none font-semibold tracking-wide text-navy uppercase">
@@ -65,12 +80,18 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
           foodAvailability={listing.foodAvailability ?? (listing.foodIncludedInRent ? 'INCLUDED' : null)}
         />
       </div>
-      <h2 className="mt-2 text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
-      {contactViewed ? (
-        <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
-      ) : null}
-      <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <h2 className="text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
+        <ListingSaveButton id={listing.id} name={listing.name} kind="places" detail={address} />
+      </div>
+      <div id={listingSectionElementId('contact')}>
+        {contactViewed ? (
+          <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
+        ) : null}
+        <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+      </div>
       {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
+      <div id={listingSectionElementId('address')}>
       {address && !unlocked ? (
         <button
           type="button"
@@ -87,6 +108,8 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
           {address}
         </p>
       ) : null}
+      </div>
+      <div id={listingSectionElementId('rent')}>
       <p className="mt-4 text-[1.35rem] font-semibold text-navy">
         <ListingPrice
           amount={listing.startingPrice}
@@ -97,6 +120,7 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
           size="detail"
         />
       </p>
+      </div>
       {listing.description ? (
         <div className="mt-5">
           <h3 className="text-sm font-semibold text-navy">{t('discovery.aboutPlace')}</h3>
@@ -109,6 +133,7 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
           <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">{listing.sharingNotes}</p>
         </div>
       ) : null}
+      <div id={listingSectionElementId('amenities')}>
       {listing.amenityCodes.length > 0 ? (
         <div className="mt-5">
           <h3 className="text-sm font-semibold text-navy">{t('discovery.amenities')}</h3>
@@ -126,6 +151,7 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
           </ul>
         </div>
       ) : null}
+      </div>
       <ListingUnavailableDetails hidePhotos={hasActualListingPhotos(meta.images)} />
       <PhotoRequestAction
         kind="property"
@@ -139,7 +165,7 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
             : []
         }
         contactAuthorized={Boolean(contact)}
-        onNeedContact={contact || contactViewed ? undefined : onEnquire}
+        onNeedContact={contact || contactViewed || isOwnListing ? undefined : onEnquire}
       />
       <div className="mt-auto pt-5">
         <ListingCardMeta
@@ -147,18 +173,24 @@ export function PropertyDetailPanel({ listing, onEnquire, revealedContact }: Pro
           showMaps={Boolean(listing.mapUrl?.trim())}
           mapHref={unlocked ? listing.mapUrl : undefined}
           onEnquire={unlocked ? undefined : onEnquire}
-          chips={<ListingInfoChips listing={listing} variant="detail" />}
+          chips={
+            <ListingInfoChips
+              listing={listing}
+              variant="detail"
+              onSelect={scrollToListingSection}
+            />
+          }
         />
-        {contactViewed && !sendingEnquiry ? null : alreadyInquired && !sendingEnquiry ? (
-          <InquirySentButton email={inquiry?.sentToEmail} className="mt-4" />
-        ) : (
-          <GetContactDetailsButton
-            listingId={listing.id}
-            onClick={onEnquire}
-            className="mt-4 w-full"
-            aria-label={`${cta}: ${listing.name}`}
-          />
-        )}
+        <ListingContactCta
+          listingId={listing.id}
+          listingName={listing.name}
+          phase={reveal.phase}
+          alreadyInquired={alreadyInquired}
+          contactViewed={contactViewed}
+          sendingEnquiry={sendingEnquiry}
+          sentToEmail={inquiry?.sentToEmail}
+          onEnquire={onEnquire}
+        />
         <Link to={`/places/${listing.id}`} className="mt-3 block text-center text-[13px] font-semibold text-primary hover:underline">
           {t('discovery.openFullPage')}
         </Link>

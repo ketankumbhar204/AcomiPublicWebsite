@@ -15,12 +15,15 @@ import { ContactViewedButton, InquirySentBadge, InquirySentButton } from './Inqu
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
 import { priceBasisLabel } from '../../lib/priceBasis';
+import type { ListingSection } from '../../data/listings/listingInfo';
 
 type PropertyCardProps = {
   listing: PropertyListing;
   selected?: boolean;
   saved?: boolean;
   onSelect: () => void;
+  /** Opens details and scrolls to this section. Falls back to onSelect. */
+  onOpenSection?: (section: ListingSection) => void;
   onToggleSave: () => void;
   onEnquire: () => void;
 };
@@ -30,6 +33,7 @@ export function PropertyCard({
   selected = false,
   saved = false,
   onSelect,
+  onOpenSection,
   onToggleSave,
   onEnquire,
 }: PropertyCardProps) {
@@ -70,7 +74,11 @@ export function PropertyCard({
         </span>
         <button
           type="button"
-          onClick={onToggleSave}
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            onToggleSave();
+          }}
           aria-pressed={saved}
           aria-label={t(saved ? 'discovery.unsave' : 'discovery.save', { name: listing.name })}
           className="absolute top-2.5 right-2.5 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-navy shadow-[0_2px_8px_rgba(15,23,42,0.18)]"
@@ -155,6 +163,7 @@ export function PropertyCard({
             listing={listing}
             variant="card"
             onViewAll={onSelect}
+            onSelect={(section) => (onOpenSection ? onOpenSection(section) : onSelect())}
             onEnquire={alreadyInquired ? undefined : onEnquire}
           />
         </div>

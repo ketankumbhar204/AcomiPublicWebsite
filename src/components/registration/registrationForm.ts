@@ -97,7 +97,9 @@ export function validateDetailsStep(form: RegistrationForm): FieldErrors {
   }
 
   const price = Number(form.startingPrice);
-  if (!form.startingPrice.trim() || !Number.isFinite(price) || price <= 0) {
+  if (form.propertyType === 'CORPORATE_STAY' && !isPriceBasis(form.priceBasis)) {
+    errors.startingPrice = 'Choose per bed, per room, or per unit for Corporate Stay.';
+  } else if (!form.startingPrice.trim() || !Number.isFinite(price) || price <= 0) {
     errors.startingPrice = 'Enter a valid monthly price.';
   }
 
@@ -207,7 +209,7 @@ export function buildRequest(
     ...(latitude !== undefined ? { latitude } : {}),
     ...(longitude !== undefined ? { longitude } : {}),
     startingPrice: Number(form.startingPrice),
-    priceBasis: form.priceBasis ?? defaultPriceBasis(form.propertyType),
+    priceBasis: form.priceBasis ?? defaultPriceBasis(form.propertyType) ?? undefined,
     ...(capacity ? { capacityEstimate: Number(capacity) } : {}),
     // The backend ignores amenities for types that do not support them; not sending
     // them keeps the payload honest about what the visitor actually chose.

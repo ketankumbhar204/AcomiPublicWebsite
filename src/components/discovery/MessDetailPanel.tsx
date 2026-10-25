@@ -2,13 +2,17 @@ import { Link } from 'react-router-dom';
 import { MapPin, Users, UtensilsCrossed } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAlreadyInquired, useContactViewed, useInquiryRecord } from '../../auth/useAlreadyInquired';
+import { useDirectContactReveal } from '../../auth/useDirectContactReveal';
 import { useIsEnquirySending } from '../../context/EnquiryFeedbackContext';
-import { GetContactDetailsButton } from './GetContactDetailsButton';
+import { ListingContactCta } from './ListingContactCta';
 import { formatListingAddress } from '../../data/listings/query';
+import { listingSectionElementId, type ListingSection } from '../../data/listings/listingInfo';
 import type { MessListing } from '../../data/listings/types';
-import { InquirySentButton, InquirySentDetails } from './InquirySentBadge';
+import { amenityDisplayLabel, amenityIcon } from './listingIcons';
+import { InquirySentDetails } from './InquirySentBadge';
 import { ListingCardMeta } from './ListingCardMeta';
 import { ListingGallery } from './ListingGallery';
+import { ListingSaveButton } from './ListingSaveButton';
 import { ListingInfoChips } from './ListingInfoChips';
 import { ListingPrice } from './ListingPrice';
 import { priceBasisLabel } from '../../lib/priceBasis';
@@ -17,14 +21,23 @@ import { PhotoRequestAction } from './PhotoRequestAction';
 import { hasActualListingPhotos } from '../../lib/photoRequest';
 import { OwnerContactCard, type RevealedOwnerContact } from './OwnerContactCard';
 import { usePersistedRevealedContact } from './usePersistedRevealedContact';
+import { scrollToListingSection, useScrollToListingSection } from '../../lib/scrollToListingSection';
 
 type MessDetailPanelProps = {
   listing: MessListing;
   onEnquire: () => void;
   revealedContact?: RevealedOwnerContact | null;
+  focusSection?: ListingSection | null;
+  focusToken?: number;
 };
 
-export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDetailPanelProps) {
+export function MessDetailPanel({
+  listing,
+  onEnquire,
+  revealedContact,
+  focusSection = null,
+  focusToken = 0,
+}: MessDetailPanelProps) {
   const { t } = useTranslation();
   const meta = listing.listingMetadata;
   const meals = meta.mealsServed;
@@ -33,9 +46,13 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
   const alreadyInquired = useAlreadyInquired(listing.id);
   const contactViewed = useContactViewed(listing.id);
   const inquiry = useInquiryRecord(listing.id);
-  const contact = usePersistedRevealedContact(listing.id, revealedContact);
+  const reveal = useDirectContactReveal(listing.id, true);
+  const contact = usePersistedRevealedContact(listing.id, reveal.contact ?? revealedContact);
   const sendingEnquiry = useIsEnquirySending(listing.id);
-  const unlocked = Boolean(contact) || contactViewed || alreadyInquired;
+  const isOwnListing = reveal.phase === 'own';
+  const unlocked = Boolean(contact) || contactViewed || alreadyInquired || isOwnListing;
+  const amenityCodes = listing.amenityCodes ?? [];
+  useScrollToListingSection(focusSection, true, focusToken);
 
   return (
     <div className="flex h-full flex-col">
@@ -47,12 +64,18 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
           name={listing.name}
         />
       </div>
-      <h2 className="mt-4 text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
-      {contactViewed ? (
-        <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
-      ) : null}
-      <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+      <div className="mt-4 flex items-start justify-between gap-3">
+        <h2 className="text-[1.35rem] font-semibold tracking-tight text-navy">{listing.name}</h2>
+        <ListingSaveButton id={listing.id} name={listing.name} kind="meals" detail={address} />
+      </div>
+      <div id={listingSectionElementId('contact')}>
+        {contactViewed ? (
+          <p className="mt-3 text-[13px] font-semibold text-[#0F6B4C]">{t('discovery.contactDetailsViewed')}</p>
+        ) : null}
+        <OwnerContactCard contact={contact} mapUrl={listing.mapUrl} />
+      </div>
       {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
+      <div id={listingSectionElementId('address')}>
       {address && !unlocked ? (
         <button
           type="button"
@@ -69,6 +92,8 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
           {address}
         </p>
       ) : null}
+      </div>
+      <div id={listingSectionElementId('rent')}>
       <p className="mt-4 text-[1.35rem] font-semibold text-navy">
         <ListingPrice
           amount={listing.monthlyPrice}
@@ -79,11 +104,13 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
           size="detail"
         />
       </p>
+      </div>
       {listing.mealPrice != null ? (
         <p className="mt-1 text-[14px] font-medium text-navy">
           <ListingPrice amount={listing.mealPrice} suffix={t('discovery.perMeal')} fallback={t('discovery.priceOnRequest')} />
         </p>
       ) : null}
+      <div id={listingSectionElementId('food')}>
       {listing.capacityEstimate != null || meals.length > 0 ? (
         <ul className="mt-4 grid grid-cols-2 gap-2">
           {listing.capacityEstimate != null ? (
@@ -100,6 +127,7 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
           ) : null}
         </ul>
       ) : null}
+      </div>
       {listing.description ? (
         <div className="mt-5">
           <h3 className="text-sm font-semibold text-navy">{t('discovery.aboutMess')}</h3>
@@ -114,6 +142,25 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
           </p>
         </div>
       ) : null}
+      <div id={listingSectionElementId('amenities')}>
+        {amenityCodes.length > 0 ? (
+          <div className="mt-5">
+            <h3 className="text-sm font-semibold text-navy">{t('discovery.amenities')}</h3>
+            <ul className="mt-3 grid grid-cols-2 gap-2">
+              {amenityCodes.map((code, index) => {
+                const label = amenityDisplayLabel(code, undefined, t);
+                const Icon = amenityIcon(code);
+                return (
+                  <li key={`${code}-${label}-${index}`} className="inline-flex min-w-0 items-center gap-2 text-[12px] text-text-secondary">
+                    <Icon aria-hidden className="h-4 w-4 shrink-0 text-register" />
+                    <span className="truncate">{label}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
+      </div>
       <ListingUnavailableDetails hidePhotos={hasActualListingPhotos(meta.images)} />
       <PhotoRequestAction
         kind="mess"
@@ -127,7 +174,7 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
             : []
         }
         contactAuthorized={Boolean(contact)}
-        onNeedContact={contact || contactViewed ? undefined : onEnquire}
+        onNeedContact={contact || contactViewed || isOwnListing ? undefined : onEnquire}
       />
       <div className="mt-auto pt-5">
         <ListingCardMeta
@@ -140,19 +187,20 @@ export function MessDetailPanel({ listing, onEnquire, revealedContact }: MessDet
               listing={{ ...listing, mealsServed: meals }}
               variant="detail"
               surface="meals"
+              onSelect={scrollToListingSection}
             />
           }
         />
-        {contactViewed && !sendingEnquiry ? null : alreadyInquired && !sendingEnquiry ? (
-          <InquirySentButton email={inquiry?.sentToEmail} className="mt-4" />
-        ) : (
-          <GetContactDetailsButton
-            listingId={listing.id}
-            onClick={onEnquire}
-            className="mt-4 w-full"
-            aria-label={`${cta}: ${listing.name}`}
-          />
-        )}
+        <ListingContactCta
+          listingId={listing.id}
+          listingName={listing.name}
+          phase={reveal.phase}
+          alreadyInquired={alreadyInquired}
+          contactViewed={contactViewed}
+          sendingEnquiry={sendingEnquiry}
+          sentToEmail={inquiry?.sentToEmail}
+          onEnquire={onEnquire}
+        />
         <Link to={`/meals/${listing.id}`} className="mt-3 block text-center text-[13px] font-semibold text-primary hover:underline">
           {t('discovery.openFullPage')}
         </Link>

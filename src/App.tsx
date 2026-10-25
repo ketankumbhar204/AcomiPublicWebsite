@@ -16,8 +16,10 @@ import { MessVendorsPage } from './pages/MessVendorsPage';
 import { PropertyOwnersPage } from './pages/PropertyOwnersPage';
 import { RegisterSpacePage } from './pages/RegisterSpacePage';
 import { WhoItsForPage } from './pages/WhoItsForPage';
+import { FavoritesPage } from './pages/FavoritesPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { MyEnquiriesPage } from './pages/MyEnquiriesPage';
+import { MySpacesPage } from './pages/MySpacesPage';
 
 export default function App() {
   return (
@@ -39,7 +41,9 @@ export default function App() {
           <Route path="/places/:id" element={<PropertyDetailPage />} />
           <Route path="/meals" element={<MealsPage />} />
           <Route path="/meals/:id" element={<MessDetailPage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/my-spaces" element={<MySpacesPage />} />
           <Route path="/my-enquiries" element={<MyEnquiriesPage />} />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/404" replace />} />

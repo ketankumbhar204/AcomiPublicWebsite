@@ -66,6 +66,15 @@ export function listingInfoFlags(listing: ListingInfoSource): ListingInfoFlags {
 }
 
 export const INFO_GRID_KEYS = ['contact', 'address', 'map', 'rent', 'amenities', 'food'] as const;
+export type ListingSection = (typeof INFO_GRID_KEYS)[number];
+
+export function isListingSection(value: string | null | undefined): value is ListingSection {
+  return Boolean(value && (INFO_GRID_KEYS as readonly string[]).includes(value));
+}
+
+export function listingSectionElementId(section: ListingSection): string {
+  return `listing-section-${section}`;
+}
 export const CARD_INFO_KEYS = ['contact', 'address', 'map'] as const;
 export const EXTRA_INFO_KEYS = ['rent', 'amenities', 'food'] as const;
 export const MEAL_EXTRA_INFO_KEYS = ['rent', 'menu', 'mealTiming', 'foodType', 'subscription'] as const;

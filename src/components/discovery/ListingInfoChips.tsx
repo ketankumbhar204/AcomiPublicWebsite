@@ -14,6 +14,7 @@ import {
   listingInfoFlags,
   type ListingInfoFlags,
   type ListingInfoSource,
+  type ListingSection,
 } from '../../data/listings/listingInfo';
 
 type ListingInfoChipsProps = {
@@ -22,6 +23,8 @@ type ListingInfoChipsProps = {
   surface?: 'places' | 'meals';
   compact?: boolean;
   onEnquire?: () => void;
+  /** Opens the matching section on the listing detail. */
+  onSelect?: (section: ListingSection) => void;
   /** Opens the existing listing detail. Card layout only. */
   onViewAll?: () => void;
 };
@@ -52,12 +55,14 @@ function Chip({
   Icon,
   ariaLabel,
   compact = false,
+  onSelect,
 }: {
   available: boolean;
   label: string;
   Icon: LucideIcon;
   ariaLabel: string;
   compact?: boolean;
+  onSelect?: () => void;
 }) {
   const className = `flex w-full min-w-0 items-center gap-1.5 rounded-xl border px-2 text-left text-[12px] leading-4 font-semibold ${
     compact ? 'h-9' : 'h-10'
@@ -77,6 +82,13 @@ function Chip({
       <span className="min-w-0">{label}</span>
     </>
   );
+  if (onSelect) {
+    return (
+      <button type="button" onClick={onSelect} className={`${className} cursor-pointer`} aria-label={ariaLabel}>
+        {inner}
+      </button>
+    );
+  }
   return (
     <span className={className} aria-label={ariaLabel}>
       {inner}
@@ -89,6 +101,7 @@ export function ListingInfoChips({
   variant,
   surface = 'places',
   compact = false,
+  onSelect,
   onViewAll,
 }: ListingInfoChipsProps) {
   const { t } = useTranslation();
@@ -137,9 +150,20 @@ export function ListingInfoChips({
             );
             return (
               <li key={key} className="min-w-0 flex-1">
-                <span className={itemClass} aria-label={state}>
-                  {itemInner}
-                </span>
+                {onSelect ? (
+                  <button
+                    type="button"
+                    onClick={() => onSelect(key)}
+                    className={`${itemClass} cursor-pointer border-0 bg-transparent p-0`}
+                    aria-label={state}
+                  >
+                    {itemInner}
+                  </button>
+                ) : (
+                  <span className={itemClass} aria-label={state}>
+                    {itemInner}
+                  </span>
+                )}
               </li>
             );
           })}
@@ -165,6 +189,7 @@ export function ListingInfoChips({
               Icon={CHIP_ICONS[key]}
               ariaLabel={state}
               compact={compact}
+              onSelect={onSelect ? () => onSelect(key) : undefined}
             />
           </li>
         );

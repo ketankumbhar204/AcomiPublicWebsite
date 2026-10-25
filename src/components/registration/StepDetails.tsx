@@ -69,14 +69,15 @@ function RupeeField({
             className={`${inputClasses(Boolean(error))} pl-7`}
           />
         </div>
-        {onBasisChange && basis ? (
+        {onBasisChange ? (
           <select
             id={`${id}-basis`}
             aria-label="Pricing unit"
-            value={basis}
+            value={basis ?? ''}
             onChange={(event) => onBasisChange(event.target.value as PriceBasis)}
             className="h-11 shrink-0 rounded-lg border border-border bg-background px-3 text-[12px] font-medium text-text-secondary sm:w-[170px]"
           >
+            {!basis ? <option value="">Choose unit</option> : null}
             {PRICE_BASIS_OPTIONS.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.label}
@@ -111,7 +112,7 @@ export function StepDetails({ form, errors, kind, onChange }: StepDetailsProps) 
           id="startingPrice"
           label={kind === 'mess' ? 'Monthly price' : 'Starting price'}
           value={form.startingPrice}
-          basis={form.priceBasis ?? defaultPriceBasis(form.propertyType)}
+          basis={form.priceBasis ?? defaultPriceBasis(form.propertyType) ?? undefined}
           onBasisChange={(value) => onChange('priceBasis', value)}
           error={errors.startingPrice}
           placeholder={kind === 'mess' ? '3500' : '6000'}

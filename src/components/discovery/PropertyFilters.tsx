@@ -24,6 +24,7 @@ const PROPERTY_TYPES: readonly { id: PlaceFilterType; label: string }[] = [
   { id: 'PG', label: 'PG' },
   { id: 'HOSTEL', label: 'Hostel' },
   { id: 'RENTAL', label: 'Rental' },
+  { id: 'CORPORATE_STAY', label: 'Corporate Stay' },
   { id: 'CO_LIVING', label: 'Co-living' },
   { id: 'MESS', label: 'Mess / Tiffin' },
   { id: 'SERVICED', label: 'Serviced / Corporate Apartment' },
