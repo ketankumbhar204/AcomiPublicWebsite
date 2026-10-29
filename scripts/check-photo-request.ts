@@ -28,6 +28,8 @@ const propertyEmpty = buildPhotoRequestMessage({
   location: 'Hinjawadi',
 });
 assert.match(propertyEmpty, /looking for a Co-living in Hinjawadi/);
+assert.match(propertyEmpty, /https:\/\/www\.acomi\.in\/open\.html/);
+assert.doesNotMatch(propertyEmpty, /play\.google\.com/);
 assert.match(propertyEmpty, /actual photos of Stanza Living Positano House/);
 assert.match(propertyEmpty, /room, bathroom and common areas/);
 assert.doesNotMatch(propertyEmpty, /null|undefined/);

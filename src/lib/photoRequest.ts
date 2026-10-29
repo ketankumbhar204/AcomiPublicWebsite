@@ -1,3 +1,5 @@
+import { withAcomiAppLink } from './acomiWhatsAppAppLink.ts';
+
 export type PhotoRequestKind = 'property' | 'mess';
 
 const INDIAN_MOBILE = /^[6-9]\d{9}$/;
@@ -72,21 +74,29 @@ export function buildPhotoRequestMessage(input: {
   if (input.kind === 'mess') {
     if (input.hasPhotos) {
       const subject = name ? ` in ${name}` : '';
-      return `Hi, I am interested${subject}. Could you please share some more photos of your meals, food portions and menu? Thank you!`;
+      return withAcomiAppLink(
+        `Hi, I am interested${subject}. Could you please share some more photos of your meals, food portions and menu? Thank you!`,
+      );
     }
     const named = name ? `, ${name}` : '';
-    return `Hi, I am interested in your mess service${named}. Could you please share some actual photos of your meals, food portions and menu? Thank you!`;
+    return withAcomiAppLink(
+      `Hi, I am interested in your mess service${named}. Could you please share some actual photos of your meals, food portions and menu? Thank you!`,
+    );
   }
 
   if (input.hasPhotos) {
     const subject = name ? ` in ${name}` : '';
-    return `Hi, I am interested${subject}. Could you please share some more photos, especially of the room, bathroom and common areas? Thank you!`;
+    return withAcomiAppLink(
+      `Hi, I am interested${subject}. Could you please share some more photos, especially of the room, bathroom and common areas? Thank you!`,
+    );
   }
 
   const spaceType = friendlySpaceType(input.spaceType) ?? 'place';
   const where = location ? ` in ${location}` : '';
   const named = name ? ` of ${name}` : '';
-  return `Hi, I am looking for a ${spaceType}${where}. Could you please share some actual photos${named}, including the room, bathroom and common areas? Thank you!`;
+  return withAcomiAppLink(
+    `Hi, I am looking for a ${spaceType}${where}. Could you please share some actual photos${named}, including the room, bathroom and common areas? Thank you!`,
+  );
 }
 
 /** Digits for wa.me. Indian locals become 91XXXXXXXXXX. Existing country codes are kept. */

@@ -20,11 +20,14 @@ import { FavoritesPage } from './pages/FavoritesPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { MyEnquiriesPage } from './pages/MyEnquiriesPage';
 import { MySpacesPage } from './pages/MySpacesPage';
+import { OpenAppPage } from './pages/OpenAppPage';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/open" element={<OpenAppPage />} />
+        <Route path="/open.html" element={<OpenAppPage />} />
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/features" element={<FeaturesPage />} />

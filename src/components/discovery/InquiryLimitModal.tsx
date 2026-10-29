@@ -18,6 +18,7 @@ import { ActionButton } from '../common/ActionButton';
 import { API_BASE_URL } from '../../config/env';
 import { getPublicAccessToken } from '../../lib/apiClient';
 import { openAcomiAndroidApp } from '../../lib/openAcomiAndroidApp';
+import { withAcomiAppLink } from '../../lib/acomiWhatsAppAppLink';
 import {
   fetchInquiryPaymentConfig,
   fetchMyPurchaseRequests,
@@ -240,7 +241,9 @@ function PaymentPanel({ config, pkg, onBack, onSuccess }: PaymentPanelProps) {
   const waFull = waDigits.length === 10 ? `91${waDigits}` : waDigits;
   const waHref = waFull
     ? `https://wa.me/${waFull}?text=${encodeURIComponent(
-        t('discovery.limitWhatsappText', { amount: priceLabel, count: pkg.credits }),
+        withAcomiAppLink(
+          t('discovery.limitWhatsappText', { amount: priceLabel, count: pkg.credits }),
+        ),
       )}`
     : null;
 
@@ -503,7 +506,7 @@ export function InquiryLimitModal({
   const helpDigits = digitsOnly(config?.whatsappNumber ?? '');
   const helpNumber = helpDigits.length === 10 ? `91${helpDigits}` : helpDigits;
   const helpHref = helpNumber
-    ? `https://wa.me/${helpNumber}?text=${encodeURIComponent(t('discovery.limitHelpText'))}`
+    ? `https://wa.me/${helpNumber}?text=${encodeURIComponent(withAcomiAppLink(t('discovery.limitHelpText')))}`
     : null;
 
   function continueChoice() {
