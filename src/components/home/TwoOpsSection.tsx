@@ -56,7 +56,7 @@ export function TwoOpsSection() {
                 <span className="text-xl font-semibold text-muted"> / {b.total}</span>
               </p>
               <p className="mt-2 text-sm text-muted">
-                {b.occupied} occupied · {b.vacant} vacant · {b.reserved} reserved
+                {b.occupied} occupied · {b.vacant} available · {b.reserved} reserved
               </p>
             </div>
           </div>

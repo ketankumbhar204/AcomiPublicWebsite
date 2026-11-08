@@ -34,7 +34,7 @@ export function OperationsDashboard({ compact = false }: OperationsDashboardProp
           </div>
           <dl className="mt-2 grid grid-cols-3 gap-2 text-center">
             <Mini label="Occupied" value={b.occupied} hint={`${lodging.occupancyPct}%`} />
-            <Mini label="Vacant" value={b.vacant} hint={`${lodging.vacantPct}%`} />
+            <Mini label="Available" value={b.vacant} hint={`${lodging.vacantPct}%`} />
             <Mini label="Reserved" value={b.reserved} hint={`${lodging.reservedPct}%`} />
           </dl>
           {compact ? null : (

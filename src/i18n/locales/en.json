@@ -335,7 +335,7 @@
   },
   "status": {
     "occupied": "Occupied",
-    "vacant": "Vacant",
+    "vacant": "Available",
     "reserved": "Reserved",
     "expected": "Expected",
     "toPrepare": "To prepare",
@@ -482,12 +482,12 @@
       "title": "Run your property from one place",
       "body": "PG, hostel, co-living, and rental. Occupancy, members, and dues stay with the property.",
       "occupied": "occupied",
-      "vacant": "vacant",
+      "vacant": "available",
       "reserved": "reserved",
       "cta": "Manage my property",
       "capabilities": {
         "layout": "Buildings, floors, rooms, and beds",
-        "occupancy": "Occupied, vacant, and reserved",
+        "occupancy": "Occupied, available, and reserved",
         "members": "Members, move-ins, and invitations",
         "payments": "Rent, deposits, and payment proofs",
         "issues": "Complaints and inventory"
@@ -974,7 +974,7 @@
     "occupancy": {
       "eyebrow": "Occupancy",
       "title": "Know who's staying.",
-      "body": "Buildings, floors, rooms and beds. Occupied, vacant and reserved. Allocate, reserve, move in, transfer, vacate.",
+      "body": "Buildings, floors, rooms and beds. Occupied, available and reserved. Allocate, reserve, move in, transfer, vacate.",
       "occupiedLabel": "occupied"
     },
     "payments": {

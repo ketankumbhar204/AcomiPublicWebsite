@@ -12,7 +12,7 @@ export function OccupancyMock() {
       </p>
       <dl className="mt-3 grid grid-cols-3 gap-2">
         <Chip label="Occupied" value={b.occupied} />
-        <Chip label="Vacant" value={b.vacant} />
+        <Chip label="Available" value={b.vacant} />
         <Chip label="Reserved" value={b.reserved} />
       </dl>
       <ul className="mt-3 space-y-1.5">

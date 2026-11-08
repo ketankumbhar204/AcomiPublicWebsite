@@ -14,7 +14,7 @@ export const SHOTS = {
   },
   occupancy: {
     src: accommodationPng,
-    alt: 'Sunrise PG occupancy with occupied, vacant and reserved beds',
+    alt: 'Sunrise PG occupancy with occupied, available and reserved beds',
     caption: 'PG · Know who is staying',
   },
   mess: {

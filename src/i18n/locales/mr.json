@@ -295,7 +295,7 @@
   },
   "status": {
     "occupied": "भरलेले",
-    "vacant": "रिकामे",
+    "vacant": "उपलब्ध",
     "reserved": "आरक्षित",
     "expected": "अपेक्षित",
     "toPrepare": "तयार करायचे",

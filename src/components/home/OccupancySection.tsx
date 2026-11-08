@@ -39,7 +39,7 @@ export function OccupancySection() {
               </div>
               <div className="mt-5 grid grid-cols-3 gap-3">
                 <MetricCard label="Occupied" value={b.occupied} tone="teal" />
-                <MetricCard label="Vacant" value={b.vacant} tone="teal" />
+                <MetricCard label="Available" value={b.vacant} tone="teal" />
                 <MetricCard label="Reserved" value={b.reserved} tone="amber" />
               </div>
               <ul className="mt-5 divide-y divide-[#DCE8E2]">

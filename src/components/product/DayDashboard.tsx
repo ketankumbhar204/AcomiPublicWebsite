@@ -29,7 +29,7 @@ export function DayDashboard() {
             <span className="bg-warning" style={{ width: `${lodging.reservedPct}%` }} />
           </div>
           <p className="mt-3 text-xs text-muted">
-            Occupied {b.occupied} · Vacant {b.vacant} · Reserved {b.reserved}
+            Occupied {b.occupied} · Available {b.vacant} · Reserved {b.reserved}
           </p>
           <ul className="mt-5 space-y-2.5 border-t border-[#e6eee9] pt-4">
             {lodging.members.map((m) => (
