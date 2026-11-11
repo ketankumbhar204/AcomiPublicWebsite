@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
   INFO_GRID_KEYS,
+  isContactGatedSection,
   listingInfoFlags,
   type ListingInfoFlags,
   type ListingInfoSource,
@@ -22,6 +23,10 @@ type ListingInfoChipsProps = {
   variant: 'card' | 'detail';
   surface?: 'places' | 'meals';
   compact?: boolean;
+  /**
+   * Same gate as Get Contact Details. When set, Contact/Map chips open this
+   * instead of scrolling to an empty contact section.
+   */
   onEnquire?: () => void;
   /** Opens the matching section on the listing detail. */
   onSelect?: (section: ListingSection) => void;
@@ -101,12 +106,21 @@ export function ListingInfoChips({
   variant,
   surface = 'places',
   compact = false,
+  onEnquire,
   onSelect,
   onViewAll,
 }: ListingInfoChipsProps) {
   const { t } = useTranslation();
   const flags = listingInfoFlags(listing);
   const meals = surface === 'meals';
+
+  function handleSelect(section: ListingSection) {
+    if (isContactGatedSection(section) && onEnquire) {
+      onEnquire();
+      return;
+    }
+    onSelect?.(section);
+  }
 
   if (variant === 'card') {
     return (
@@ -150,10 +164,10 @@ export function ListingInfoChips({
             );
             return (
               <li key={key} className="min-w-0 flex-1">
-                {onSelect ? (
+                {onSelect || (isContactGatedSection(key) && onEnquire) ? (
                   <button
                     type="button"
-                    onClick={() => onSelect(key)}
+                    onClick={() => handleSelect(key)}
                     className={`${itemClass} cursor-pointer border-0 bg-transparent p-0`}
                     aria-label={state}
                   >
@@ -189,7 +203,11 @@ export function ListingInfoChips({
               Icon={CHIP_ICONS[key]}
               ariaLabel={state}
               compact={compact}
-              onSelect={onSelect ? () => onSelect(key) : undefined}
+              onSelect={
+                onSelect || (isContactGatedSection(key) && onEnquire)
+                  ? () => handleSelect(key)
+                  : undefined
+              }
             />
           </li>
         );

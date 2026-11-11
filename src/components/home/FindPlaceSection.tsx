@@ -24,6 +24,11 @@ const TYPES = [
     type: 'RENTAL',
     image: '/assets/illustrations/places/rental-illustration.webp',
   },
+  {
+    key: 'corporateStay',
+    type: 'CORPORATE_STAY',
+    image: '/images/representative/serviced-1.png',
+  },
 ] as const;
 
 export function FindPlaceSection() {
@@ -43,7 +48,7 @@ export function FindPlaceSection() {
           {t('home.findPlace.title')}
         </h2>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-text-secondary">{t('home.findPlace.body')}</p>
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {TYPES.map((type) => {
             const name = t(`home.findPlace.types.${type.key}.name`);
             return (

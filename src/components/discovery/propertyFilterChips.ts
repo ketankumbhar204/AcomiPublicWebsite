@@ -25,7 +25,11 @@ export function propertyFilterChips(
         ? 'Mess / Tiffin'
         : type === 'SERVICED'
           ? 'Serviced / Corporate Apartment'
-          : t(`discovery.propertyTypes.${type}`);
+          : type === 'CORPORATE_STAY'
+            ? t('discovery.propertyTypes.CORPORATE_STAY', { defaultValue: 'Corporate Stay' })
+            : t(`discovery.propertyTypes.${type}`, {
+                defaultValue: type.replaceAll('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+              });
     chips.push({
       id: `type-${type}`,
       label,

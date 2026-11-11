@@ -119,25 +119,13 @@ export function MessCard({
             {listing.name}
           </h2>
         </button>
-        {address && !alreadyInquired ? (
-          <button
-            type="button"
-            onClick={onEnquire}
-            className="flex min-h-5 w-full min-w-0 items-center gap-1 text-left text-[13px] text-text-secondary hover:text-primary"
-            aria-label={`${cta}: ${listing.name}`}
-          >
+        {address ? (
+          <p className="flex min-h-5 items-center gap-1 text-[13px] text-text-secondary">
             <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-[#5F7368]" />
             <span className="truncate">{address}</span>
-          </button>
-        ) : (
-          <p className="flex min-h-5 items-center gap-1 text-[13px] text-text-secondary">
-            {address ? (
-              <>
-                <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-[#5F7368]" />
-                <span className="truncate">{address}</span>
-              </>
-            ) : null}
           </p>
+        ) : (
+          <p className="min-h-5" />
         )}
         <button
           type="button"
@@ -167,7 +155,7 @@ export function MessCard({
             surface="meals"
             onViewAll={onSelect}
             onSelect={(section) => (onOpenSection ? onOpenSection(section) : onSelect())}
-            onEnquire={alreadyInquired ? undefined : onEnquire}
+            onEnquire={contactViewed || alreadyInquired ? undefined : onEnquire}
           />
         </div>
         <div className="mt-auto flex flex-row items-stretch gap-2 pt-0.5">

@@ -123,25 +123,13 @@ export function PropertyCard({
             {listing.name}
           </h2>
         </button>
-        {place && !alreadyInquired ? (
-          <button
-            type="button"
-            onClick={onEnquire}
-            className="flex min-h-5 w-full min-w-0 items-center gap-1 text-left text-[13px] text-text-secondary hover:text-primary"
-            aria-label={`${cta}: ${listing.name}`}
-          >
+        {place ? (
+          <p className="flex min-h-5 items-center gap-1 text-[13px] text-text-secondary">
             <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-[#5F7368]" />
             <span className="truncate">{place}</span>
-          </button>
-        ) : (
-          <p className="flex min-h-5 items-center gap-1 text-[13px] text-text-secondary">
-            {place ? (
-              <>
-                <MapPin aria-hidden className="h-3.5 w-3.5 shrink-0 text-[#5F7368]" />
-                <span className="truncate">{place}</span>
-              </>
-            ) : null}
           </p>
+        ) : (
+          <p className="min-h-5" />
         )}
         <button
           type="button"
@@ -169,7 +157,7 @@ export function PropertyCard({
             variant="card"
             onViewAll={onSelect}
             onSelect={(section) => (onOpenSection ? onOpenSection(section) : onSelect())}
-            onEnquire={alreadyInquired ? undefined : onEnquire}
+            onEnquire={contactViewed || alreadyInquired ? undefined : onEnquire}
           />
         </div>
         <div className="mt-auto flex flex-row items-stretch gap-2 pt-0.5">

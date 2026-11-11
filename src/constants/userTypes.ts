@@ -34,8 +34,8 @@ export type UserTypeOption = {
 export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   {
     id: 'ACCOMMODATION_SEEKER',
-    title: 'I need a place',
-    description: 'Find a PG, hostel, co-living or rental.',
+    title: 'Search PGs and Rentals',
+    description: 'Find PGs, hostels, co-living, rentals and corporate stays.',
     shortLabel: 'Looking for a place',
     Icon: Home,
     to: '/places',
@@ -47,8 +47,8 @@ export const USER_TYPE_OPTIONS: readonly UserTypeOption[] = [
   },
   {
     id: 'MEAL_SEEKER',
-    title: 'I need meals',
-    description: 'Find a mess or meal service.',
+    title: 'Search Tiffin and Meal Services',
+    description: 'Find tiffin providers, mess services and meal options.',
     shortLabel: 'Looking for meals',
     Icon: Soup,
     to: '/meals',

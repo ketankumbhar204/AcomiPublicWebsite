@@ -10,7 +10,7 @@ export function BrandMark({ size = 36, className = '' }: BrandMarkProps) {
       alt="ACOMI"
       width={size}
       height={size}
-      className={`rounded-xl object-contain shadow-sm ${className}`}
+      className={`rounded-xl bg-transparent object-contain ${className}`}
     />
   );
 }

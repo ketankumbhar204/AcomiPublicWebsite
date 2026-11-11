@@ -18,9 +18,9 @@ export function InquirySentBadge({ variant = 'chip', sentVia = null }: InquirySe
   const { t } = useTranslation();
   const label = t('discovery.inquirySent', { defaultValue: 'Inquiry sent' });
   const where = sentVia === 'APP'
-    ? t('discovery.inquirySentInApp', { defaultValue: 'Sent in the ACOMI app' })
+    ? t('discovery.inquirySentInApp', { defaultValue: 'Sent in the Acomi app' })
     : sentVia === 'BOTH'
-      ? t('discovery.inquirySentEmailAndApp', { defaultValue: 'Sent to your email and the ACOMI app' })
+      ? t('discovery.inquirySentEmailAndApp', { defaultValue: 'Sent to your email and the Acomi app' })
       : sentVia === 'EMAIL'
         ? t('discovery.inquirySentByEmail', { defaultValue: 'Sent to your email' })
         : null;
@@ -89,7 +89,7 @@ export function InquirySentDetails({ listingId }: { listingId: string }) {
   const alreadySent = t('discovery.inquiryAlreadySent', { defaultValue: 'Inquiry already sent' });
   const statusLine = [
     alreadySent,
-    email || (appOnly ? t('discovery.inquirySentInApp', { defaultValue: 'Sent in the ACOMI app' }) : null),
+    email || (appOnly ? t('discovery.inquirySentInApp', { defaultValue: 'Sent in the Acomi app' }) : null),
     when,
   ]
     .filter(Boolean)

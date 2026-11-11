@@ -20,7 +20,6 @@ import { OwnerListingActions, useMyListing } from '../components/discovery/Owner
 import { ListingInfoChips } from '../components/discovery/ListingInfoChips';
 import { ListingUnavailableDetails } from '../components/discovery/ListingUnavailableDetails';
 import { PhotoRequestAction } from '../components/discovery/PhotoRequestAction';
-import { useListingExtrasGate } from '../components/discovery/useListingExtrasGate';
 import { hasActualListingPhotos } from '../lib/photoRequest';
 import { ListingPrice } from '../components/discovery/ListingPrice';
 import { priceBasisLabel } from '../lib/priceBasis';
@@ -57,8 +56,6 @@ export function MessDetailPage() {
   const mine = useMyListing(listing?.id);
   const isOwnListing = reveal.phase === 'own' || Boolean(mine);
   const unlocked = Boolean(contact) || contactViewed || alreadyInquired || isOwnListing;
-  const extras = useListingExtrasGate(listing?.id ?? '', Boolean(contact) || contactViewed || alreadyInquired);
-  extras.mapHrefRef.current = listing?.mapUrl ?? '';
   const sendingEnquiry = useIsEnquirySending(listing?.id ?? '');
   useScrollToListingSection(focusSection, status === 'ready' && Boolean(listing));
 
@@ -190,22 +187,12 @@ export function MessDetailPage() {
             </div>
             {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
             <div id={listingSectionElementId('address')}>
-            {address && !unlocked ? (
-              <button
-                type="button"
-                onClick={() => setEnquireOpen(true)}
-                className="mt-2 flex w-full items-center gap-1.5 text-left text-[14px] text-text-secondary underline decoration-black/15 underline-offset-2 hover:text-primary hover:decoration-primary"
-                aria-label={`${t('discovery.getContactDetails')}: ${listing.name}`}
-              >
-                <MapPin aria-hidden className="h-4 w-4 shrink-0 text-muted" />
-                {address}
-              </button>
-            ) : address ? (
-              <p className="mt-2 flex items-center gap-1.5 text-[14px] text-text-secondary">
-                <MapPin aria-hidden className="h-4 w-4 shrink-0 text-muted" />
-                {address}
-              </p>
-            ) : null}
+              {address ? (
+                <p className="mt-2 flex items-center gap-1.5 text-[14px] text-text-secondary">
+                  <MapPin aria-hidden className="h-4 w-4 shrink-0 text-muted" />
+                  {address}
+                </p>
+              ) : null}
             </div>
             <div id={listingSectionElementId('rent')}>
             <p className="mt-5 text-[1.5rem] font-semibold text-navy">
@@ -235,14 +222,15 @@ export function MessDetailPage() {
               <ListingCardMeta
                 listing={listing}
                 showMaps={Boolean(listing.mapUrl?.trim())}
-                mapHref={extras.allowed ? listing.mapUrl : undefined}
-                onEnquire={extras.allowed ? undefined : () => extras.hold('map')}
+                mapHref={unlocked ? listing.mapUrl : undefined}
+                onEnquire={unlocked ? undefined : () => setEnquireOpen(true)}
                 chips={
                   <ListingInfoChips
                     listing={{ ...listing, mealsServed: meta.mealsServed }}
                     variant="detail"
                     surface="meals"
                     onSelect={scrollToListingSection}
+                    onEnquire={unlocked ? undefined : () => setEnquireOpen(true)}
                   />
                 }
               />
@@ -307,8 +295,6 @@ export function MessDetailPage() {
                 : []
             }
             contactAuthorized={Boolean(contact)}
-            onBeforeOpen={() => extras.hold('photos')}
-            openToken={extras.photoOpenToken}
             onNeedContact={contact || contactViewed ? undefined : () => setEnquireOpen(true)}
           />
           )}
@@ -317,7 +303,7 @@ export function MessDetailPage() {
         {listing.mapUrl ? (
           <div className="mt-6 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h2 className="text-lg font-semibold text-navy">{t('discovery.location')}</h2>
-            {extras.allowed ? (
+            {unlocked ? (
               <div className="mt-3">
                 <ListingMapLink listing={listing} />
               </div>
@@ -326,7 +312,7 @@ export function MessDetailPage() {
                 <p className="mt-3 text-[15px] text-text-secondary">{t('discovery.enquireForMap', { defaultValue: 'Map and exact location are shared after you send an enquiry.' })}</p>
                 <GetContactDetailsButton
                   listingId={listing.id}
-                  onClick={() => extras.hold('map')}
+                  onClick={() => setEnquireOpen(true)}
                   className="mt-4"
                   aria-label={`${t('discovery.openMaps')}: ${listing.name}`}
                 />
@@ -347,7 +333,6 @@ export function MessDetailPage() {
           setEnquireOpen(false);
         }}
       />
-      {extras.dialog}
     </section>
   );
 }

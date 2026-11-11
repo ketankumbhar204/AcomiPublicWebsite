@@ -14,8 +14,8 @@
     "about": "About",
     "home": "Home",
     "explore": "Explore",
-    "places": "Places",
-    "meals": "Meals",
+    "places": "Rental properties",
+    "meals": "Tiffin and meal services",
     "createAccount": "Create account",
     "dashboard": "Dashboard",
     "mySpaces": "My Spaces",
@@ -111,7 +111,7 @@
     "loginTitle": "Sign in to ACOMI",
     "signedIn": "You're signed in",
     "registerTitle": "Create your ACOMI account",
-    "loginBody": "Use the same mobile number and password as the ACOMI app. Customers stay on this website. Owners and staff are taken to the ACOMI workspace.",
+    "loginBody": "Use the same mobile number and password as the Acomi app. Customers stay on this website. Owners and staff are taken to the ACOMI workspace.",
     "workspaceOpening": "Welcome back. Opening your ACOMI workspace…",
     "workspaceOpeningHint": "You will be taken to the operations app in a moment.",
     "workspaceLookupFailed": "We signed you in, but could not confirm your workspace role. Please try again.",
@@ -143,7 +143,7 @@
   },
   "notifications": {
     "title": "Notifications",
-    "subtitle": "Updates about your contact enquiries. Open a notification to continue in the ACOMI app.",
+    "subtitle": "Updates about your contact enquiries. Open a notification to continue in the Acomi app.",
     "empty": "No notifications yet.",
     "viewAll": "View all",
     "unread": "Unread",
@@ -161,10 +161,10 @@
   "enquiries": {
     "title": "My Enquiries",
     "subtitle": "Contact requests you sent to ACOMI. Owner details are shared by email when they can be shared.",
-    "appOnlyTitle": "View enquiries in the ACOMI app",
-    "appOnlyBody": "Enquiry details and owner contacts are available in the ACOMI Android app — not on this website.",
-    "appOnlyFromNotificationTitle": "Continue in the ACOMI app",
-    "appOnlyFromNotificationBody": "Open the ACOMI app to view this enquiry and any shared contact details.",
+    "appOnlyTitle": "View enquiries in the Acomi app",
+    "appOnlyBody": "Enquiry details and owner contacts are available in the Acomi Android app — not on this website.",
+    "appOnlyFromNotificationTitle": "Continue in the Acomi app",
+    "appOnlyFromNotificationBody": "Open the Acomi app to view this enquiry and any shared contact details.",
     "appOnlyBrowse": "Continue browsing places",
     "empty": "You have not requested contact details yet.",
     "emptyFilter": "No enquiries match this filter.",
@@ -175,7 +175,7 @@
     "respondedOnHint": "Search your inbox for the ACOMI email from this date.",
     "pendingHint": "Your enquiry is being reviewed by ACOMI.",
     "sharedHint": "ACOMI has shared the contact details with you. Please check your email.",
-    "sharedInAppHint": "Contact details are ready in the ACOMI app under My Enquiries.",
+    "sharedInAppHint": "Contact details are ready in the Acomi app under My Enquiries.",
     "rejectedHint": "Your enquiry was reviewed by ACOMI but could not be fulfilled.",
     "expiredHint": "This enquiry has expired.",
     "helpTitle": "Need help?",
@@ -196,7 +196,7 @@
         "title": "Check your email",
         "body": "The owner contact details for {{name}} have been sent to your email. Please check your inbox and spam folder for this enquiry.",
         "inAppTitle": "Your enquiry is ready",
-        "inAppBody": "View the contact details for {{name}} in the ACOMI app under My Enquiries."
+        "inAppBody": "View the contact details for {{name}} in the Acomi app under My Enquiries."
       },
       "EXPIRED": {
         "title": "This enquiry has expired",
@@ -251,13 +251,13 @@
       "shortLabel": "Mess vendor"
     },
     "ACCOMMODATION_SEEKER": {
-      "title": "I need a place",
-      "description": "Find a PG, hostel, co-living or rental.",
+      "title": "Search PGs and Rentals",
+      "description": "Find PGs, hostels, co-living, rentals and corporate stays.",
       "shortLabel": "Looking for a place"
     },
     "MEAL_SEEKER": {
-      "title": "I need meals",
-      "description": "Find a mess or meal service.",
+      "title": "Search Tiffin and Meal Services",
+      "description": "Find tiffin providers, mess services and meal options.",
       "shortLabel": "Looking for meals"
     }
   },
@@ -424,6 +424,10 @@
         "rental": {
           "name": "Rental",
           "line": "Explore rental listings and the property information provided on each one."
+        },
+        "corporateStay": {
+          "name": "Corporate Stay",
+          "line": "Explore corporate stays and serviced accommodation options for business travellers and extended stays."
         }
       }
     },
@@ -450,22 +454,23 @@
     "discoverySteps": {
       "eyebrow": "Finding a place or meals",
       "title": "How finding something on ACOMI works",
+      "badge": "In 4 simple steps",
       "steps": {
         "location": {
           "title": "Choose a location",
-          "line": "Search an area, city, or pincode."
+          "line": "Search by area, city, or pincode to find relevant options."
         },
         "explore": {
           "title": "Explore places or meals",
-          "line": "Open the listings for that location."
+          "line": "Browse PGs, hostels, co-living, rentals, corporate stays or tiffin and meal services that fit your needs."
         },
         "review": {
           "title": "Review what is listed",
-          "line": "Read the information that listing provides."
+          "line": "Check photos, amenities, rent, food options and other details shared by the provider."
         },
         "enquire": {
           "title": "Send an enquiry",
-          "line": "Ask for contact details. This is not a booking."
+          "line": "Get the provider's contact details and connect directly. This is not a booking."
         }
       }
     },
@@ -513,11 +518,16 @@
       "howManyPlates": "How many plates?"
     },
     "twoModes": {
+      "eyebrow": "The ACOMI platform",
       "title": "One platform. Two operations.",
+      "subtitle": "Everything you need to <highlight>manage accommodation and meals</highlight> in one place.",
       "mealsEyebrow": "Mess · Food operations",
       "mealsTitle": "Meals",
+      "mealsBody": "Run your mess or meal service end to end.",
       "lodgingEyebrow": "PG · Hostel · Co-living · Rental",
       "lodgingTitle": "Accommodation",
+      "lodgingBody": "Manage your property, members and payments easily.",
+
       "steps": {
         "building": "Building",
         "floor": "Floor",
@@ -745,7 +755,7 @@
       "title": "Platforms",
       "note": "Places and meals are on this website. The web app and the Android app are where owners, operators, and invited members run a space or take part in one.",
       "web": "Web",
-      "androidApp": "ACOMI Android app",
+      "androidApp": "Acomi Android app",
       "openWebApp": "Open web app"
     },
     "visual": {
@@ -887,7 +897,7 @@
     },
     "android": {
       "title": "Android application",
-      "body": "The ACOMI Android app (com.acomi) is the same product for on-site work.",
+      "body": "The Acomi Android app (com.acomi) is the same product for on-site work.",
       "note": "No store URL is published on this page. iOS is not offered as a public download."
     }
   },
@@ -1184,8 +1194,8 @@
     "getContactDetails": "Get Contact Details",
     "inquirySent": "Inquiry sent",
     "inquirySentByEmail": "Sent to your email",
-    "inquirySentInApp": "Sent in the ACOMI app",
-    "inquirySentEmailAndApp": "Sent to your email and the ACOMI app",
+    "inquirySentInApp": "Sent in the Acomi app",
+    "inquirySentEmailAndApp": "Sent to your email and the Acomi app",
     "view": "View",
     "viewDetails": "View Details",
     "infoAvailable": "Information available",
@@ -1234,7 +1244,7 @@
     "enquireOr": "Don't use Android?",
     "enquireChooseTitle": "Get owner contact details",
     "enquireChooseBody": "Send your enquiry through ACOMI to get the owner's contact details.",
-    "enquireSendOnApp": "Send on ACOMI App",
+    "enquireSendOnApp": "Send on Acomi App",
     "enquireRecommended": "Recommended",
     "enquireUnlimitedTitle": "Unlimited enquiries",
     "enquireFreeAndroid": "Free on Android!",
@@ -1260,18 +1270,18 @@
     "viewHereContactFailed": "Contact details could not be loaded. Try again.",
     "viewHereContactRetry": "Try again",
     "enquireAppSentTitle": "Enquiry sent!",
-    "enquireAppSentBody": "Open ACOMI app to check owner contact details.",
-    "enquireAlreadyAppTitle": "Already sent to ACOMI App",
-    "enquireAlreadyAppBody": "Owner contact details were already sent to ACOMI App on {{date}}.",
-    "enquireAlreadyAppBodyNoDate": "Owner contact details were already sent to ACOMI App.",
+    "enquireAppSentBody": "Open Acomi app to check owner contact details.",
+    "enquireAlreadyAppTitle": "Already sent to Acomi App",
+    "enquireAlreadyAppBody": "Owner contact details were already sent to Acomi App on {{date}}.",
+    "enquireAlreadyAppBodyNoDate": "Owner contact details were already sent to Acomi App.",
     "enquireAlreadyEmailTitle": "Already sent by email",
     "enquireAlreadyEmailBody": "Owner contact details were already emailed on {{date}}.",
     "enquireAlreadyEmailBodyTo": "Owner contact details were already emailed on {{date}} to {{email}}.",
     "enquireAlreadyEmailBodyNoDate": "Owner contact details were already emailed.",
     "enquireWantEmailInstead": "Want it by email instead?",
     "enquireWantAppInstead": "Want it in ACOMI instead?",
-    "enquireAppPromoTitle": "Get any number of enquiries for free on ACOMI app!",
-    "enquireAppPromoBody": "Use the ACOMI app to make unlimited enquiries, anytime, anywhere.",
+    "enquireAppPromoTitle": "Get any number of enquiries for free on Acomi app!",
+    "enquireAppPromoBody": "Use the Acomi app to make unlimited enquiries, anytime, anywhere.",
     "enquireSendingTitle": "Sending your enquiry...",
     "enquireSendingAppBody": "Please wait while we send your enquiry to ACOMI.",
     "enquireSendingEmailBody": "Please wait while we send owner contact details to your email.",
@@ -1288,11 +1298,11 @@
     "contactDetailsViewed": "Contact details viewed",
     "inquirySentTo": "Sent to {{email}}",
     "enquireSuccessTitle": "Enquiry sent!",
-    "enquireSuccessBodyReady": "Your enquiry is ready. Open ACOMI to view the owner's contact details.",
-    "enquireSuccessBodyPending": "We'll notify you when contact details are available. Open ACOMI to track your enquiry.",
-    "enquireOpenApp": "Open ACOMI App",
-    "enquireDontHaveApp": "Don't have ACOMI?",
-    "enquireDownloadApp": "Download ACOMI",
+    "enquireSuccessBodyReady": "Your enquiry is ready. Open Acomi to view the owner's contact details.",
+    "enquireSuccessBodyPending": "We'll notify you when contact details are available. Open Acomi to track your enquiry.",
+    "enquireOpenApp": "Open Acomi App",
+    "enquireDontHaveApp": "Don't have Acomi?",
+    "enquireDownloadApp": "Download Acomi",
     "enquireReadyTitle": "Enquiry ready!",
     "enquireReadyBody": "Get owner contact details in ACOMI.",
     "enquirePendingTitleShort": "Enquiry sent!",
@@ -1301,8 +1311,8 @@
     "enquireAlreadyPendingBodyShort": "We'll notify you when contact details are available.",
     "enquireAlreadyReadyBodyShort": "Get owner contact details in ACOMI.",
     "enquireAlreadyEmailedBodyShort": "Contact details were emailed.",
-    "enquireAppCtaReady": "Open ACOMI App",
-    "enquireAppCtaPending": "Open ACOMI App",
+    "enquireAppCtaReady": "Open Acomi App",
+    "enquireAppCtaPending": "Open Acomi App",
     "enquireAppHint": "Unlimited enquiries · Free on Android",
     "enquireEmailCtaReady": "Get on email",
     "enquireEmailCtaExhausted": "Get {{count}} more enquiries",
@@ -1331,7 +1341,7 @@
     "enquireSuccessPendingTitle": "Enquiry sent!",
     "enquireSuccessPendingBody": "We'll notify you when details are available.",
     "enquireSuccessAppBody": "Get details free in ACOMI",
-    "enquireSuccessAppCta": "Get the ACOMI App",
+    "enquireSuccessAppCta": "Get the Acomi App",
     "enquireSuccessAppNote": "Unlimited enquiries · Free on Android",
     "enquireViewMyEnquiries": "View My Enquiries →",
     "enquireEmailRequired": "Enter your email to continue.",
@@ -1339,14 +1349,14 @@
     "enquireAlreadySharedTitle": "Already sent",
     "enquireAlreadySharedBody": "Contact details were emailed.",
     "enquireAlreadySharedInAppTitle": "Your enquiry is ready",
-    "enquireAlreadySharedInAppBody": "View the contact details for this place in the ACOMI app.",
+    "enquireAlreadySharedInAppBody": "View the contact details for this place in the Acomi app.",
     "enquireAlreadySharedBodyNoDate": "Contact details were emailed.",
     "enquireAlreadyNoNewEmail": "A new email was not sent.",
     "enquireAlreadyPendingTitle": "You've already enquired",
     "enquireAlreadyPendingBody": "We'll notify you when contact details are available.",
     "enquireAlreadyPendingHint": "A new email was not sent.",
     "enquireSuccessSharedInAppTitle": "Contact details ready",
-    "enquireSuccessSharedInAppBody": "View the contact details for this place in the ACOMI app.",
+    "enquireSuccessSharedInAppBody": "View the contact details for this place in the Acomi app.",
     "enquireOwnTitle": "This is your Space",
     "enquireOwnBody": "You cannot enquire about a Space you own. Owner contact information stays hidden.",
     "enquirePrivacy": "Owner contact details are shared by email for web enquiries.",
@@ -1364,7 +1374,7 @@
     "limitDesktopBody": "You can use the ACOMI mobile app for unlimited free enquiries.",
     "limitDesktopBodyLead": "You can use the ACOMI mobile app for unlimited",
     "limitDesktopBodyTail": "free enquiries.",
-    "limitMobileBody": "Get unlimited enquiries with the ACOMI Android app, or choose paid email enquiries.",
+    "limitMobileBody": "Get unlimited enquiries with the Acomi Android app, or choose paid email enquiries.",
     "limitUsedTitle_one": "You've used {{count}} free enquiry today",
     "limitUsedTitle_other": "You've used {{count}} free enquiries today",
     "limitUsedBody": "Get more enquiries to continue contacting properties.",
@@ -1381,12 +1391,12 @@
     "limitPayRejectedTitle": "Payment was not confirmed",
     "limitPayRejectedBody": "This payment was not confirmed, so the map and photo request stay closed.",
     "limitUnlimitedTitle": "Unlimited enquiries",
-    "limitUnlimitedBody": "Use the ACOMI Android app for free and enjoy unlimited enquiries.",
+    "limitUnlimitedBody": "Use the Acomi Android app for free and enjoy unlimited enquiries.",
     "limitAndroidCreditsTitle": "Enquiries in the Android app",
     "limitAndroidCreditsBody": "You get {{count}} free enquiries a day in the app. After that, mobile credits apply.",
     "limitGetCreditsCta": "Get {{count}} credits for {{amount}}",
-    "limitGetAppCta": "Get the ACOMI app",
-    "limitOpenAppCta": "Open the ACOMI app",
+    "limitGetAppCta": "Get the Acomi app",
+    "limitOpenAppCta": "Open the Acomi app",
     "limitNotNow": "Not now",
     "limitNeedHelp": "Need help?",
     "limitHelpText": "Hi, I need help with ACOMI enquiry credits.",
@@ -1405,7 +1415,7 @@
     "limitPaymentUnavailable": "Payment details are currently unavailable. Please try again later.",
     "limitPayTitle": "Get {{count}} enquiry credits",
     "limitPaySubtitle": "Pay {{amount}} to get {{count}} more email enquiries and continue contacting properties.",
-    "limitPayOrApp": "OR get free inquiries on ACOMI app",
+    "limitPayOrApp": "OR get free inquiries on Acomi app",
     "limitPayOr": "OR",
     "limitPayUsingUpi": "Pay using UPI",
     "limitPayAmount": "Amount: {{amount}}",
@@ -1489,15 +1499,19 @@
       "PG": "PG",
       "HOSTEL": "Hostel",
       "RENTAL": "Rental",
+      "CORPORATE_STAY": "Corporate Stay",
       "CO_LIVING": "Co-living",
-      "MESS": "Mess / Tiffin"
+      "MESS": "Mess / Tiffin",
+      "SERVICED": "Serviced / Corporate Apartment"
     },
     "priceSuffix": {
       "PG": "per bed / month",
       "HOSTEL": "per bed / month",
       "RENTAL": "per month",
+      "CORPORATE_STAY": "per month",
       "CO_LIVING": "per room / month",
-      "MESS": "per month"
+      "MESS": "per month",
+      "SERVICED": "per month"
     },
     "priceBasis": {
       "PER_BED": "per bed / month",

@@ -75,6 +75,11 @@ export function isListingSection(value: string | null | undefined): value is Lis
 export function listingSectionElementId(section: ListingSection): string {
   return `listing-section-${section}`;
 }
+
+/** Contact phone and map need Get Contact Details before the viewer can open them. */
+export function isContactGatedSection(section: ListingSection): boolean {
+  return section === 'contact' || section === 'map';
+}
 export const CARD_INFO_KEYS = ['contact', 'address', 'map'] as const;
 export const EXTRA_INFO_KEYS = ['rent', 'amenities', 'food'] as const;
 export const MEAL_EXTRA_INFO_KEYS = ['rent', 'menu', 'mealTiming', 'foodType', 'subscription'] as const;

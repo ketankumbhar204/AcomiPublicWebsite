@@ -40,7 +40,7 @@ export function Navbar() {
           title={t('nav.home')}
           onClick={() => setOpen(false)}
         >
-          <BrandMark size={52} className="!rounded-xl shadow-sm ring-1 ring-black/10" />
+          <BrandMark size={52} className="!rounded-xl" />
           <span className="text-xl tracking-tight">{t('brand')}</span>
         </NavLink>
 
@@ -50,10 +50,10 @@ export function Navbar() {
           </NavLink>
           <ExploreMenu />
           <NavLink to="/places" className={linkClass}>
-            {t('nav.places', { defaultValue: 'Places' })}
+            {t('nav.places', { defaultValue: 'Rental properties' })}
           </NavLink>
           <NavLink to="/meals" className={linkClass}>
-            {t('nav.meals', { defaultValue: 'Meals' })}
+            {t('nav.meals', { defaultValue: 'Tiffin and meal services' })}
           </NavLink>
         </nav>
 
@@ -114,10 +114,10 @@ export function Navbar() {
               {t('nav.home')}
             </NavLink>
             <NavLink to="/places" className="px-1 py-3 text-sm font-medium text-text" onClick={() => setOpen(false)}>
-              {t('nav.places', { defaultValue: 'Places' })}
+              {t('nav.places', { defaultValue: 'Rental properties' })}
             </NavLink>
             <NavLink to="/meals" className="px-1 py-3 text-sm font-medium text-text" onClick={() => setOpen(false)}>
-              {t('nav.meals', { defaultValue: 'Meals' })}
+              {t('nav.meals', { defaultValue: 'Tiffin and meal services' })}
             </NavLink>
             <NavLink to="/favorites" className="px-1 py-3 text-sm font-medium text-text" onClick={() => setOpen(false)}>
               {t('favorites.open', { defaultValue: 'Favorites' })}

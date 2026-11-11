@@ -218,13 +218,13 @@
       "shortLabel": "मेस विक्रेता"
     },
     "ACCOMMODATION_SEEKER": {
-      "title": "मला जागा हवी आहे",
-      "description": "PG, हॉस्टेल, भाडे आणि को-लिव्हिंग शोधा",
+      "title": "PG आणि भाडे शोधा",
+      "description": "PG, हॉस्टेल, को-लिव्हिंग, भाडे आणि कॉर्पोरेट स्टे शोधा.",
       "shortLabel": "जागा शोधत आहे"
     },
     "MEAL_SEEKER": {
-      "title": "मला जेवण हवे आहे",
-      "description": "मेस, टिफिन आणि जेवण योजना शोधा",
+      "title": "टिफिन आणि जेवण सेवा शोधा",
+      "description": "टिफिन पुरवठादार, मेस सेवा आणि जेवण पर्याय शोधा.",
       "shortLabel": "जेवण शोधत आहे"
     }
   },
@@ -574,7 +574,7 @@
     "platforms": {
       "title": "प्लॅटफॉर्म",
       "web": "वेब",
-      "androidApp": "ACOMI Android अॅप",
+      "androidApp": "Acomi Android अॅप",
       "openWebApp": "वेब अॅप उघडा"
     },
     "visual": {
@@ -716,7 +716,7 @@
     },
     "android": {
       "title": "Android अॅप्लिकेशन",
-      "body": "ACOMI Android अॅप (com.acomi) साइटवरील कामासाठी तोच उत्पादन आहे.",
+      "body": "Acomi Android अॅप (com.acomi) साइटवरील कामासाठी तोच उत्पादन आहे.",
       "note": "या पृष्ठावर स्टोअर URL प्रकाशित नाही. iOS सार्वजनिक डाउनलोड म्हणून उपलब्ध नाही."
     }
   },
@@ -1100,7 +1100,10 @@
       "PG": "PG",
       "HOSTEL": "वसतिगृह",
       "RENTAL": "भाड्याने",
-      "CO_LIVING": "सहजीवन"
+      "CORPORATE_STAY": "कॉर्पोरेट स्टे",
+      "CO_LIVING": "सहजीवन",
+      "MESS": "मेस / टिफिन",
+      "SERVICED": "सर्व्हिस / कॉर्पोरेट अपार्टमेंट"
     },
     "priceSuffix": {
       "PG": "प्रति बेड / महिना",

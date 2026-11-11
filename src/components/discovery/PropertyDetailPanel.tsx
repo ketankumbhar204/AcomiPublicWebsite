@@ -19,7 +19,6 @@ import { ListingPrice } from './ListingPrice';
 import { priceBasisLabel } from '../../lib/priceBasis';
 import { ListingUnavailableDetails } from './ListingUnavailableDetails';
 import { PhotoRequestAction } from './PhotoRequestAction';
-import { useListingExtrasGate } from './useListingExtrasGate';
 import { hasActualListingPhotos } from '../../lib/photoRequest';
 import { OwnerListingActions, useMyListing } from './OwnerListingActions';
 import { OwnerContactCard, type RevealedOwnerContact } from './OwnerContactCard';
@@ -44,7 +43,6 @@ export function PropertyDetailPanel({
   const { t } = useTranslation();
   const meta = listing.listingMetadata;
   const address = formatListingAddress(listing);
-  const cta = t('discovery.getContactDetails');
   const alreadyInquired = useAlreadyInquired(listing.id);
   const contactViewed = useContactViewed(listing.id);
   const inquiry = useInquiryRecord(listing.id);
@@ -57,8 +55,6 @@ export function PropertyDetailPanel({
   const mine = useMyListing(listing.id);
   const isOwnListing = reveal.phase === 'own' || Boolean(mine);
   const unlocked = Boolean(contact) || contactViewed || alreadyInquired || isOwnListing;
-  const extras = useListingExtrasGate(listing.id, Boolean(contact) || contactViewed || alreadyInquired);
-  extras.mapHrefRef.current = listing.mapUrl ?? '';
   useScrollToListingSection(focusSection, true, focusToken);
 
   return (
@@ -107,22 +103,12 @@ export function PropertyDetailPanel({
       </div>
       {alreadyInquired ? <InquirySentDetails listingId={listing.id} /> : null}
       <div id={listingSectionElementId('address')}>
-      {address && !unlocked ? (
-        <button
-          type="button"
-          onClick={onEnquire}
-          className="mt-2 flex w-full items-start gap-1.5 text-left text-[13px] text-text-secondary underline decoration-black/15 underline-offset-2 hover:text-primary hover:decoration-primary"
-          aria-label={`${cta}: ${listing.name}`}
-        >
-          <MapPin aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-muted" />
-          {address}
-        </button>
-      ) : address ? (
-        <p className="mt-2 flex items-start gap-1.5 text-[13px] text-text-secondary">
-          <MapPin aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-muted" />
-          {address}
-        </p>
-      ) : null}
+        {address ? (
+          <p className="mt-2 flex items-start gap-1.5 text-[13px] text-text-secondary">
+            <MapPin aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-muted" />
+            {address}
+          </p>
+        ) : null}
       </div>
       <div id={listingSectionElementId('rent')}>
       <p className="mt-4 text-[1.35rem] font-semibold text-navy">
@@ -181,8 +167,6 @@ export function PropertyDetailPanel({
             : []
         }
         contactAuthorized={Boolean(contact)}
-        onBeforeOpen={() => extras.hold('photos')}
-        openToken={extras.photoOpenToken}
         onNeedContact={contact || contactViewed ? undefined : onEnquire}
       />
       )}
@@ -190,13 +174,14 @@ export function PropertyDetailPanel({
         <ListingCardMeta
           listing={listing}
           showMaps={Boolean(listing.mapUrl?.trim())}
-          mapHref={extras.allowed ? listing.mapUrl : undefined}
-          onEnquire={extras.allowed ? undefined : () => extras.hold('map')}
+          mapHref={unlocked ? listing.mapUrl : undefined}
+          onEnquire={unlocked ? undefined : onEnquire}
           chips={
             <ListingInfoChips
               listing={listing}
               variant="detail"
               onSelect={scrollToListingSection}
+              onEnquire={unlocked ? undefined : onEnquire}
             />
           }
         />
@@ -214,7 +199,6 @@ export function PropertyDetailPanel({
           {t('discovery.openFullPage')}
         </Link>
       </div>
-      {extras.dialog}
     </div>
   );
 }
