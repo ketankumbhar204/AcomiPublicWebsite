@@ -5,7 +5,6 @@ type DiscoveryPageShellProps = {
   title: string;
   description: string;
   search: ReactNode;
-  headerActions?: ReactNode;
   filters?: ReactNode;
   /** Places keeps filters in a drawer so the listing grid can use the full width. */
   hideSidebar?: boolean;
@@ -18,7 +17,6 @@ export function DiscoveryPageShell({
   title,
   description,
   search,
-  headerActions,
   filters,
   hideSidebar = false,
   toolbar,
@@ -27,20 +25,19 @@ export function DiscoveryPageShell({
   return (
     <section className="bg-[#F4F7F8] py-3 sm:py-4">
       <div className="w-full px-3 sm:px-4">
-        <header className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <p className="text-[10px] font-semibold tracking-[0.16em] text-primary uppercase">
-              {eyebrow}
-            </p>
+        <header className="min-w-0">
+          <p className="text-[10px] font-semibold tracking-[0.16em] text-primary uppercase">
+            {eyebrow}
+          </p>
+          <div className="mt-0.5 flex min-w-0 flex-col gap-0.5 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-2">
             <h1 className="text-base font-semibold tracking-tight text-navy sm:text-lg">{title}</h1>
             <span className="hidden text-text-muted sm:inline" aria-hidden>
               ·
             </span>
-            <p className="w-full text-[12px] text-text-secondary sm:w-auto sm:text-[13px]">
+            <p className="max-w-3xl text-[12px] leading-snug text-text-secondary sm:text-[13px]">
               {description}
             </p>
           </div>
-          {headerActions ? <div className="ml-auto shrink-0">{headerActions}</div> : null}
         </header>
 
         <div

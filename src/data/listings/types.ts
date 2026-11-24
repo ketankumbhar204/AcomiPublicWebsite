@@ -60,6 +60,7 @@ export type PropertyListing = {
   capacityEstimate: number | null;
   amenityCodes: string[];
   amenityLabels?: string[];
+  rules?: Array<{ code: string; label: string }>;
   foodIncludedInRent?: boolean;
   foodAvailability?: FoodFilter | null;
   genderPolicy?: GenderFilter | null;
@@ -85,6 +86,7 @@ export type MessListing = {
   mealPrice: number | null;
   priceBasis?: PriceBasis | null;
   amenityCodes?: string[];
+  rules?: Array<{ code: string; label: string }>;
   foodIncludedInRent?: boolean;
   foodAvailability?: FoodFilter | null;
   hasContact?: boolean;

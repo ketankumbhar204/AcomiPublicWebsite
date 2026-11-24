@@ -15,6 +15,31 @@ import { ExploreMenu } from './ExploreMenu';
 import { FavoritesMenu } from './FavoritesMenu';
 import { NotificationBell } from './NotificationBell';
 
+function MenuToggle({
+  open,
+  onToggle,
+  openLabel,
+  closeLabel,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  openLabel: string;
+  closeLabel: string;
+}) {
+  return (
+    <button
+      type="button"
+      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-text"
+      aria-expanded={open}
+      aria-controls="mobile-nav"
+      aria-label={open ? closeLabel : openLabel}
+      onClick={onToggle}
+    >
+      {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+    </button>
+  );
+}
+
 export function Navbar() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -30,18 +55,23 @@ export function Navbar() {
       isActive ? 'bg-soft text-text' : 'text-text-secondary hover:text-text'
     }`;
 
+  const toggleMenu = () => setOpen((value) => !value);
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur-xl">
-      <Container className="flex h-[4.5rem] !max-w-none items-center justify-between gap-4">
+      <Container className="flex h-[4.5rem] !max-w-none items-center justify-between gap-3 md:gap-4">
         <NavLink
           to="/"
-          className="flex items-center gap-2.5 font-bold text-text"
+          className="flex shrink-0 flex-col items-center gap-0.5 font-bold text-text md:flex-row md:items-center md:gap-2.5"
           aria-label={t('nav.home')}
           title={t('nav.home')}
           onClick={() => setOpen(false)}
         >
-          <BrandMark size={52} className="!rounded-xl" />
-          <span className="text-xl tracking-tight">{t('brand')}</span>
+          <BrandMark
+            size={52}
+            className="!h-10 !w-10 !rounded-xl md:!h-[52px] md:!w-[52px]"
+          />
+          <span className="text-[11px] leading-none tracking-tight md:text-xl">{t('brand')}</span>
         </NavLink>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label={t('nav.primary')}>
@@ -57,7 +87,20 @@ export function Navbar() {
           </NavLink>
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Mobile header actions — phone widths only */}
+        <div className="flex items-center gap-0.5 md:hidden">
+          <FavoritesMenu />
+          <LanguageSelect variant="icon" />
+          <MenuToggle
+            open={open}
+            onToggle={toggleMenu}
+            openLabel={t('nav.openMenu')}
+            closeLabel={t('nav.closeMenu')}
+          />
+        </div>
+
+        {/* Tablet + desktop header actions — unchanged */}
+        <div className="hidden items-center gap-2 sm:gap-3 md:flex">
           {showSwitcher ? (
             <div className="hidden lg:block">
               <UserTypeSwitcher />
@@ -93,22 +136,26 @@ export function Navbar() {
             </>
           )}
 
-          <button
-            type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-text lg:hidden"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="lg:hidden">
+            <MenuToggle
+              open={open}
+              onToggle={toggleMenu}
+              openLabel={t('nav.openMenu')}
+              closeLabel={t('nav.closeMenu')}
+            />
+          </div>
         </div>
       </Container>
 
       {open ? (
         <div id="mobile-nav" className="border-t border-border bg-white lg:hidden">
           <Container className="flex flex-col py-3">
+            {isAuthenticated ? (
+              <div className="mb-1 flex items-center gap-2 border-b border-border/70 px-1 pb-3 md:hidden">
+                <NotificationBell />
+                <AccountMenu onNavigate={() => setOpen(false)} />
+              </div>
+            ) : null}
             {showSwitcher ? <UserTypeSwitcher variant="menu" onOpen={() => setOpen(false)} /> : null}
             <NavLink to="/" end className="px-1 py-3 text-sm font-medium text-text" onClick={() => setOpen(false)}>
               {t('nav.home')}
@@ -139,13 +186,23 @@ export function Navbar() {
               <>
                 <button
                   type="button"
-                  className="px-1 py-3 text-left text-sm font-medium text-text-secondary sm:hidden"
+                  className="px-1 py-3 text-left text-sm font-medium text-text-secondary md:hidden"
                   onClick={() => {
                     setOpen(false);
                     openAuth('login');
                   }}
                 >
                   {t('nav.signIn')}
+                </button>
+                <button
+                  type="button"
+                  className="px-1 py-3 text-left text-sm font-medium text-text-secondary md:hidden"
+                  onClick={() => {
+                    setOpen(false);
+                    openAuth('register');
+                  }}
+                >
+                  {t('auth.createAccount')}
                 </button>
                 <button
                   type="button"

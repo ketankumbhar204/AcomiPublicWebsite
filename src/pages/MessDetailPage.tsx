@@ -271,6 +271,27 @@ export function MessDetailPage() {
           ) : null}
         </div>
 
+        {(listing.rules?.length ?? 0) > 0 ? (
+          <div className="mt-8 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
+            <h2 className="text-lg font-semibold text-navy">
+              {t('discovery.rules', { defaultValue: 'Rules & Guidelines' })}
+            </h2>
+            <ul className="mt-4 space-y-2">
+              {listing.rules!.map((rule, index) => (
+                <li
+                  key={`${rule.code}-${index}`}
+                  className="flex items-start gap-2 text-sm text-text-secondary"
+                >
+                  <span className="mt-0.5 text-register" aria-hidden>
+                    ✓
+                  </span>
+                  <span>{rule.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         {listing.description ? (
           <div className="mt-8 rounded-[24px] border border-black/5 bg-white p-6 shadow-[var(--shadow-sm)]">
             <h2 className="text-lg font-semibold text-navy">{t('discovery.aboutMess')}</h2>

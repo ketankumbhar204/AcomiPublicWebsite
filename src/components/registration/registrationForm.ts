@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import type {
   CreateMessRegistrationRequest,
   CreatePropertyRegistrationRequest,
@@ -69,57 +70,60 @@ export const EMPTY_FORM: RegistrationForm = {
   mobileNumber: '',
 };
 
-export function validatePropertyStep(form: RegistrationForm): FieldErrors {
+export function validatePropertyStep(form: RegistrationForm, t: TFunction): FieldErrors {
   const errors: FieldErrors = {};
   if (!form.propertyType) {
-    errors.propertyType = 'Select a property type.';
+    errors.propertyType = t('registration.errors.selectPropertyType');
   }
   if (!form.propertyName.trim()) {
-    errors.propertyName = form.propertyType === 'MESS' ? 'Mess name is required.' : 'Property name is required.';
+    errors.propertyName =
+      form.propertyType === 'MESS'
+        ? t('registration.errors.messNameRequired')
+        : t('registration.errors.propertyNameRequired');
   }
   if (!form.ownerName.trim()) {
-    errors.ownerName = 'Owner name is required.';
+    errors.ownerName = t('registration.errors.ownerNameRequired');
   }
   return errors;
 }
 
-export function validateDetailsStep(form: RegistrationForm): FieldErrors {
+export function validateDetailsStep(form: RegistrationForm, t: TFunction): FieldErrors {
   const errors: FieldErrors = {};
   if (!form.buildingName.trim()) {
-    errors.buildingName = 'Property / Apartment / Building name is required.';
+    errors.buildingName = t('registration.errors.buildingRequired');
   }
   const locationText = (form.locationSelected ? form.addressLine : form.locationQuery).trim();
   if (!locationText) {
-    errors.locationQuery = 'Enter a location.';
+    errors.locationQuery = t('registration.errors.enterLocation');
   }
   if (form.pincode.trim() && !isValidPincode(form.pincode)) {
-    errors.pincode = 'Enter a valid 6-digit pincode.';
+    errors.pincode = t('registration.errors.invalidPincode');
   }
 
   const price = Number(form.startingPrice);
   if (form.propertyType === 'CORPORATE_STAY' && !isPriceBasis(form.priceBasis)) {
-    errors.startingPrice = 'Choose per bed, per room, or per unit for Corporate Stay.';
+    errors.startingPrice = t('registration.errors.chooseCorporateBasis');
   } else if (!form.startingPrice.trim() || !Number.isFinite(price) || price <= 0) {
-    errors.startingPrice = 'Enter a valid monthly price.';
+    errors.startingPrice = t('registration.errors.invalidMonthlyPrice');
   }
 
   if (form.propertyType === 'MESS') {
     const mealPrice = Number(form.mealPrice);
     if (!form.mealPrice.trim() || !Number.isFinite(mealPrice) || mealPrice <= 0) {
-      errors.mealPrice = 'Enter a valid per meal / tiffin price.';
+      errors.mealPrice = t('registration.errors.invalidMealPrice');
     }
   }
 
   if (form.capacityEstimate.trim()) {
     const capacity = Number(form.capacityEstimate);
     if (!Number.isInteger(capacity) || capacity < 0) {
-      errors.capacityEstimate = 'Enter a whole number.';
+      errors.capacityEstimate = t('registration.errors.wholeNumber');
     }
   }
 
   const mapUrl = form.mapUrl.trim();
   if (mapUrl && !/^https?:\/\//i.test(mapUrl)) {
-    errors.mapUrl = 'Enter a link starting with http:// or https://';
+    errors.mapUrl = t('registration.errors.invalidMapUrl');
   }
 
   const latRaw = form.latitude.trim();
@@ -128,10 +132,10 @@ export function validateDetailsStep(form: RegistrationForm): FieldErrors {
     const latitude = Number(latRaw);
     const longitude = Number(lngRaw);
     if (!latRaw || !Number.isFinite(latitude) || latitude < -90 || latitude > 90) {
-      errors.latitude = 'Enter a valid latitude between -90 and 90.';
+      errors.latitude = t('registration.errors.invalidLatitude');
     }
     if (!lngRaw || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
-      errors.longitude = 'Enter a valid longitude between -180 and 180.';
+      errors.longitude = t('registration.errors.invalidLongitude');
     }
   }
 
@@ -168,10 +172,10 @@ export function formCoordinate(value: string): number | undefined {
   return Number.isFinite(numeric) ? numeric : undefined;
 }
 
-export function validateMobile(form: RegistrationForm): FieldErrors {
+export function validateMobile(form: RegistrationForm, t: TFunction): FieldErrors {
   return isValidMobile(form.mobileNumber)
     ? {}
-    : { mobileNumber: 'Enter a valid 10-digit mobile number.' };
+    : { mobileNumber: t('registration.errors.invalidMobile') };
 }
 
 export function buildRequest(

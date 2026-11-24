@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { ImagePlus, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { MAX_LISTING_PHOTOS, listingPhotoError } from './listingPhotos';
 
 export type SelectedListingPhoto = {
@@ -15,6 +16,7 @@ type StepPhotosProps = {
 };
 
 export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
+  const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const atLimit = photos.length >= MAX_LISTING_PHOTOS;
@@ -26,7 +28,7 @@ export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
     const next = [...photos];
     let rejection: string | null = null;
     for (const file of Array.from(list)) {
-      const error = listingPhotoError(file, next.length);
+      const error = listingPhotoError(file, next.length, t);
       if (error) {
         rejection = error;
         break;
@@ -56,8 +58,8 @@ export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-[15px] font-semibold text-text">Upload photos</h3>
-        <p className="mt-1 text-[13px] text-muted">Add up to 3 photos. Maximum 3 MB per photo.</p>
+        <h3 className="text-[15px] font-semibold text-text">{t('registration.photos.title')}</h3>
+        <p className="mt-1 text-[13px] text-muted">{t('registration.photos.subtitle')}</p>
         {note ? <p className="mt-1 text-[13px] text-muted">{note}</p> : null}
       </div>
 
@@ -68,7 +70,7 @@ export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
         className="reg-focus flex w-full flex-col items-center gap-2 rounded-xl border border-dashed border-border bg-background px-4 py-6 text-center text-[13px] font-medium text-text-secondary transition hover:border-register hover:text-text disabled:cursor-not-allowed disabled:opacity-60"
       >
         <ImagePlus aria-hidden className="h-5 w-5 text-register" />
-        {atLimit ? '3 photos added' : 'Choose photos'}
+        {atLimit ? t('registration.photos.threeAdded') : t('registration.photos.choose')}
       </button>
       <input
         ref={inputRef}
@@ -80,7 +82,7 @@ export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
       />
 
       <p className="text-[12px] text-muted" aria-live="polite">
-        {photos.length} of 3 photos added.
+        {t('registration.photos.countAdded', { count: photos.length })}
       </p>
 
       {message ? (
@@ -97,7 +99,7 @@ export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
               <button
                 type="button"
                 onClick={() => remove(photo.id)}
-                aria-label={`Remove ${photo.file.name}`}
+                aria-label={t('registration.photos.removeAria', { name: photo.file.name })}
                 className="reg-focus absolute top-1.5 right-1.5 rounded-full bg-white/95 p-1 text-text shadow-sm"
               >
                 <X aria-hidden className="h-3.5 w-3.5" />
@@ -106,7 +108,7 @@ export function StepPhotos({ photos, onChange, note }: StepPhotosProps) {
           ))}
         </ul>
       ) : (
-        <p className="text-[12px] text-muted">Photos are optional. You can continue without any.</p>
+        <p className="text-[12px] text-muted">{t('registration.photos.optionalContinue')}</p>
       )}
     </div>
   );

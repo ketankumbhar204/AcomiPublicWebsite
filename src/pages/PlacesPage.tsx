@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { locationsApi } from '../api/locationsApi';
 import { ActionButton } from '../components/common/ActionButton';
-import { ListingHeaderActions } from '../components/common/PersistentListingActions';
 import { ActiveFilterChips } from '../components/discovery/ActiveFilterChips';
 import { DiscoveryPageShell } from '../components/discovery/DiscoveryPageShell';
 import { DiscoverySearchBar } from '../components/discovery/DiscoverySearchBar';
@@ -267,7 +266,6 @@ export function PlacesPage() {
         eyebrow={t('places.eyebrow')}
         title={t('places.title')}
         description={t('places.description')}
-        headerActions={<ListingHeaderActions />}
         search={
           <DiscoverySearchBar
             searchId="places-search"

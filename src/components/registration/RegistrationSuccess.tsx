@@ -1,4 +1,5 @@
 import { Check, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { CtaButton } from './RegistrationButtons';
 
 type RegistrationSuccessProps = {
@@ -17,12 +18,13 @@ export function RegistrationSuccess({
   reference,
   onClose,
 }: RegistrationSuccessProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex h-full flex-col justify-center px-5 py-8 text-center sm:px-6">
       <button
         type="button"
         onClick={onClose}
-        aria-label="Close"
+        aria-label={t('registration.close')}
         className="reg-focus absolute top-4 right-4 rounded-lg p-1.5 text-muted transition hover:bg-background hover:text-text"
       >
         <X aria-hidden className="h-5 w-5" />
@@ -37,12 +39,12 @@ export function RegistrationSuccess({
       <p className="mt-2 text-[14px] leading-relaxed text-text-secondary">{body}</p>
       <div className="mt-5 rounded-xl bg-register-soft px-4 py-3">
         <p className="text-[11px] font-semibold tracking-[0.14em] text-text-secondary uppercase">
-          Reference
+          {t('registration.reference')}
         </p>
         <p className="mt-1 text-[16px] font-semibold text-register">{reference}</p>
       </div>
       <CtaButton onClick={onClose} className="mt-6 w-full">
-        Back to ACOMI
+        {t('registration.backToAcomi')}
       </CtaButton>
     </div>
   );

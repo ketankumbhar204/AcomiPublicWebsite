@@ -14,7 +14,18 @@
     "about": "గురించి",
     "home": "హోమ్",
     "accountMenu": "ఖాతా మెను",
-    "accountMenuHint": "మీ ACOMI ఖాతాను నిర్వహించండి"
+    "accountMenuHint": "మీ ACOMI ఖాతాను నిర్వహించండి",
+    "explore": "అన్వేషించండి",
+    "places": "అద్దె ప్రాపర్టీలు",
+    "meals": "టిఫిన్ మరియు భోజన సేవలు",
+    "createAccount": "ఖాతా సృష్టించండి",
+    "dashboard": "డాష్‌బోర్డ్",
+    "mySpaces": "నా స్పేస్‌లు",
+    "account": "ఖాతా",
+    "signOut": "సైన్ అవుట్",
+    "notifications": "నోటిఫికేషన్లు",
+    "myEnquiries": "నా విచారణలు",
+    "favorites": "ఇష్టమైనవి"
   },
   "language": {
     "title": "భాష",
@@ -32,27 +43,32 @@
     "heading": "ACOMI మీకు ఎలా సహాయపడగలదు?",
     "getStartedFree": "ఉచితంగా ప్రారంభించండి",
     "seeHowItWorks": "ఎలా పని చేస్తుందో చూడండి",
-    "builtFor": "భారతీయ మెస్, PG, హాస్టల్ మరియు కో-లివింగ్ ఆపరేటర్ల కోసం రూపొందించబడింది."
+    "builtFor": "భారతీయ మెస్, PG, హాస్టల్ మరియు కో-లివింగ్ ఆపరేటర్ల కోసం రూపొందించబడింది.",
+    "eyebrow": "ACOMIకి స్వాగతం",
+    "subtitle": "ప్రారంభించడానికి మీకు సరిపోయే ఎంపికను ఎంచుకోండి",
+    "findPlace": "స్థలం వెతకండి",
+    "findMeals": "భోజనం వెతకండి",
+    "seeHowFindingWorks": "వెతకడం ఎలా పనిచేస్తుందో చూడండి"
   },
   "userTypes": {
     "PROPERTY_OWNER": {
       "title": "నేను ప్రాపర్టీ నిర్వహిస్తాను",
-      "description": "PG • Hostel • Rental • Co-living",
+      "description": "ఆక్యుపెన్సీ, గదులు, సభ్యులు మరియు చెల్లింపులు నిర్వహించండి.",
       "shortLabel": "ప్రాపర్టీ యజమాని"
     },
     "MESS_VENDOR": {
       "title": "నేను మెస్ / ఆహార సేవ నడుపుతాను",
-      "description": "Mess • Tiffin • Meal service",
+      "description": "కస్టమర్లు, మెనూ, భోజనాలు మరియు హెడ్‌కౌంట్ నిర్వహించండి.",
       "shortLabel": "మెస్ విక్రేత"
     },
     "ACCOMMODATION_SEEKER": {
-      "title": "PG మరియు అద్దె వెతకండి",
-      "description": "PG, హాస్టల్, కో-లివింగ్, అద్దె మరియు కార్పొరేట్ స్టే వెతకండి.",
+      "title": "నాకు స్థలం కావాలి",
+      "description": "PG, హాస్టల్, కో-లివింగ్ లేదా అద్దె స్థలం వెతకండి.",
       "shortLabel": "స్థలం వెతుకుతున్నాను"
     },
     "MEAL_SEEKER": {
-      "title": "టిఫిన్ మరియు భోజన సేవలు వెతకండి",
-      "description": "టిఫిన్ అందించేవారు, మెస్ సేవలు మరియు భోజన ఎంపికలు వెతకండి.",
+      "title": "నాకు భోజనం కావాలి",
+      "description": "మెస్ లేదా భోజన సేవ వెతకండి.",
       "shortLabel": "భోజనం వెతుకుతున్నాను"
     }
   },
@@ -145,7 +161,13 @@
   },
   "finalCta": {
     "title": "మీ స్థలాన్ని ఒకే చోట నుండి నడపండి.",
-    "subtitle": "ఆక్యుపెన్సీ, భోజనం, సంఖ్య మరియు చెల్లింపులు — కలిసి."
+    "subtitle": "ఆక్యుపెన్సీ, భోజనం, సంఖ్య మరియు చెల్లింపులు — కలిసి.",
+    "balancedTitle": "మీరు ఏమి చేయాలనుకుంటున్నారు?",
+    "balancedSubtitle": "స్థలం లేదా భోజనం వెతకండి, లేదా ప్రాపర్టీ లేదా ఫుడ్ సర్వీస్ నడపండి.",
+    "findPlace": "స్థలం వెతకండి",
+    "findMeals": "భోజనం వెతకండి",
+    "manageProperty": "నా ప్రాపర్టీని నిర్వహించండి",
+    "runFood": "నా ఫుడ్ సర్వీస్ నడపండి"
   },
   "home": {
     "problem": {
@@ -157,7 +179,7 @@
       "title": "ఒక ప్లాట్‌ఫారమ్. రెండు ఆపరేషన్లు.",
       "mealsEyebrow": "మెస్ · ఆహార ఆపరేషన్లు",
       "mealsTitle": "భోజనం",
-      "lodgingEyebrow": "PG · Hostel · Co-living · Rental",
+      "lodgingEyebrow": "PG · హాస్టల్ · కో-లివింగ్ · అద్దె",
       "lodgingTitle": "వసతి",
       "steps": {
         "building": "భవనం",
@@ -172,7 +194,11 @@
         "participation": "పాల్గొనడం",
         "headcount": "సంఖ్య",
         "kitchen": "వంటగది"
-      }
+      },
+      "eyebrow": "ACOMI ప్లాట్‌ఫామ్",
+      "subtitle": "<highlight>వసతి మరియు భోజనాన్ని నిర్వహించడానికి</highlight> కావలసిందంతా ఒకే చోట.",
+      "mealsBody": "మీ మెస్ లేదా భోజన సేవను మొదటి నుండి చివరి వరకు నడపండి.",
+      "lodgingBody": "మీ ప్రాపర్టీ, సభ్యులు మరియు చెల్లింపులను సులభంగా నిర్వహించండి."
     },
     "headcount": {
       "eyebrow": "మెస్ · సంఖ్య",
@@ -279,7 +305,7 @@
       "title": "స్పేస్ రకాలు",
       "types": {
         "mess": {
-          "name": "MESS",
+          "name": "మెస్",
           "line": "కస్టమర్లు · మెనూ · సంఖ్య"
         },
         "pg": {
@@ -287,18 +313,19 @@
           "line": "గదులు · పడకలు · సభ్యులు"
         },
         "hostel": {
-          "name": "HOSTEL",
+          "name": "హాస్టల్",
           "line": "వసతి · ఆక్యుపెన్సీ"
         },
         "coliving": {
-          "name": "CO-LIVING",
+          "name": "కో-లివింగ్",
           "line": "భాగస్వామ్య వసతి"
         },
         "rental": {
-          "name": "RENTAL",
+          "name": "అద్దె",
           "line": "యూనిట్లు · అద్దెదారులు"
         }
-      }
+      },
+      "subtitle": "స్పేస్ రకాన్ని ఒక్కసారే ఎంచుకుంటారు. మెస్ కస్టమర్లు మరియు మెనూలతో ప్రారంభమవుతుంది. ప్రాపర్టీ గదులు మరియు బెడ్‌లతో ప్రారంభమవుతుంది."
     },
     "howItWorks": {
       "title": "ఇది ఎలా పని చేస్తుంది",
@@ -335,7 +362,8 @@
           "3": "పాల్గొనడం సేకరించండి",
           "4": "సంఖ్య చూడండి"
         }
-      }
+      },
+      "eyebrow": "ఓనర్లు మరియు ఆపరేటర్ల కోసం"
     },
     "access": {
       "title": "ప్రవేశం",
@@ -355,6 +383,15 @@
         "respondToPolls": "భోజన పోల్‌లకు స్పందించండి",
         "submitProof": "చెల్లింపు రుజువు సమర్పించండి",
         "raiseComplaints": "ఫిర్యాదులు నమోదు చేయండి"
+      },
+      "whoTitle": "ACOMIని ఎవరు ఉపయోగిస్తారు",
+      "seekerTitle": "స్థలం లేదా భోజనం కోసం వెతుకుతున్నవారు",
+      "seekerNote": "ఇది వేరొకరు నడిపే స్పేస్‌లో సభ్యులుగా ఉండటం కంటే భిన్నమైనది.",
+      "seeker": {
+        "findPlace": "ఈ వెబ్‌సైట్‌లో స్థలం వెతకండి",
+        "findMeals": "ఈ వెబ్‌సైట్‌లో భోజనం వెతకండి",
+        "review": "లిస్టింగ్‌లోని సమాచారాన్ని పరిశీలించండి",
+        "enquire": "సంప్రదింపు వివరాల కోసం విచారణ పంపండి"
       }
     },
     "multiSpace": {
@@ -375,7 +412,8 @@
       "title": "ప్లాట్‌ఫారమ్‌లు",
       "web": "వెబ్",
       "androidApp": "Acomi Android యాప్",
-      "openWebApp": "వెబ్ యాప్ తెరవండి"
+      "openWebApp": "వెబ్ యాప్ తెరవండి",
+      "note": "స్థలాలు మరియు భోజనాలు ఈ వెబ్‌సైట్‌లో ఉంటాయి. ఓనర్లు, ఆపరేటర్లు మరియు ఆహ్వానించిన సభ్యులు వెబ్ యాప్ మరియు Android యాప్‌లో స్పేస్‌ను నడుపుతారు లేదా అందులో పాల్గొంటారు."
     },
     "visual": {
       "occupancy": "ఆక్యుపెన్సీ",
@@ -389,6 +427,129 @@
       "activePeople": "సక్రియ వ్యక్తులు",
       "messCustomers": "MESS కస్టమర్లు",
       "pgResidents": "PG నివాసులు"
+    },
+    "heroPhones": {
+      "property": "ప్రాపర్టీ నిర్వహణ",
+      "food": "ఫుడ్ సర్వీస్ నిర్వహణ"
+    },
+    "atAGlance": {
+      "title": "ఒక్క చూపులో",
+      "body": "ప్రొడక్ట్ నుండి తీసుకున్న నమూనా గణాంకాలు. ఓనర్ ఏమేమి ట్రాక్ చేయగలరో ఇవి చూపిస్తాయి. ఇవి లైవ్ లిస్టింగ్‌లు లేదా కంపెనీ గణాంకాలు కావు."
+    },
+    "findPlace": {
+      "eyebrow": "స్థలాలు",
+      "title": "మీకు సరిపోయే స్థలాన్ని కనుగొనండి",
+      "body": "ప్రాంతం వారీగా ACOMI లిస్టింగ్‌లను అన్వేషించండి. ప్రతి లిస్టింగ్‌లో అందించిన సమాచారం — అద్దె, షేరింగ్, సౌకర్యాలు, భోజనం, చిరునామా, మ్యాప్ వంటివి — కనిపిస్తుంది.",
+      "illustration": "చిత్రం",
+      "cta": "స్థలాలను అన్వేషించండి",
+      "types": {
+        "pg": {
+          "name": "PG",
+          "line": "PG లిస్టింగ్‌లు, అద్దె, షేరింగ్, సౌకర్యాలు మరియు లిస్టింగ్‌లో ఉన్నచోట సంప్రదింపు సమాచారం చూడండి."
+        },
+        "hostel": {
+          "name": "హాస్టల్",
+          "line": "హాస్టల్ లిస్టింగ్‌లను మరియు ప్రతి దానిలో అందించిన ప్రాపర్టీ సమాచారాన్ని చూడండి."
+        },
+        "coliving": {
+          "name": "కో-లివింగ్",
+          "line": "కో-లివింగ్ లిస్టింగ్‌లను మరియు ప్రతి స్థలానికి అందించిన వివరాలను చూడండి."
+        },
+        "rental": {
+          "name": "అద్దె ఇల్లు",
+          "line": "అద్దె లిస్టింగ్‌లను మరియు ప్రతి దానిలో అందించిన ప్రాపర్టీ సమాచారాన్ని చూడండి."
+        },
+        "corporateStay": {
+          "name": "కార్పొరేట్ స్టే",
+          "line": "వ్యాపార ప్రయాణికులు మరియు దీర్ఘకాలిక బసల కోసం కార్పొరేట్ స్టేలు మరియు సర్వీస్డ్ వసతి ఎంపికలను చూడండి."
+        }
+      }
+    },
+    "findMeals": {
+      "eyebrow": "భోజనాలు",
+      "title": "మీ రోజువారీ భోజనాన్ని కనుగొనండి",
+      "body": "ప్రాంతం వారీగా మెస్ మరియు భోజన సేవల లిస్టింగ్‌లను అన్వేషించండి. మెనూ, సమయాలు, ఆహార రకం లేదా ధర వంటి భోజన సమాచారం చూడటానికి లిస్టింగ్‌ను తెరవండి.",
+      "cta": "భోజనం వెతకండి",
+      "types": {
+        "mess": {
+          "name": "మెస్",
+          "line": "మెస్ లిస్టింగ్‌లను మరియు ప్రతి దానిలో అందించిన భోజన వివరాలను చూడండి."
+        },
+        "tiffin": {
+          "name": "టిఫిన్",
+          "line": "ఆ సేవ లిస్ట్ అయిన చోట టిఫిన్ మరియు ప్యాక్డ్ మీల్ లిస్టింగ్‌లను చూడండి."
+        },
+        "mealService": {
+          "name": "భోజన సేవ",
+          "line": "భోజన సేవల లిస్టింగ్‌లను మరియు ప్రతి దానిలో అందించిన సమాచారాన్ని చూడండి."
+        }
+      }
+    },
+    "discoverySteps": {
+      "eyebrow": "స్థలం లేదా భోజనం వెతకడం",
+      "title": "ACOMIలో వెతకడం ఎలా పనిచేస్తుంది",
+      "badge": "4 సులభమైన దశల్లో",
+      "steps": {
+        "location": {
+          "title": "ప్రాంతాన్ని ఎంచుకోండి",
+          "line": "సంబంధిత ఎంపికల కోసం ఏరియా, నగరం లేదా పిన్‌కోడ్‌తో వెతకండి."
+        },
+        "explore": {
+          "title": "స్థలాలు లేదా భోజనాలను అన్వేషించండి",
+          "line": "మీ అవసరాలకు సరిపోయే PGలు, హాస్టళ్లు, కో-లివింగ్, అద్దె ఇళ్లు, కార్పొరేట్ స్టేలు లేదా టిఫిన్ మరియు భోజన సేవలను చూడండి."
+        },
+        "review": {
+          "title": "లిస్ట్ చేసిన వివరాలు పరిశీలించండి",
+          "line": "ప్రొవైడర్ షేర్ చేసిన ఫోటోలు, సౌకర్యాలు, అద్దె, భోజన ఎంపికలు మరియు ఇతర వివరాలను చూడండి."
+        },
+        "enquire": {
+          "title": "విచారణ పంపండి",
+          "line": "ప్రొవైడర్ సంప్రదింపు వివరాలు పొంది నేరుగా మాట్లాడండి. ఇది బుకింగ్ కాదు."
+        }
+      }
+    },
+    "operatorBridge": {
+      "eyebrow": "ఓనర్లు మరియు ఆపరేటర్ల కోసం",
+      "title": "ప్రాపర్టీ లేదా ఫుడ్ సర్వీస్ నడుపుతున్నారా?",
+      "body": "ఓనర్లు మరియు ఆపరేటర్లు తమ స్పేస్‌లను నడిపేది ఇదే ACOMI ప్రొడక్ట్‌లో. ప్రాపర్టీలు గదులు, సభ్యులు మరియు బకాయిలను ట్రాక్ చేస్తాయి. ఫుడ్ సర్వీసులు కస్టమర్లు, మెనూలు మరియు ప్లేట్లను ట్రాక్ చేస్తాయి.",
+      "manageProperty": "నా ప్రాపర్టీని నిర్వహించండి",
+      "runFood": "నా ఫుడ్ సర్వీస్ నడపండి",
+      "getStarted": "ప్రారంభించండి"
+    },
+    "propertyRun": {
+      "eyebrow": "ప్రాపర్టీ",
+      "title": "మీ ప్రాపర్టీని ఒకే చోట నుండి నడపండి",
+      "body": "PG, హాస్టల్, కో-లివింగ్ మరియు అద్దె ఇళ్లు. ఆక్యుపెన్సీ, సభ్యులు మరియు బకాయిలు ప్రాపర్టీతోనే ఉంటాయి.",
+      "occupied": "నిండినవి",
+      "vacant": "ఖాళీ",
+      "reserved": "రిజర్వ్ చేసినవి",
+      "cta": "నా ప్రాపర్టీని నిర్వహించండి",
+      "capabilities": {
+        "layout": "భవనాలు, అంతస్తులు, గదులు మరియు బెడ్‌లు",
+        "occupancy": "నిండినవి, ఖాళీ మరియు రిజర్వ్ చేసినవి",
+        "members": "సభ్యులు, చేరికలు మరియు ఆహ్వానాలు",
+        "payments": "అద్దె, డిపాజిట్లు మరియు చెల్లింపు రుజువులు",
+        "issues": "ఫిర్యాదులు మరియు ఇన్వెంటరీ"
+      }
+    },
+    "foodRun": {
+      "eyebrow": "ఫుడ్ సర్వీస్",
+      "title": "మీ ఫుడ్ సర్వీస్‌ను ఒకే చోట నుండి నడపండి",
+      "body": "మెస్, టిఫిన్ మరియు భోజన సేవ. కస్టమర్లు, మెనూలు, పోల్స్, హెడ్‌కౌంట్ మరియు భోజన బకాయిలు.",
+      "plates": "ఎన్ని ప్లేట్లు సిద్ధం చేయాలో తెలుసుకోండి.",
+      "cta": "నా ఫుడ్ సర్వీస్ నడపండి",
+      "capabilities": {
+        "customers": "కస్టమర్లు",
+        "menu": "మెనూలు మరియు మీల్ ప్లాన్‌లు",
+        "poll": "పోల్స్ మరియు పాల్గొనడం",
+        "headcount": "రోజువారీ హెడ్‌కౌంట్",
+        "dues": "భోజన చెల్లింపులు మరియు రుజువులు"
+      }
+    },
+    "whatsappChat": {
+      "businessAccount": "బిజినెస్ అకౌంట్",
+      "message": "సందేశం",
+      "today": "ఈరోజు"
     }
   },
   "features": {
@@ -416,7 +577,7 @@
     "messEyebrow": "మెస్ · ఆహార ఆపరేషన్లు",
     "messTitle": "మెనూలు, భోజనాలు, సేవా స్థలాలు",
     "messBody": "మెనూ లైబ్రరీ, ఈరోజు మెనూ, షేర్. కస్టమర్లు మొదట ఐచ్ఛికం. భవనం లేదా పడక మ్యాప్ లేదు.",
-    "lodgingEyebrow": "PG · Hostel · Co-living · Rental",
+    "lodgingEyebrow": "PG · హాస్టల్ · కో-లివింగ్ · అద్దె",
     "lodgingTitle": "భవనాలు, గదులు, పడకలు",
     "lodgingBody": "క్విక్ సెటప్ లేదా మాన్యువల్ బిల్డర్. తర్వాత నివాసులను జోడించండి. భోజనం ఐచ్ఛికం, అద్దె మినహా, అక్కడ భోజన మైలురాయి లేదు.",
     "inviteEyebrow": "సభ్యులు",
@@ -842,7 +1003,14 @@
       "propertyType": "ఆస్తి రకం",
       "priceRangeMonth": "ధర పరిధి (నెలకు)",
       "monthlyPrice": "నెలవారీ ధర పరిధి",
-      "perMealPrice": "భోజనం ధర పరిధికి"
+      "perMealPrice": "భోజనం ధర పరిధికి",
+      "gender": "లింగం",
+      "sharing": "షేరింగ్",
+      "food": "భోజనం",
+      "furnishing": "ఫర్నిషింగ్",
+      "contact": "సంప్రదింపు",
+      "mealType": "భోజన రకం",
+      "foodType": "ఆహార రకం"
     },
     "sort": {
       "recommended": "సిఫార్సు చేయబడింది",
@@ -885,7 +1053,10 @@
       "PG": "మంచం / నెలకు",
       "HOSTEL": "మంచం / నెలకు",
       "RENTAL": "నెలకు",
-      "CO_LIVING": "గదికి / నెలకు"
+      "CO_LIVING": "గదికి / నెలకు",
+      "CORPORATE_STAY": "నెలకు",
+      "MESS": "నెలకు",
+      "SERVICED": "నెలకు"
     },
     "capacityUnit": {
       "PG": "పడకలు",
@@ -904,8 +1075,259 @@
       "CCTV": "CCTV",
       "HOT_WATER": "వేడి నీరు",
       "REFRIGERATOR": "రిఫ్రిజిరేటర్",
-      "WARDROBE": "వార్డ్రోబ్"
-    }
+      "WARDROBE": "వార్డ్రోబ్",
+      "BEDS": "బెడ్‌లు",
+      "CUSTOM": "ఇతర"
+    },
+    "enquireForMap": "మీరు విచారణ పంపిన తర్వాత మ్యాప్ మరియు ఖచ్చితమైన లొకేషన్ షేర్ చేయబడతాయి.",
+    "getContactDetails": "సంప్రదింపు వివరాలు పొందండి",
+    "inquirySent": "విచారణ పంపబడింది",
+    "inquirySentByEmail": "మీ ఈమెయిల్‌కు పంపబడింది",
+    "inquirySentInApp": "Acomi యాప్‌లో పంపబడింది",
+    "inquirySentEmailAndApp": "మీ ఈమెయిల్‌కు మరియు Acomi యాప్‌కు పంపబడింది",
+    "view": "చూడండి",
+    "viewDetails": "వివరాలు చూడండి",
+    "infoAvailable": "అందుబాటులో ఉన్న సమాచారం",
+    "availableInformation": "అందుబాటులో ఉన్న సమాచారం",
+    "viewAllInfo": "అన్నీ చూడండి",
+    "infoContact": "సంప్రదింపు",
+    "infoAddress": "చిరునామా",
+    "infoMap": "మ్యాప్",
+    "infoRent": "అద్దె",
+    "infoPrice": "ధర",
+    "infoMenu": "మెనూ",
+    "infoMealTiming": "భోజన సమయాలు",
+    "infoFoodType": "ఆహార రకం",
+    "infoSubscription": "సబ్‌స్క్రిప్షన్",
+    "infoAmenities": "సౌకర్యాలు",
+    "infoFood": "భోజనం",
+    "infoAvailableState": "{{field}} సమాచారం ఈ లిస్టింగ్‌లో ఉంది",
+    "infoUnavailableState": "{{field}} సమాచారం ఈ లిస్టింగ్‌లో లేదు",
+    "reviewsRatings": "రివ్యూలు & రేటింగ్‌లు",
+    "photos": "ఫోటోలు",
+    "notAvailable": "అందుబాటులో లేదు",
+    "priceOnRequest": "అభ్యర్థనపై ధర",
+    "sharing": "షేరింగ్",
+    "retry": "మళ్లీ ప్రయత్నించండి",
+    "enquireSignInBodyShort": "కొనసాగడానికి సైన్ ఇన్ చేయండి.",
+    "enquireBack": "వెనుకకు",
+    "enquireOr": "Android ఉపయోగించరా?",
+    "enquireChooseTitle": "ఓనర్ సంప్రదింపు వివరాలు పొందండి",
+    "enquireChooseBody": "ఓనర్ సంప్రదింపు వివరాలు పొందడానికి ACOMI ద్వారా మీ విచారణ పంపండి.",
+    "enquireSendOnApp": "Acomi యాప్‌లో పంపండి",
+    "enquireRecommended": "సిఫార్సు చేయబడింది",
+    "enquireUnlimitedTitle": "అపరిమిత విచారణలు",
+    "enquireFreeAndroid": "Androidలో ఉచితం!",
+    "enquireBenefitFast": "వేగంగా & సులభంగా",
+    "enquireBenefitSecure": "సురక్షితం",
+    "enquireBenefitAnywhere": "ఎక్కడి నుండైనా యాక్సెస్",
+    "enquireEmailDailyLimit": "రోజుకు {{count}} విచారణలు మాత్రమే",
+    "enquireEmailRemaining": "{{limit}}లో {{remaining}} విచారణలు మిగిలి ఉన్నాయి",
+    "enquireEmailRemainingOne": "{{limit}}లో {{remaining}} విచారణ మిగిలి ఉంది",
+    "enquireEmailCardHint": "ఓనర్ సంప్రదింపు వివరాలను మీ రిజిస్టర్డ్ ఈమెయిల్‌కు పంపుతాం.",
+    "enquireOptionOr": "లేదా",
+    "enquireViewHereTitle": "సంప్రదింపు వివరాలు ఇక్కడే చూడండి",
+    "enquireViewHereBody": "ఓనర్ సంప్రదింపు వివరాలను ఈ వెబ్‌సైట్‌లోనే వెంటనే చూడండి.",
+    "enquireViewHereRemaining": "ఈరోజు {{remaining}} తక్షణ వీక్షణలు మిగిలి ఉన్నాయి ({{limit}}లో)",
+    "enquireViewHereRemainingOne": "ఈరోజు {{remaining}} తక్షణ వీక్షణ మిగిలి ఉంది ({{limit}}లో)",
+    "viewHereContactTitle": "సంప్రదింపు వివరాలు",
+    "viewHereOwner": "ఓనర్",
+    "viewHerePhone": "ఫోన్",
+    "viewHereEmail": "ఈమెయిల్",
+    "viewHereMap": "మ్యాప్ లింక్",
+    "viewHereContactEmpty": "ఈ లిస్టింగ్‌కు ఓనర్ సంప్రదింపు వివరాలు అందుబాటులో లేవు.",
+    "viewHereContactLoading": "సంప్రదింపు వివరాలు లోడ్ అవుతున్నాయి…",
+    "viewHereContactFailed": "సంప్రదింపు వివరాలు లోడ్ కాలేదు. మళ్లీ ప్రయత్నించండి.",
+    "viewHereContactRetry": "మళ్లీ ప్రయత్నించండి",
+    "enquireAppSentTitle": "విచారణ పంపబడింది!",
+    "enquireAppSentBody": "ఓనర్ సంప్రదింపు వివరాలు చూడటానికి Acomi యాప్ తెరవండి.",
+    "enquireAlreadyAppTitle": "ఇప్పటికే Acomi యాప్‌కు పంపబడింది",
+    "enquireAlreadyAppBody": "ఓనర్ సంప్రదింపు వివరాలు {{date}}న ఇప్పటికే Acomi యాప్‌కు పంపబడ్డాయి.",
+    "enquireAlreadyAppBodyNoDate": "ఓనర్ సంప్రదింపు వివరాలు ఇప్పటికే Acomi యాప్‌కు పంపబడ్డాయి.",
+    "enquireAlreadyEmailTitle": "ఇప్పటికే ఈమెయిల్ ద్వారా పంపబడింది",
+    "enquireAlreadyEmailBody": "ఓనర్ సంప్రదింపు వివరాలు {{date}}న ఇప్పటికే ఈమెయిల్ చేయబడ్డాయి.",
+    "enquireAlreadyEmailBodyTo": "ఓనర్ సంప్రదింపు వివరాలు {{date}}న ఇప్పటికే {{email}}కు ఈమెయిల్ చేయబడ్డాయి.",
+    "enquireAlreadyEmailBodyNoDate": "ఓనర్ సంప్రదింపు వివరాలు ఇప్పటికే ఈమెయిల్ చేయబడ్డాయి.",
+    "enquireWantEmailInstead": "బదులుగా ఈమెయిల్‌లో కావాలా?",
+    "enquireWantAppInstead": "బదులుగా ACOMIలో కావాలా?",
+    "enquireAppPromoTitle": "Acomi యాప్‌లో ఎన్ని విచారణలైనా ఉచితంగా పొందండి!",
+    "enquireAppPromoBody": "ఎప్పుడైనా, ఎక్కడైనా అపరిమిత విచారణలు చేయడానికి Acomi యాప్ ఉపయోగించండి.",
+    "enquireSendingTitle": "మీ విచారణ పంపుతున్నాం...",
+    "enquireSendingAppBody": "మీ విచారణను ACOMIకి పంపుతున్నాం, దయచేసి వేచి ఉండండి.",
+    "enquireSendingEmailBody": "ఓనర్ సంప్రదింపు వివరాలను మీ ఈమెయిల్‌కు పంపుతున్నాం, దయచేసి వేచి ఉండండి.",
+    "enquireSendingViewTitle": "సంప్రదింపు వివరాలు తెరుస్తున్నాం...",
+    "enquireSendingViewBody": "ఓనర్ సంప్రదింపు వివరాలను లోడ్ చేస్తున్నాం, దయచేసి వేచి ఉండండి.",
+    "enquireEmailSentTitle": "విచారణ పంపబడింది!",
+    "enquireEmailSentBody": "ఓనర్ సంప్రదింపు వివరాల కోసం మీ ఈమెయిల్ ఇన్‌బాక్స్ చూడండి.",
+    "enquireEmailSentBodyTo": "మీ ఈమెయిల్ ఇన్‌బాక్స్ చూడండి, ఓనర్ సంప్రదింపు వివరాలను {{email}}కు పంపాం.",
+    "enquireSubmittingShort": "పంపుతున్నాం…",
+    "enquireViewingShort": "చూపిస్తున్నాం…",
+    "enquireViewFailed": "ప్రస్తుతం సంప్రదింపు వివరాలు చూపించలేకపోతున్నాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "enquireSendFailed": "ప్రస్తుతం మీ విచారణ పంపలేకపోతున్నాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "enquireViewHereExhausted": "రోజువారీ ఉచిత వీక్షణలు అయిపోయాయి. అయినా ఇమెయిల్ ద్వారా సంప్రదింపు వివరాలు పొందవచ్చు.",
+    "contactDetailsViewed": "సంప్రదింపు వివరాలు చూశారు",
+    "inquirySentTo": "{{email}}కు పంపబడింది",
+    "enquireSuccessTitle": "విచారణ పంపబడింది!",
+    "enquireSuccessBodyReady": "మీ విచారణ సిద్ధంగా ఉంది. ఓనర్ సంప్రదింపు వివరాలు చూడటానికి Acomi తెరవండి.",
+    "enquireSuccessBodyPending": "సంప్రదింపు వివరాలు అందుబాటులోకి వచ్చినప్పుడు మీకు తెలియజేస్తాం. మీ విచారణను ట్రాక్ చేయడానికి Acomi తెరవండి.",
+    "enquireOpenApp": "Acomi యాప్ తెరవండి",
+    "enquireDontHaveApp": "Acomi లేదా?",
+    "enquireDownloadApp": "Acomi డౌన్‌లోడ్ చేయండి",
+    "enquireReadyTitle": "విచారణ సిద్ధం!",
+    "enquireReadyBody": "ACOMIలో ఓనర్ సంప్రదింపు వివరాలు పొందండి.",
+    "enquirePendingTitleShort": "విచారణ పంపబడింది!",
+    "enquirePendingBodyShort": "సంప్రదింపు వివరాలు అందుబాటులోకి వచ్చినప్పుడు మీకు తెలియజేస్తాం.",
+    "enquireAlreadyTitleShort": "మీరు ఇప్పటికే విచారించారు",
+    "enquireAlreadyPendingBodyShort": "సంప్రదింపు వివరాలు అందుబాటులోకి వచ్చినప్పుడు మీకు తెలియజేస్తాం.",
+    "enquireAlreadyReadyBodyShort": "ACOMIలో ఓనర్ సంప్రదింపు వివరాలు పొందండి.",
+    "enquireAlreadyEmailedBodyShort": "సంప్రదింపు వివరాలు ఈమెయిల్ చేయబడ్డాయి.",
+    "enquireAppCtaReady": "Acomi యాప్ తెరవండి",
+    "enquireAppCtaPending": "Acomi యాప్ తెరవండి",
+    "enquireAppHint": "అపరిమిత విచారణలు · Androidలో ఉచితం",
+    "enquireEmailCtaReady": "ఈమెయిల్‌లో పొందండి",
+    "enquireEmailCtaExhausted": "మరో {{count}} విచారణలు పొందండి",
+    "enquireEmailCtaExhaustedPending": "మరిన్ని విచారణలు పొందండి",
+    "enquireEmailExhaustedHint": "UPIలో {{amount}} చెల్లించి, స్క్రీన్‌షాట్‌ను WhatsAppలో పంపండి.",
+    "enquireEmailPaidRemaining": "{{count}} చెల్లింపు విచారణలు మిగిలి ఉన్నాయి",
+    "enquireEmailPaidHint": "అడ్మిన్ ఆమోదించిన క్రెడిట్‌లు ఉపయోగించడానికి సిద్ధంగా ఉన్నాయి.",
+    "enquireEmailCtaPending": "ఈమెయిల్ ద్వారా అప్‌డేట్‌లు పొందండి",
+    "enquireEmailHintReady": "సంప్రదింపు వివరాలను ఈమెయిల్ చేస్తాం.",
+    "enquireEmailHintPending": "వివరాలు అందుబాటులోకి వచ్చినప్పుడు మీకు ఈమెయిల్ చేస్తాం.",
+    "enquireEmailTitleShort": "వివరాలను ఈమెయిల్ ద్వారా పంపండి",
+    "enquireEmailBodyReady": "సేవ్ చేసిన ఈమెయిల్‌ను ఎంచుకోండి లేదా కొత్తది నమోదు చేయండి.",
+    "enquireEmailBodyPending": "అప్‌డేట్‌ల కోసం మీ ఈమెయిల్ నమోదు చేయండి.",
+    "enquireSavedEmails": "సేవ్ చేసిన ఈమెయిల్‌లు",
+    "enquireEmailInputLabel": "ఈమెయిల్ చిరునామా",
+    "enquireSendDetails": "వివరాలు పంపండి",
+    "enquireEmailTrust": "దీన్ని ఈ విచారణ కోసం మాత్రమే ఉపయోగిస్తాం.",
+    "enquireEmailInvalid": "సరైన ఈమెయిల్ చిరునామా నమోదు చేయండి.",
+    "enquireRequestTitle": "సంప్రదింపు వివరాలు అభ్యర్థించండి",
+    "enquireRequestBody": "లిస్టింగ్ అర్హత పొందినప్పుడు ACOMI దాని సంప్రదింపు వివరాలను ఈమెయిల్ చేస్తుంది. ఓనర్ సంప్రదింపు సమాచారం ఈ పేజీలో ఎప్పుడూ చూపబడదు.",
+    "enquireSend": "విచారణ సమర్పించండి",
+    "enquireSentTitle": "విచారణ పంపబడింది",
+    "enquireSentBody": "మీ విచారణ సమర్పించబడింది. లిస్టింగ్ అర్హత పొందితే, త్వరలో సంప్రదింపు వివరాలను ఈమెయిల్ చేస్తాం. మీరు నా విచారణలు విభాగంలో కూడా చూడవచ్చు.",
+    "enquireSuccessSharedTitle": "మీ విచారణ సిద్ధంగా ఉంది!",
+    "enquireSuccessSharedBody": "ఓనర్ సంప్రదింపు వివరాలు అందుబాటులో ఉన్నాయి.",
+    "enquireSuccessPendingTitle": "విచారణ పంపబడింది!",
+    "enquireSuccessPendingBody": "వివరాలు అందుబాటులోకి వచ్చినప్పుడు మీకు తెలియజేస్తాం.",
+    "enquireSuccessAppBody": "ACOMIలో వివరాలు ఉచితంగా పొందండి",
+    "enquireSuccessAppCta": "Acomi యాప్ పొందండి",
+    "enquireSuccessAppNote": "అపరిమిత విచారణలు · Androidలో ఉచితం",
+    "enquireViewMyEnquiries": "నా విచారణలు చూడండి →",
+    "enquireEmailRequired": "కొనసాగడానికి మీ ఈమెయిల్ నమోదు చేయండి.",
+    "enquireEmailRequiredBody": "ఈ విచారణ కోసం ఏదైనా ఈమెయిల్ నమోదు చేయండి.",
+    "enquireAlreadySharedTitle": "ఇప్పటికే పంపబడింది",
+    "enquireAlreadySharedBody": "సంప్రదింపు వివరాలు ఈమెయిల్ చేయబడ్డాయి.",
+    "enquireAlreadySharedInAppTitle": "మీ విచారణ సిద్ధంగా ఉంది",
+    "enquireAlreadySharedInAppBody": "ఈ స్థలం సంప్రదింపు వివరాలను Acomi యాప్‌లో చూడండి.",
+    "enquireAlreadySharedBodyNoDate": "సంప్రదింపు వివరాలు ఈమెయిల్ చేయబడ్డాయి.",
+    "enquireAlreadyNoNewEmail": "కొత్త ఈమెయిల్ పంపబడలేదు.",
+    "enquireAlreadyPendingTitle": "మీరు ఇప్పటికే విచారించారు",
+    "enquireAlreadyPendingBody": "సంప్రదింపు వివరాలు అందుబాటులోకి వచ్చినప్పుడు మీకు తెలియజేస్తాం.",
+    "enquireAlreadyPendingHint": "కొత్త ఈమెయిల్ పంపబడలేదు.",
+    "enquireSuccessSharedInAppTitle": "సంప్రదింపు వివరాలు సిద్ధం",
+    "enquireSuccessSharedInAppBody": "ఈ స్థలం సంప్రదింపు వివరాలను Acomi యాప్‌లో చూడండి.",
+    "enquireOwnTitle": "ఇది మీ స్పేస్",
+    "enquireOwnBody": "మీకు చెందిన స్పేస్ గురించి మీరు విచారించలేరు. ఓనర్ సంప్రదింపు సమాచారం దాచబడి ఉంటుంది.",
+    "enquirePrivacy": "వెబ్ విచారణలకు ఓనర్ సంప్రదింపు వివరాలు ఈమెయిల్ ద్వారా షేర్ చేయబడతాయి.",
+    "enquireEmailLabel": "ఈమెయిల్",
+    "enquireUseDifferentEmail": "వేరే ఈమెయిల్ ఉపయోగించండి",
+    "enquireListingUnavailable": "ఈ లిస్టింగ్‌కు విచారణ ప్రారంభించలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి లేదా వేరే లిస్టింగ్ ఎంచుకోండి.",
+    "enquireSubmitError": "మీ విచారణను సమర్పించలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "enquireSubmitting": "పంపుతున్నాం…",
+    "enquireSubmittingHint": "దయచేసి వేచి ఉండండి…",
+    "enquireDone": "పూర్తయింది",
+    "limitUsedTodayTitle": "ఈరోజు ఉచిత విచారణను మీరు ఉపయోగించేశారు",
+    "limitDesktopBody": "అపరిమిత ఉచిత విచారణల కోసం ACOMI మొబైల్ యాప్ ఉపయోగించవచ్చు.",
+    "limitDesktopBodyLead": "ACOMI మొబైల్ యాప్‌లో మీరు అపరిమితంగా",
+    "limitDesktopBodyTail": "ఉచిత విచారణలు చేయవచ్చు.",
+    "limitMobileBody": "Acomi Android యాప్‌తో అపరిమిత విచారణలు పొందండి, లేదా చెల్లింపు ఈమెయిల్ విచారణలను ఎంచుకోండి.",
+    "limitUsedTitle_one": "ఈరోజు మీరు {{count}} ఉచిత విచారణను ఉపయోగించారు",
+    "limitUsedTitle_other": "ఈరోజు మీరు {{count}} ఉచిత విచారణలను ఉపయోగించారు",
+    "limitUsedBody": "ప్రాపర్టీలను సంప్రదించడం కొనసాగించడానికి మరిన్ని విచారణలు పొందండి.",
+    "limitPackageTitle": "{{count}} విచారణ క్రెడిట్‌లు — {{amount}}",
+    "limitPackageBody": "ప్రాపర్టీలను సంప్రదించడానికి మరో {{count}} ఈమెయిల్ విచారణలు పొందండి.",
+    "limitMapTitle": "మ్యాప్‌కు కొనసాగడానికి చెల్లించండి",
+    "limitMapBody": "ఈరోజు ఉచిత విచారణ అయిపోయింది. Google Mapsకి కొనసాగడానికి చెల్లింపు పూర్తి చేయండి.",
+    "limitPhotosTitle": "ఫోటోలు అభ్యర్థించడం కొనసాగించడానికి చెల్లించండి",
+    "limitPhotosBody": "ఈరోజు ఉచిత విచారణ అయిపోయింది. ఫోటోలు అభ్యర్థించడం కొనసాగించడానికి చెల్లింపు పూర్తి చేయండి.",
+    "limitPackageBodyMap": "{{count}} విచారణ క్రెడిట్‌లు పొందండి. చెల్లింపు నిర్ధారించబడిన తర్వాత మ్యాప్‌కు కొనసాగండి.",
+    "limitPackageBodyPhotos": "{{count}} విచారణ క్రెడిట్‌లు పొందండి. చెల్లింపు నిర్ధారించబడిన తర్వాత ఫోటోలు అభ్యర్థించడం కొనసాగించండి.",
+    "limitMapPendingBody": "అడ్మిన్ ఈ చెల్లింపును నిర్ధారించే వరకు మ్యాప్ మూసి ఉంటుంది. చెల్లింపు నిర్ధారించిన వెంటనే అది తెరుచుకుంటుంది.",
+    "limitPhotosPendingBody": "అడ్మిన్ ఈ చెల్లింపును నిర్ధారించే వరకు ఫోటో అభ్యర్థనలు మూసి ఉంటాయి. చెల్లింపు నిర్ధారించిన వెంటనే మీరు కొనసాగవచ్చు.",
+    "limitPayRejectedTitle": "చెల్లింపు నిర్ధారించబడలేదు",
+    "limitPayRejectedBody": "ఈ చెల్లింపు నిర్ధారించబడలేదు, కాబట్టి మ్యాప్ మరియు ఫోటో అభ్యర్థన మూసి ఉంటాయి.",
+    "limitUnlimitedTitle": "అపరిమిత విచారణలు",
+    "limitUnlimitedBody": "Acomi Android యాప్‌ను ఉచితంగా ఉపయోగించి అపరిమిత విచారణలు చేయండి.",
+    "limitAndroidCreditsTitle": "Android యాప్‌లో విచారణలు",
+    "limitAndroidCreditsBody": "యాప్‌లో రోజుకు {{count}} ఉచిత విచారణలు లభిస్తాయి. ఆ తర్వాత మొబైల్ క్రెడిట్‌లు వర్తిస్తాయి.",
+    "limitGetCreditsCta": "{{amount}}కు {{count}} క్రెడిట్‌లు పొందండి",
+    "limitGetAppCta": "Acomi యాప్ పొందండి",
+    "limitOpenAppCta": "Acomi యాప్ తెరవండి",
+    "limitNotNow": "ఇప్పుడు కాదు",
+    "limitNeedHelp": "సహాయం కావాలా?",
+    "limitHelpText": "నమస్కారం, ACOMI విచారణ క్రెడిట్‌ల విషయంలో నాకు సహాయం కావాలి.",
+    "limitTitle": "మీ ఉచిత విచారణలు అయిపోయాయి",
+    "limitTitleWithCount": "మీ {{count}} ఉచిత విచారణలు అయిపోయాయి",
+    "limitBody": "మరో 30 ఈమెయిల్ విచారణల కోసం ₹9 చెల్లించండి, లేదా అపరిమిత విచారణల కోసం Android యాప్ ఉపయోగించండి.",
+    "limitAndroidCta": "ACOMIలో అపరిమిత విచారణలు",
+    "limitAndroidNote": "Androidలో ఉచితం",
+    "limitEmailTitle": "Android ఉపయోగించరా?",
+    "limitEmailBody": "వెబ్ కోసం మరో 30 విచారణలు పొందండి.",
+    "limitMyEnquiries": "నా విచారణలకు వెళ్లండి →",
+    "limitCreditsCtaDefault": "మరో 30 విచారణలు పొందండి · ₹9",
+    "limitCreditsCta": "మరో {{count}} విచారణలు పొందండి · {{amount}}",
+    "limitCreditsUnit": "క్రెడిట్‌లు",
+    "limitCreditsJust": "UPIలో {{amount}} చెల్లించి, స్క్రీన్‌షాట్‌ను WhatsAppలో పంపండి",
+    "limitPaymentUnavailable": "చెల్లింపు వివరాలు ప్రస్తుతం అందుబాటులో లేవు. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.",
+    "limitPayTitle": "{{count}} విచారణ క్రెడిట్‌లు పొందండి",
+    "limitPaySubtitle": "మరో {{count}} ఈమెయిల్ విచారణలు పొంది ప్రాపర్టీలను సంప్రదించడం కొనసాగించడానికి {{amount}} చెల్లించండి.",
+    "limitPayOrApp": "లేదా Acomi యాప్‌లో ఉచిత విచారణలు పొందండి",
+    "limitPayOr": "లేదా",
+    "limitPayUsingUpi": "UPI ద్వారా చెల్లించండి",
+    "limitPayAmount": "మొత్తం: {{amount}}",
+    "limitPayScan": "ఏదైనా UPI యాప్‌తో (Google Pay, PhonePe, Paytm మొదలైనవి) QR కోడ్‌ను స్కాన్ చేయండి.",
+    "limitPayQrUnavailable": "QR చెల్లింపు ప్రస్తుతం అందుబాటులో లేదు.",
+    "limitPayUpiOnly": "కింద ఉన్న UPI IDకి చెల్లించండి.",
+    "limitPayUpiLabel": "UPI ఐడీ",
+    "limitPayCopied": "కాపీ అయింది",
+    "limitPayUpiUnavailable": "UPI చెల్లింపు వివరాలు ప్రస్తుతం అందుబాటులో లేవు.",
+    "limitPayUnavailableBoth": "చెల్లింపు వివరాలు ప్రస్తుతం అందుబాటులో లేవు. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.",
+    "limitPayReference": "లావాదేవీ రిఫరెన్స్",
+    "limitPayReferenceOptional": "(ఐచ్ఛికం)",
+    "limitPaySuccessTitle": "చెల్లింపు అభ్యర్థన సమర్పించబడింది",
+    "limitPaySuccessBody": "ఆమోదం తర్వాత మీ విచారణ క్రెడిట్‌లు జోడించబడతాయి.",
+    "limitPaymentSubmit": "నేను చెల్లించాను — అడ్మిన్‌కు తెలియజేయండి",
+    "limitPaymentSubmitError": "చెల్లింపు అభ్యర్థనను సమర్పించలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "limitPaymentPendingTitle": "స్క్రీన్‌షాట్ పంపబడింది — అడ్మిన్ కోసం వేచి ఉంది",
+    "limitPaymentPendingBody": "మీరు చెల్లించి, స్క్రీన్‌షాట్‌ను WhatsAppలో షేర్ చేసిన తర్వాత, అడ్మిన్ మీ ఖాతాకు 30 విచారణలు జోడిస్తారు.",
+    "limitQrAlt": "UPI QR కోడ్",
+    "limitCopyUpi": "UPI ID కాపీ చేయండి",
+    "limitUtrLabel": "UTR / లావాదేవీ రిఫరెన్స్ (ఐచ్ఛికం)",
+    "limitUtrPlaceholder": "ఉదా. 123456789012",
+    "limitWhatsappCta": "చెల్లింపు స్క్రీన్‌షాట్‌ను WhatsAppలో పంపండి",
+    "limitWhatsappText": "నమస్కారం, ACOMIలో {{count}} విచారణ క్రెడిట్‌ల కోసం {{amount}} చెల్లించాను. చెల్లింపు స్క్రీన్‌షాట్ షేర్ చేస్తున్నాను.",
+    "limitDismiss": "మూసివేయండి",
+    "limitResetQuota": "ఈరోజు ఈమెయిల్ పరిమితిని రీసెట్ చేయండి (లోకల్ మాత్రమే)",
+    "limitResetViewHere": "ఈరోజు ఇక్కడ చూసే పరిమితిని రీసెట్ చేయండి (లోకల్ మాత్రమే)",
+    "limitContinueWithCredits": "{{count}} చెల్లింపు విచారణలు ఉపయోగించండి",
+    "contactAvailable": "సంప్రదింపు అందుబాటులో ఉంది",
+    "priceBasis": {
+      "PER_BED": "ఒక్కో బెడ్‌కు / నెలకు",
+      "PER_ROOM": "ఒక్కో గదికి / నెలకు",
+      "PER_UNIT": "నెలకు"
+    },
+    "closeDetails": "వివరాలు మూసివేయండి",
+    "enquireGetOnApp": "Acomi యాప్‌లో పొందండి",
+    "enquireGetByEmail": "ఇమెయిల్ ద్వారా వివరాలు పొందండి",
+    "enquireEmailReceiveDesc": "యజమాని సంప్రదింపు వివరాలు మీ నమోదిత ఇమెయిల్‌కు పంపబడతాయి.",
+    "enquireRemainingBadge": "{{remaining}} మిగిలి ఉన్నాయి",
+    "enquireContinue": "కొనసాగించండి →",
+    "enquireAppInfoLabel": "Acomi యాప్ విచారణల గురించి",
+    "enquireAppInfoBody": "అపరిమిత ఉచిత విచారణల కోసం Acomi Android యాప్ ఉపయోగించండి. సంప్రదింపు వివరాలు యాప్‌లో అందుబాటులో ఉంటాయి.",
+    "enquireEmailInfoLabel": "ఇమెయిల్ విచారణల గురించి",
+    "enquireEmailInfoBody": "లిస్టింగ్ అర్హత ఉన్నప్పుడు ACOMI యజమాని సంప్రదింపు వివరాలను మీ నమోదిత ఇమెయిల్‌కు పంపుతుంది. రోజువారీ ఉచిత ఇమెయిల్ విచారణలు పరిమితం.",
+    "enquireViewInfoLabel": "ఇక్కడ చూడటం గురించి"
   },
   "places": {
     "seo": {
@@ -921,7 +1343,16 @@
     "foundMany": "{{count}} స్థలాలు కనుగొనబడ్డాయి",
     "emptyTitle": "ఆస్తులేవీ కనుగొనబడలేదు",
     "emptyDescription": "మరొక ప్రాంతం, ఆస్తి రకం లేదా ధర పరిధిని ప్రయత్నించండి.",
-    "detailFallback": "స్థలం వివరాలు"
+    "detailFallback": "స్థలం వివరాలు",
+    "locationLabel": "ప్రాంతం",
+    "selectLocation": "ప్రాంతాన్ని ఎంచుకోండి",
+    "clearLocation": "ప్రాంతాన్ని క్లియర్ చేయండి",
+    "foundAll": "అన్ని ప్రాంతాల్లో కలిపి {{count}} స్థలాలు. ఈ జాబితాను కుదించడానికి ప్రాంతాన్ని ఎంచుకోండి.",
+    "loading": "స్థలాలు లోడ్ అవుతున్నాయి…",
+    "loadingMore": "మరిన్ని స్థలాలు లోడ్ అవుతున్నాయి…",
+    "loadErrorTitle": "స్థలాలను లోడ్ చేయలేకపోయాం",
+    "loadErrorDescription": "ACOMI బ్యాకెండ్ నడుస్తోందో లేదో చూసి, మళ్లీ ప్రయత్నించండి.",
+    "regionFallback": "భారతదేశం"
   },
   "mealsPage": {
     "seo": {
@@ -932,19 +1363,23 @@
     "title": "మీకు సమీపంలో భోజనాన్ని కనుగొనండి",
     "description": "పూణే అంతటా మెస్, టిఫిన్ మరియు భోజన సేవలు.",
     "searchLabel": "భోజనం శోధించండి",
-    "searchPlaceholder": "Search by mess or meal name",
-    "selectLocation": "Select location",
-    "clearLocation": "Clear location",
-    "foundOne": "{{count}} mess found",
-    "foundMany": "{{count}} messes found",
-    "emptyTitle": "No meals found",
-    "emptyDescription": "Try another location or adjust your search.",
-    "emptyInLocation": "No meals found in {{location}}",
-    "emptyInLocationDescription": "Try another location or adjust your filters.",
-    "detailFallback": "Mess details",
-    "loading": "Loading meals…",
-    "loadingMore": "Loading more meals…",
-    "filtersHint": "Use the location selector and search to find meals. Results are filtered on the server."
+    "searchPlaceholder": "మెస్ లేదా భోజనం పేరుతో వెతకండి",
+    "selectLocation": "ప్రాంతాన్ని ఎంచుకోండి",
+    "clearLocation": "ప్రాంతాన్ని తొలగించండి",
+    "foundOne": "{{count}} మెస్ కనుగొనబడింది",
+    "foundMany": "{{count}} మెస్‌లు కనుగొనబడ్డాయి",
+    "emptyTitle": "భోజనాలు ఏవీ కనుగొనబడలేదు",
+    "emptyDescription": "మరో ప్రాంతాన్ని ప్రయత్నించండి లేదా మీ శోధనను మార్చండి.",
+    "emptyInLocation": "{{location}}లో భోజనాలు ఏవీ కనుగొనబడలేదు",
+    "emptyInLocationDescription": "మరో ప్రాంతాన్ని ప్రయత్నించండి లేదా మీ ఫిల్టర్‌లను మార్చండి.",
+    "detailFallback": "మెస్ వివరాలు",
+    "loading": "భోజనాలు లోడ్ అవుతున్నాయి…",
+    "loadingMore": "మరిన్ని భోజనాలు లోడ్ అవుతున్నాయి…",
+    "filtersHint": "భోజనాలు వెతకడానికి ప్రాంత ఎంపిక మరియు శోధనను ఉపయోగించండి. ఫలితాలు సర్వర్‌లో ఫిల్టర్ చేయబడతాయి.",
+    "foundAll": "అన్ని ప్రాంతాల్లో కలిపి {{count}} మెస్‌లు. ఈ జాబితాను కుదించడానికి ప్రాంతాన్ని ఎంచుకోండి.",
+    "loadErrorTitle": "భోజనాలను లోడ్ చేయలేకపోయాం",
+    "loadErrorDescription": "ACOMI బ్యాకెండ్ నడుస్తోందో లేదో చూసి, మళ్లీ ప్రయత్నించండి.",
+    "regionFallback": "భారతదేశం"
   },
   "propertyDetail": {
     "seoNotFound": {
@@ -987,5 +1422,487 @@
     "description": "PG, హాస్టల్, అద్దె లేదా సహ-జీవనం. మీ ఆస్తి వివరాలను పంచుకోండి మరియు మా బృందం దానిని ముందుకు తీసుకువెళుతుంది.",
     "freeNote": "మీ ఆస్తిని నమోదు చేసుకోవడం ఉచితం.",
     "backHome": "తిరిగి ఇంటికి"
+  },
+  "mySpaces": {
+    "title": "నా స్పేస్‌లు",
+    "subtitle": "మీ ఖాతాకు లింక్ అయిన ప్రాపర్టీలు మరియు మెస్‌లు. మీ లిస్టింగ్‌లను నిర్వహించండి, వివరాలు అప్‌డేట్ చేయండి, వసతిని సెటప్ చేయండి.",
+    "properties": "ప్రాపర్టీలు",
+    "messes": "మెస్‌లు",
+    "all": "అన్నీ",
+    "live": "లైవ్",
+    "pending": "సమీక్షలో ఉంది",
+    "search": "పేరు, చిరునామా లేదా రిఫరెన్స్ ID (ఉదా. SPC00001) ద్వారా వెతకండి",
+    "loading": "మీ స్పేస్‌లు లోడ్ అవుతున్నాయి…",
+    "loadFailed": "మీ స్పేస్‌లను లోడ్ చేయలేకపోయాం.",
+    "retry": "మళ్లీ ప్రయత్నించండి",
+    "emptyTitle": "ఇంకా స్పేస్‌లు లేవు",
+    "emptyBody": "ప్రాపర్టీ లేదా మెస్‌ను లిస్ట్ చేయండి. ACOMI ప్రచురించే వరకు అది సమీక్షలో ఉంటుంది.",
+    "listProperty": "మీ ప్రాపర్టీని లిస్ట్ చేయండి",
+    "listMess": "మీ మెస్‌ను లిస్ట్ చేయండి",
+    "noMatches": "ఈ ఫిల్టర్‌లకు సరిపోయే లిస్టింగ్‌లు లేవు.",
+    "clearSearch": "శోధనను క్లియర్ చేయండి",
+    "clearFilters": "ఫిల్టర్‌లను క్లియర్ చేయండి",
+    "location": "ప్రాంతం",
+    "allLocations": "అన్ని ప్రాంతాలు",
+    "type": "రకం",
+    "allTypes": "అన్ని రకాలు",
+    "status": "స్థితి",
+    "allStatuses": "అన్ని స్థితులు",
+    "sort": "క్రమబద్ధీకరించండి",
+    "sortUpdated": "ఇటీవల అప్‌డేట్ చేసినవి",
+    "sortName": "పేరు",
+    "sortPriceAsc": "ధర: తక్కువ నుండి ఎక్కువ",
+    "sortPriceDesc": "ధర: ఎక్కువ నుండి తక్కువ",
+    "showing": "{{count}} స్పేస్‌లలో {{from}} నుండి {{to}} వరకు చూపిస్తున్నాం",
+    "moreActions": "మరిన్ని చర్యలు",
+    "mealManagement": "భోజన నిర్వహణ",
+    "previous": "మునుపటి పేజీ",
+    "next": "తదుపరి పేజీ",
+    "food": "భోజనం",
+    "viewPublic": "పబ్లిక్ లిస్టింగ్ చూడండి",
+    "edit": "లిస్టింగ్ సవరించండి",
+    "manage": "నిర్వహించండి",
+    "accommodation": "వసతి",
+    "meals": "భోజనాలు",
+    "reference": "రిఫరెన్స్",
+    "save": "సేవ్ చేయండి",
+    "cancel": "రద్దు చేయండి",
+    "saved": "లిస్టింగ్ అప్‌డేట్ అయింది.",
+    "saveFailed": "ఈ లిస్టింగ్‌ను సేవ్ చేయలేకపోయాం.",
+    "name": "పేరు",
+    "address": "చిరునామా",
+    "city": "నగరం",
+    "state": "రాష్ట్రం",
+    "pincode": "పిన్‌కోడ్",
+    "description": "వివరణ",
+    "startingPrice": "ప్రారంభ ధర",
+    "monthlyPrice": "నెలవారీ ధర",
+    "mealPrice": "భోజనం ధర",
+    "gender": "ఎవరు ఉండవచ్చు",
+    "foodIncluded": "భోజనం కలిపి",
+    "contact": "సంప్రదింపు నంబర్"
+  },
+  "favorites": {
+    "title": "ఇష్టమైనవి",
+    "open": "ఇష్టమైనవి",
+    "openCount": "ఇష్టమైనవి, {{count}} సేవ్ అయ్యాయి",
+    "empty": "ఇంకా ఇష్టమైనవి లేవు. ఏదైనా స్థలం లేదా మెస్‌పై హార్ట్‌ను నొక్కండి.",
+    "remove": "{{name}}ను ఇష్టమైనవాటి నుండి తీసివేయండి"
+  },
+  "auth": {
+    "createAccount": "ఖాతా సృష్టించండి",
+    "continueBrowsing": "బ్రౌజింగ్ కొనసాగించండి",
+    "loginTitle": "ACOMIలో సైన్ ఇన్ చేయండి",
+    "signedIn": "మీరు సైన్ ఇన్ అయ్యారు",
+    "registerTitle": "మీ ACOMI ఖాతాను సృష్టించండి",
+    "loginBody": "Acomi యాప్‌లో ఉపయోగించే అదే మొబైల్ నంబర్ మరియు పాస్‌వర్డ్‌ను ఉపయోగించండి. కస్టమర్లు ఈ వెబ్‌సైట్‌లోనే ఉంటారు. ఓనర్లు మరియు సిబ్బందిని ACOMI వర్క్‌స్పేస్‌కు తీసుకెళ్తాం.",
+    "workspaceOpening": "తిరిగి స్వాగతం. మీ ACOMI వర్క్‌స్పేస్ తెరుచుకుంటోంది…",
+    "workspaceOpeningHint": "కొద్దిసేపట్లో మిమ్మల్ని ఆపరేషన్స్ యాప్‌కు తీసుకెళ్తాం.",
+    "workspaceLookupFailed": "మిమ్మల్ని సైన్ ఇన్ చేశాం, కానీ మీ వర్క్‌స్పేస్ పాత్రను నిర్ధారించలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "workspaceRetry": "మళ్లీ ప్రయత్నించండి",
+    "otpTitle": "వెరిఫికేషన్ కోడ్ నమోదు చేయండి",
+    "otpBody": "మీ మొబైల్ నంబర్‌కు 6 అంకెల కోడ్ పంపాం.",
+    "otpLabel": "వెరిఫికేషన్ కోడ్",
+    "nameLabel": "పూర్తి పేరు",
+    "mobileLabel": "మొబైల్ నంబర్",
+    "passwordLabel": "పాస్‌వర్డ్",
+    "confirmPasswordLabel": "పాస్‌వర్డ్‌ను నిర్ధారించండి",
+    "usePassword": "పాస్‌వర్డ్ ఉపయోగించండి",
+    "useOtp": "OTP ఉపయోగించండి",
+    "verifyOtp": "కోడ్ ధృవీకరించండి",
+    "back": "వెనుకకు",
+    "pleaseWait": "దయచేసి వేచి ఉండండి…",
+    "needAccount": "ACOMIకి కొత్తవారా? ఖాతా సృష్టించండి",
+    "haveAccount": "ఇప్పటికే ఖాతా ఉందా? సైన్ ఇన్ చేయండి",
+    "invalidCredentials": "మొబైల్ నంబర్ లేదా పాస్‌వర్డ్ తప్పు.",
+    "mobileRegistered": "ఈ మొబైల్ నంబర్‌తో ఇప్పటికే ఖాతా ఉంది. బదులుగా సైన్ ఇన్ చేయండి.",
+    "genericError": "ఏదో తప్పు జరిగింది. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "mobileInvalid": "సరైన 10 అంకెల భారతీయ మొబైల్ నంబర్ నమోదు చేయండి.",
+    "passwordInvalid": "పాస్‌వర్డ్ 8 నుండి 72 అక్షరాల మధ్య ఉండాలి.",
+    "passwordMismatch": "పాస్‌వర్డ్‌లు సరిపోలడం లేదు.",
+    "nameRequired": "మీ పూర్తి పేరు నమోదు చేయండి.",
+    "otpInvalid": "6 అంకెల వెరిఫికేషన్ కోడ్ నమోదు చేయండి.",
+    "showPassword": "పాస్‌వర్డ్ చూపించు",
+    "hidePassword": "పాస్‌వర్డ్ దాచు"
+  },
+  "notifications": {
+    "title": "నోటిఫికేషన్లు",
+    "subtitle": "మీ సంప్రదింపు విచారణల గురించి అప్‌డేట్‌లు. Acomi యాప్‌లో కొనసాగడానికి నోటిఫికేషన్‌ను తెరవండి.",
+    "empty": "ఇంకా నోటిఫికేషన్లు లేవు.",
+    "viewAll": "అన్నీ చూడండి",
+    "unread": "చదవనివి",
+    "markAsRead": "చదివినట్లు గుర్తించండి"
+  },
+  "accountProfile": {
+    "title": "మీ ఖాతా",
+    "subtitle": "ఈ ACOMI ఖాతా ప్రొఫైల్ వివరాలు.",
+    "name": "పేరు",
+    "mobile": "మొబైల్",
+    "email": "ఈమెయిల్",
+    "noEmail": "ఈమెయిల్ నమోదు కాలేదు",
+    "close": "మూసివేయండి"
+  },
+  "enquiries": {
+    "title": "నా విచారణలు",
+    "subtitle": "మీరు ACOMIకి పంపిన సంప్రదింపు అభ్యర్థనలు. షేర్ చేయగలిగినప్పుడు ఓనర్ వివరాలు ఈమెయిల్ ద్వారా పంపబడతాయి.",
+    "appOnlyTitle": "విచారణలను Acomi యాప్‌లో చూడండి",
+    "appOnlyBody": "విచారణ వివరాలు మరియు ఓనర్ సంప్రదింపులు Acomi Android యాప్‌లో మాత్రమే లభిస్తాయి — ఈ వెబ్‌సైట్‌లో కాదు.",
+    "appOnlyFromNotificationTitle": "Acomi యాప్‌లో కొనసాగండి",
+    "appOnlyFromNotificationBody": "ఈ విచారణను మరియు షేర్ చేసిన సంప్రదింపు వివరాలను చూడటానికి Acomi యాప్‌ను తెరవండి.",
+    "appOnlyBrowse": "స్థలాలను చూడటం కొనసాగించండి",
+    "empty": "మీరు ఇంకా సంప్రదింపు వివరాలను అభ్యర్థించలేదు.",
+    "emptyFilter": "ఈ ఫిల్టర్‌కు సరిపోయే విచారణలు లేవు.",
+    "requestedOn": "{{date}}న అభ్యర్థించారు",
+    "requestedOnLabel": "అభ్యర్థించిన తేదీ",
+    "respondedOnLabel": "ఈమెయిల్ పంపిన తేదీ",
+    "sentToLabel": "పంపినది",
+    "respondedOnHint": "ఈ తేదీన వచ్చిన ACOMI ఈమెయిల్ కోసం మీ ఇన్‌బాక్స్‌లో వెతకండి.",
+    "pendingHint": "మీ విచారణను ACOMI సమీక్షిస్తోంది.",
+    "sharedHint": "ACOMI మీకు సంప్రదింపు వివరాలను షేర్ చేసింది. దయచేసి మీ ఈమెయిల్ చూడండి.",
+    "sharedInAppHint": "సంప్రదింపు వివరాలు Acomi యాప్‌లో నా విచారణలు విభాగంలో సిద్ధంగా ఉన్నాయి.",
+    "rejectedHint": "ACOMI మీ విచారణను సమీక్షించింది, కానీ దాన్ని పూర్తి చేయలేకపోయింది.",
+    "expiredHint": "ఈ విచారణ గడువు ముగిసింది.",
+    "helpTitle": "సహాయం కావాలా?",
+    "helpBody": "మీకు ఈమెయిల్ రాకపోతే, దయచేసి మీ స్పామ్ ఫోల్డర్ చూడండి, లేదా సంప్రదించండి:",
+    "helpSupport": "మా సపోర్ట్ టీమ్",
+    "sortBy": "క్రమబద్ధీకరించండి",
+    "sortNewest": "కొత్తవి ముందు",
+    "sortOldest": "పాతవి ముందు",
+    "filterAll": "అన్నీ",
+    "filterShared": "సంప్రదింపు షేర్ అయింది",
+    "filterPending": "పెండింగ్",
+    "filterExpired": "గడువు ముగిసినవి",
+    "filterRejected": "తిరస్కరించినవి",
+    "showing": "{{count}} విచారణలు చూపిస్తున్నాం",
+    "openEnquiry": "{{name}} కోసం విచారణను చూడండి",
+    "detail": {
+      "SHARED": {
+        "title": "మీ ఈమెయిల్ చూడండి",
+        "body": "{{name}} ఓనర్ సంప్రదింపు వివరాలు మీ ఈమెయిల్‌కు పంపబడ్డాయి. ఈ విచారణ కోసం దయచేసి మీ ఇన్‌బాక్స్ మరియు స్పామ్ ఫోల్డర్ చూడండి.",
+        "inAppTitle": "మీ విచారణ సిద్ధంగా ఉంది",
+        "inAppBody": "{{name}} సంప్రదింపు వివరాలను Acomi యాప్‌లో నా విచారణలు విభాగంలో చూడండి."
+      },
+      "EXPIRED": {
+        "title": "ఈ విచారణ గడువు ముగిసింది",
+        "body": "{{name}} కోసం మీ విచారణ ఇప్పుడు యాక్టివ్‌గా లేదు, కాబట్టి ఈ అభ్యర్థన నుండి సంప్రదింపు వివరాలు షేర్ చేయలేం. ఈ స్థలం వివరాలు ఇంకా కావాలంటే కొత్త విచారణ పంపండి."
+      },
+      "PENDING": {
+        "title": "విచారణ సమీక్షలో ఉంది",
+        "body": "{{name}} కోసం మీ విచారణను ACOMI సమీక్షిస్తోంది. లిస్టింగ్ అర్హత పొందితే, సంప్రదింపు వివరాలు మీకు ఈమెయిల్ చేయబడతాయి."
+      },
+      "REJECTED": {
+        "title": "వివరాలు షేర్ చేయలేకపోయాం",
+        "body": "{{name}} కోసం ఈ విచారణను పూర్తి చేయలేకపోయాం. ఈ అభ్యర్థనకు సంప్రదింపు వివరాలు షేర్ చేయబడలేదు."
+      },
+      "enquireAgain": "మళ్లీ విచారణ పంపండి"
+    },
+    "mealsIncluded": "భోజనం కలిపి",
+    "placeType": {
+      "PG": "PG",
+      "HOSTEL": "హాస్టల్",
+      "RENTAL": "అపార్ట్‌మెంట్",
+      "CO_LIVING": "కో-లివింగ్",
+      "MESS": "మెస్"
+    },
+    "status": {
+      "PENDING": "పెండింగ్",
+      "SHARED": "సంప్రదింపు వివరాలు షేర్ అయ్యాయి",
+      "REJECTED": "పూర్తి చేయలేకపోయాం",
+      "EXPIRED": "గడువు ముగిసింది",
+      "CANCELLED": "రద్దు చేయబడింది"
+    },
+    "received": {
+      "from": "నుండి",
+      "to": "వరకు",
+      "senderDetails": "పంపినవారి వివరాలు",
+      "name": "పేరు",
+      "mobile": "మొబైల్",
+      "email": "ఇమెయిల్",
+      "account": "ఖాతా",
+      "notAvailable": "అందుబాటులో లేదు",
+      "listsProperty": "ప్రాపర్టీ జాబితా చేస్తారు",
+      "member": "సభ్యుడు",
+      "call": "కాల్",
+      "message": "సందేశం",
+      "openListing": "లిస్టింగ్ తెరవండి"
+    }
+  },
+  "locationSelect": {
+    "title": "ప్రాంతాన్ని ఎంచుకోండి",
+    "description": "దగ్గర్లోని స్థలాలను కనుగొనడానికి ఏరియా, నగరం లేదా పిన్‌కోడ్‌తో వెతకండి.",
+    "searchLabel": "వెతకండి",
+    "searchPlaceholder": "ఏరియా, నగరం లేదా పిన్‌కోడ్ వెతకండి",
+    "searching": "ప్రాంతాలను వెతుకుతున్నాం...",
+    "searchFailed": "ప్రాంత శోధన తాత్కాలికంగా అందుబాటులో లేదు.",
+    "noResults": "సరిపోయే ప్రాంతాలు కనబడలేదు. వేరే ఏరియా, నగరం లేదా పిన్‌కోడ్ ప్రయత్నించండి.",
+    "searchTab": "ప్రాంతం వెతకండి",
+    "browseTab": "ప్రాంతం వారీగా చూడండి",
+    "intro": "ఏరియా, నగరం లేదా పిన్‌కోడ్ కోసం వెతకండి",
+    "selectAction": "ప్రాంతాన్ని ఎంచుకోండి",
+    "applyAction": "ప్రాంతాన్ని వర్తింపజేయండి",
+    "cancel": "రద్దు చేయండి",
+    "clearSearch": "శోధనను క్లియర్ చేయండి",
+    "stateLabel": "రాష్ట్రం",
+    "districtLabel": "జిల్లా",
+    "talukaLabel": "నగరం / తాలూకా",
+    "areaLabel": "ఏరియా",
+    "selectState": "రాష్ట్రాన్ని ఎంచుకోండి",
+    "selectDistrict": "జిల్లాను ఎంచుకోండి",
+    "selectTaluka": "నగరం లేదా తాలూకాను ఎంచుకోండి",
+    "selectArea": "ఏరియాను ఎంచుకోండి",
+    "chooseByLocation": "ప్రాంతం ద్వారా ఎంచుకోండి",
+    "or": "లేదా",
+    "retry": "మళ్లీ ప్రయత్నించండి",
+    "attributionGeoapify": "Geoapify ఆధారితం",
+    "attributionOsm": "© OpenStreetMap సహకారులు",
+    "browseStates": "ఒక రాష్ట్రాన్ని ఎంచుకోండి",
+    "browseDistricts": "ఒక జిల్లాను ఎంచుకోండి",
+    "browseTalukas": "ఒక నగరం / తాలూకాను ఎంచుకోండి",
+    "browseAreas": "ఒక ఏరియాను ఎంచుకోండి",
+    "continue": "స్థలాలు చూడండి",
+    "continueMeals": "భోజనాలు చూడండి"
+  },
+  "openApp": {
+    "opening": "Acomi తెరుచుకుంటోంది…",
+    "getOnPlay": "Google Playలో Acomi పొందండి"
+  },
+  "product": {
+    "ops": {
+      "todaysOperations": "ఈరోజు నిర్వహణ",
+      "ownerView": "యజమాని వీక్షణ",
+      "occupancy": "ఆక్యుపెన్సీ",
+      "occupiedOf": "{{occupied}} / {{total}} ఆక్యుపైడ్",
+      "paymentSummary": "చెల్లింపు సారాంశం",
+      "thisMonth": "ఈ నెల",
+      "todaysMealHeadcount": "ఈరోజు భోజన హెడ్‌కౌంట్",
+      "mealsPrepareExpected": "తయారు చేయాల్సిన భోజనాలు / అంచనా",
+      "noResponseCount": "{{count}} స్పందన లేదు",
+      "mealOperations": "భోజన నిర్వహణ",
+      "customers": "కస్టమర్లు",
+      "todaysHeadcount": "ఈరోజు హెడ్‌కౌంట్",
+      "noBuildingsHint": "భవనాలు, గదులు లేదా పడకలు లేవు — కస్టమర్లు మరియు ప్లేట్లు."
+    }
+  },
+  "registration": {
+    "editListing": "లిస్టింగ్ సవరించండి",
+    "back": "వెనుకకు",
+    "continue": "కొనసాగించండి",
+    "close": "మూసివేయి",
+    "backToPreviousStep": "మునుపటి దశకు తిరిగి వెళ్ళండి",
+    "skipOtp": "OTP దాటవేయి",
+    "saving": "సేవ్ అవుతోంది…",
+    "saveListing": "లిస్టింగ్ సేవ్ చేయండి",
+    "submitProperty": "ప్రాపర్టీ సమర్పించండి",
+    "submitMess": "మెస్ సమర్పించండి",
+    "progressAria": "నమోదు పురోగతి",
+    "currentStep": "(ప్రస్తుత దశ)",
+    "emDash": "—",
+    "edit": "సవరించు",
+    "reference": "రిఫరెన్స్",
+    "backToAcomi": "ACOMIకి తిరిగి వెళ్ళండి",
+    "optional": "(ఐచ్ఛికం)",
+    "photosReplaceNote": "కొత్త ఫోటోలు ప్రస్తుత వాటిని భర్తీ చేస్తాయి. ఉంచాలంటే దీన్ని ఖాళీగా ఉంచండి.",
+    "steps": {
+      "property": "ప్రాపర్టీ",
+      "mess": "మెస్",
+      "details": "వివరాలు",
+      "verify": "ధృవీకరణ",
+      "photos": "ఫోటోలు",
+      "review": "సమీక్ష"
+    },
+    "property": {
+      "title": "మీ ప్రాపర్టీని ఉచితంగా నమోదు చేయండి",
+      "typeLegend": "మీరు ఏ రకమైన ప్రాపర్టీ నిర్వహిస్తున్నారు?",
+      "nameLabel": "ప్రాపర్టీ పేరు",
+      "namePlaceholder": "ఉదా. Sunrise PG",
+      "buildingLabel": "ప్రాపర్టీ / అపార్ట్‌మెంట్ / భవనం పేరు",
+      "buildingPlaceholder": "ఉదా. Sunrise Residency, ABC Apartments",
+      "descriptionPlaceholder": "కొన్ని పదాల్లో మీ ప్రాపర్టీని వివరించండి",
+      "reviewNameLabel": "ప్రాపర్టీ",
+      "successTitle": "ప్రాపర్టీ నమోదు అందింది",
+      "successBody": "ధన్యవాదాలు! మీ ప్రాపర్టీ వివరాలు మాకు అందాయి. ధృవీకరణ కోసం మా బృందం మిమ్మల్ని సంప్రదించవచ్చు."
+    },
+    "mess": {
+      "title": "మీ మెస్‌ను ఉచితంగా నమోదు చేయండి",
+      "typeLegend": "మీరు ఏ రకమైన ఆహార సేవ నడుపుతున్నారు?",
+      "nameLabel": "మెస్ పేరు",
+      "namePlaceholder": "ఉదా. Sunrise Mess",
+      "buildingLabel": "ప్రాపర్టీ / అపార్ట్‌మెంట్ / భవనం పేరు",
+      "buildingPlaceholder": "ఉదా. Sunrise Residency, ABC Apartments",
+      "descriptionPlaceholder": "కొన్ని పదాల్లో మీ మెస్‌ను వివరించండి",
+      "reviewNameLabel": "మెస్",
+      "successTitle": "మెస్ నమోదు అందింది",
+      "successBody": "ధన్యవాదాలు! మీ మెస్ వివరాలు మాకు అందాయి. ధృవీకరణ కోసం మా బృందం మిమ్మల్ని సంప్రదించవచ్చు."
+    },
+    "fields": {
+      "ownerName": "యజమాని పేరు",
+      "ownerNamePlaceholder": "ఉదా. కేతన్ కుంభార్",
+      "shortDescription": "చిన్న వివరణ (ఐచ్ఛికం)",
+      "monthlyPrice": "నెలవారీ ధర",
+      "startingPrice": "ప్రారంభ ధర",
+      "pricingUnit": "ధర యూనిట్",
+      "chooseUnit": "యూనిట్ ఎంచుకోండి",
+      "perMealTiffin": "ఒక్కో భోజనం / టిఫిన్",
+      "perMealTiffinSuffix": "ఒక్కో భోజనం / టిఫిన్",
+      "capacityFallback": "సామర్థ్యం",
+      "searchLocation": "లొకేషన్ వెతకండి",
+      "searchLocationPlaceholder": "భవనం, రోడ్డు, ప్రాంతం, లోకాలిటీ లేదా ల్యాండ్‌మార్క్ వెతకండి",
+      "locality": "లోకాలిటీ",
+      "city": "నగరం",
+      "state": "రాష్ట్రం",
+      "pincode": "పిన్‌కోడ్",
+      "district": "జిల్లా",
+      "mapLink": "Google Maps లింక్ (ఐచ్ఛికం)",
+      "mapLinkPlaceholder": "Google Maps లింక్ పేస్ట్ చేయండి",
+      "mobileNumber": "మొబైల్ నంబర్",
+      "mobilePlaceholder": "98765 43210"
+    },
+    "sections": {
+      "location": "లొకేషన్",
+      "pricing": "ధర",
+      "capacity": "సామర్థ్యం",
+      "amenities": "సౌకర్యాలు"
+    },
+    "propertyTypes": {
+      "PG": {
+        "title": "PG",
+        "subtitle": "పేయింగ్ గెస్ట్",
+        "priceSuffix": "ఒక్కో బెడ్ / నెల",
+        "capacityLabel": "అంచనా బెడ్‌లు",
+        "capacityPlaceholder": "ఉదా. 24"
+      },
+      "HOSTEL": {
+        "title": "హాస్టల్",
+        "subtitle": "హాస్టల్ వసతి",
+        "priceSuffix": "ఒక్కో బెడ్ / నెల",
+        "capacityLabel": "అంచనా బెడ్‌లు",
+        "capacityPlaceholder": "ఉదా. 60"
+      },
+      "RENTAL": {
+        "title": "అద్దె",
+        "subtitle": "అద్దె ప్రాపర్టీ",
+        "priceSuffix": "నెలకు",
+        "capacityLabel": "యూనిట్లు",
+        "capacityPlaceholder": "ఉదా. 4"
+      },
+      "CORPORATE_STAY": {
+        "title": "కార్పొరేట్ స్టే",
+        "subtitle": "కంపెనీ వసతి",
+        "priceSuffix": "యూనిట్ ఎంచుకోండి",
+        "capacityLabel": "యూనిట్లు",
+        "capacityPlaceholder": "ఉదా. 4"
+      },
+      "CO_LIVING": {
+        "title": "కో-లివింగ్",
+        "subtitle": "షేర్డ్ వసతి",
+        "priceSuffix": "ఒక్కో గది / నెల",
+        "capacityLabel": "అంచనా నివాసితులు",
+        "capacityPlaceholder": "ఉదా. 12"
+      },
+      "MESS": {
+        "title": "మెస్",
+        "subtitle": "మెస్ / టిఫిన్ / భోజన సేవ",
+        "priceSuffix": "నెలకు",
+        "capacityLabel": "అంచనా వినియోగదారులు",
+        "capacityPlaceholder": "ఉదా. 80"
+      }
+    },
+    "priceBasis": {
+      "PER_BED": "ఒక్కో బెడ్ / నెల",
+      "PER_ROOM": "ఒక్కో గది / నెల",
+      "PER_UNIT": "నెలకు",
+      "chooseCorporate": "ఒక్కో బెడ్, గది లేదా యూనిట్ ఎంచుకోండి"
+    },
+    "location": {
+      "useTyped": "“{{query}}” ఉపయోగించండి",
+      "useTypedHint": "ఈ టెక్స్ట్‌తో కొనసాగండి. సూచన ఐచ్ఛికం.",
+      "searching": "లొకేషన్‌లు వెతుకుతోంది...",
+      "noMatches": "సరిపోయే స్థలాలు లేవు. మీరు టైప్ చేసిన లొకేషన్‌తో కొనసాగవచ్చు.",
+      "searchFailed": "లొకేషన్‌లు వెతకలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+      "selected": "లొకేషన్ ఎంచుకోబడింది",
+      "openInMaps": "Google Mapsలో తెరవండి",
+      "changeLocation": "లొకేషన్ మార్చండి",
+      "detailsTitle": "లొకేషన్ వివరాలు",
+      "detailsHint": "ఐచ్ఛికం. “{{query}}” కోసం నగరం, జిల్లా మరియు ఇతర వివరాలు జోడించండి."
+    },
+    "verify": {
+      "title": "మీ మొబైల్ నంబర్‌ను ధృవీకరించండి",
+      "sendOtp": "OTP పంపండి",
+      "changeNumber": "నంబర్ మార్చండి",
+      "enterOtp": "6 అంకెల OTP నమోదు చేయండి",
+      "resendIn": "{{time}}లో OTP మళ్లీ పంపండి",
+      "resendOtp": "OTP మళ్లీ పంపండి",
+      "verifyOtp": "OTP ధృవీకరించండి",
+      "mobileVerified": "మొబైల్ ధృవీకరించబడింది",
+      "localTest": "లోకల్ టెస్ట్",
+      "localSkipHint": "ఈ లిస్టింగ్ కోసం OTP దాటవేయండి. పైన ఉన్న నంబర్ ఉపయోగించబడుతుంది (లాగిన్ లేదా టెస్ట్). ప్రొడక్షన్‌లో ఎప్పుడూ కనిపించదు.",
+      "beforeContinue": "కొనసాగే ముందు మీ మొబైల్ నంబర్‌ను ధృవీకరించండి.",
+      "enterSixDigit": "6 అంకెల OTP నమోదు చేయండి."
+    },
+    "photos": {
+      "title": "ఫోటోలు అప్‌లోడ్ చేయండి",
+      "subtitle": "గరిష్టంగా 3 ఫోటోలు జోడించండి. ప్రతి ఫోటో గరిష్టం 3 MB.",
+      "choose": "ఫోటోలు ఎంచుకోండి",
+      "threeAdded": "3 ఫోటోలు జోడించబడ్డాయి",
+      "countAdded": "3లో {{count}} ఫోటోలు జోడించబడ్డాయి.",
+      "optionalContinue": "ఫోటోలు ఐచ్ఛికం. లేకుండా కూడా కొనసాగవచ్చు.",
+      "removeAria": "{{name}} తొలగించు",
+      "ofThree": "3లో {{count}}",
+      "none": "ఏవీ లేవు",
+      "currentKept": "ప్రస్తుత ఫోటోలు ఉంచబడ్డాయి",
+      "upToThree": "మీరు గరిష్టంగా 3 ఫోటోలు జోడించవచ్చు.",
+      "invalidType": "JPEG, PNG లేదా WebP చిత్రం ఉపయోగించండి.",
+      "tooLarge": "ప్రతి ఫోటో 3 MB లేదా అంతకంటే తక్కువ ఉండాలి.",
+      "empty": "ఆ ఫోటో ఖాళీగా ఉంది."
+    },
+    "review": {
+      "title": "సమీక్షించి సమర్పించండి",
+      "building": "భవనం",
+      "type": "రకం",
+      "location": "లొకేషన్",
+      "capacity": "సామర్థ్యం",
+      "photos": "ఫోటోలు",
+      "mealPriceValue": "₹{{amount}} ఒక్కో భోజనం / టిఫిన్"
+    },
+    "amenities": {
+      "addCustom": "కస్టమ్ సౌకర్యం జోడించండి",
+      "customPlaceholder": "ఉదా. జిమ్ యాక్సెస్",
+      "addCustomAria": "కస్టమ్ సౌకర్యం జోడించండి",
+      "removeAria": "{{label}} తొలగించు",
+      "errors": {
+        "required": "కస్టమ్ సౌకర్యం పేరు నమోదు చేయండి.",
+        "tooLong": "కస్టమ్ సౌకర్యం పేరు చాలా పొడవుగా ఉంది.",
+        "duplicate": "ఈ సౌకర్యం ఇప్పటికే జోడించబడింది.",
+        "maxReached": "సౌకర్యాల గరిష్ట సంఖ్య చేరుకుంది."
+      }
+    },
+    "errors": {
+      "selectPropertyType": "ప్రాపర్టీ రకం ఎంచుకోండి.",
+      "propertyNameRequired": "ప్రాపర్టీ పేరు అవసరం.",
+      "messNameRequired": "మెస్ పేరు అవసరం.",
+      "ownerNameRequired": "యజమాని పేరు అవసరం.",
+      "buildingRequired": "ప్రాపర్టీ / అపార్ట్‌మెంట్ / భవనం పేరు అవసరం.",
+      "enterLocation": "లొకేషన్ నమోదు చేయండి.",
+      "invalidPincode": "చెల్లుబాటు అయ్యే 6 అంకెల పిన్‌కోడ్ నమోదు చేయండి.",
+      "chooseCorporateBasis": "కార్పొరేట్ స్టే కోసం ఒక్కో బెడ్, ఒక్కో గది లేదా ఒక్కో యూనిట్ ఎంచుకోండి.",
+      "invalidMonthlyPrice": "చెల్లుబాటు అయ్యే నెలవారీ ధర నమోదు చేయండి.",
+      "invalidMealPrice": "చెల్లుబాటు అయ్యే ఒక్కో భోజనం / టిఫిన్ ధర నమోదు చేయండి.",
+      "wholeNumber": "పూర్ణ సంఖ్య నమోదు చేయండి.",
+      "invalidMapUrl": "http:// లేదా https:// తో ప్రారంభమయ్యే లింక్ నమోదు చేయండి",
+      "invalidLatitude": "-90 మరియు 90 మధ్య చెల్లుబాటు అయ్యే అక్షాంశం నమోదు చేయండి.",
+      "invalidLongitude": "-180 మరియు 180 మధ్య చెల్లుబాటు అయ్యే రేఖాంశం నమోదు చేయండి.",
+      "invalidMobile": "చెల్లుబాటు అయ్యే 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి.",
+      "network": "మీరు ఆఫ్‌లైన్‌లో ఉన్నట్లు కనిపిస్తోంది. కనెక్షన్ తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.",
+      "otpTooMany": "చాలా ఎక్కువ OTP అభ్యర్థనలు. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.",
+      "otpWait": "మరో OTP అడిగే ముందు కాసేపు వేచి ఉండండి.",
+      "otpSendFailed": "OTP పంపలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+      "otpExpired": "OTP గడువు ముగిసింది. దయచేసి కొత్తది అడగండి.",
+      "otpTooManyAttempts": "చాలా తప్పు ప్రయత్నాలు. దయచేసి కొత్త OTP అడగండి.",
+      "otpAlreadyUsed": "ఆ OTP ఇప్పటికే ఉపయోగించబడింది. దయచేసి కొత్తది అడగండి.",
+      "otpIncorrect": "తప్పు OTP. దయచేసి మళ్లీ ప్రయత్నించండి.",
+      "verificationExpired": "మీ మొబైల్ ధృవీకరణ గడువు ముగిసింది. దయచేసి నంబర్‌ను మళ్లీ ధృవీకరించండి.",
+      "submitFailed": "మీ ప్రాపర్టీని సమర్పించలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.",
+      "saveFailed": "ఈ లిస్టింగ్‌ను సేవ్ చేయలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి."
+    }
   }
 }

@@ -79,6 +79,8 @@ export type DiscoverSpaceDetail = DiscoverSpaceCard & {
   monthlyPrice?: number | string | null;
   mealPrice?: number | string | null;
   sharingNotes?: string | null;
+  /** Selected house rules saved for this space only. */
+  rules?: Array<{ code: string; label: string }> | null;
 };
 
 export type EnquiryInboxMode = 'MINE' | 'RECEIVED';

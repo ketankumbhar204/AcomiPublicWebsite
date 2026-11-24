@@ -3,15 +3,14 @@ import { useTranslation } from 'react-i18next';
 import {
   AlertCircle,
   CheckCircle2,
-  ChevronRight,
   Clock3,
   ExternalLink,
   Eye,
+  Info,
   Lock,
   Mail,
   MessageCircle,
   Smartphone,
-  Zap,
 } from 'lucide-react';
 import { useAuth } from '../../auth/AuthProvider';
 import { useEnquiryFeedback } from '../../context/EnquiryFeedbackContext';
@@ -259,13 +258,62 @@ function ChannelCard({
   );
 }
 
-function OrDivider({ label }: { label: string }) {
+/** Info tip for choose-option cards — display only; never starts an enquiry. */
+function OptionInfoTip({
+  label,
+  body,
+  tone,
+}: {
+  label: string;
+  body: string;
+  tone: 'green' | 'orange' | 'sky';
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLSpanElement | null>(null);
+  const color =
+    tone === 'green' ? 'text-primary' : tone === 'orange' ? 'text-amber-700' : 'text-sky-700';
+
+  useEffect(() => {
+    if (!open) return;
+    function onDoc(event: MouseEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
   return (
-    <div className="flex items-center gap-3 py-0.5" aria-hidden="true">
-      <span className="h-px flex-1 bg-black/10" />
-      <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-400">{label}</span>
-      <span className="h-px flex-1 bg-black/10" />
-    </div>
+    <span ref={rootRef} className="relative inline-flex shrink-0">
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen((value) => !value);
+        }}
+        className={`rounded-full p-0.5 ${color} opacity-70 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
+      >
+        <Info className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden />
+      </button>
+      {open ? (
+        <span
+          role="tooltip"
+          className="absolute top-6 right-0 z-20 w-[min(16.5rem,calc(100vw-4rem))] rounded-xl border border-black/10 bg-white px-3 py-2 text-left text-[12px] leading-snug font-normal text-text-secondary shadow-[0_8px_24px_rgba(15,23,42,0.12)]"
+          onClick={(event) => event.stopPropagation()}
+        >
+          {body}
+        </span>
+      ) : null}
+    </span>
   );
 }
 
@@ -923,162 +971,152 @@ export function EnquireDialog({
           <h2 id="enquire-title" className="mt-2 text-[17px] font-semibold tracking-tight text-navy">
             {t('discovery.enquireChooseTitle')}
           </h2>
-          <p id="enquire-body" className="mt-1 text-[13px] text-text-secondary">
-            {t('discovery.enquireChooseBody')}
+          <p id="enquire-body" className="mx-auto mt-1.5 max-w-[22rem] text-[13px] leading-snug text-text-secondary">
+            {showViewHereExhausted
+              ? t('discovery.enquireViewHereExhausted')
+              : t('discovery.enquireChooseBody')}
           </p>
 
-          <div className="mt-3 space-y-2 text-left">
+          <div className="mt-3.5 space-y-2.5 text-left">
             {/* APP — recommended / unlimited */}
             <button
               type="button"
               disabled={busy}
               onClick={() => void onSendOnAcomiApp()}
-              className="w-full rounded-2xl border border-primary/30 bg-[#E7F6EE] p-3 text-left transition hover:border-primary/55 disabled:opacity-60"
+              className="w-full rounded-2xl border border-primary/35 bg-[#E7F6EE] px-3 py-2.5 text-left transition hover:border-primary/55 disabled:opacity-60"
             >
               <div className="flex items-start gap-2.5">
-                <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/80 text-primary shadow-sm ring-1 ring-primary/10">
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#D8F3E4] text-primary">
                   <Smartphone className="h-4 w-4" aria-hidden />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="inline-flex rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
-                    {t('discovery.enquireRecommended')}
-                  </span>
-                  <span className="mt-1 block text-[12px] font-semibold text-navy/80">
-                    {t('discovery.enquireSendOnApp')}
-                  </span>
-                  <span className="mt-0.5 block text-[15px] font-bold leading-tight text-navy">
-                    {t('discovery.enquireUnlimitedTitle')}
-                  </span>
-                  <span className="mt-0.5 block text-[14px] font-semibold leading-tight text-primary">
-                    {t('discovery.enquireFreeAndroid')}
-                  </span>
-                  <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-medium text-navy/65">
-                    <span className="inline-flex items-center gap-1">
-                      <Zap className="h-3 w-3 text-primary" aria-hidden />
-                      {t('discovery.enquireBenefitFast')}
+                  <span className="flex items-start justify-between gap-2">
+                    <span className="flex min-w-0 flex-wrap items-center gap-1.5">
+                      <span className="text-[14px] font-bold leading-tight text-[#0F6B4C]">
+                        {t('discovery.enquireGetOnApp')}
+                      </span>
+                      <span className="inline-flex rounded-full bg-primary px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white uppercase">
+                        {t('discovery.enquireRecommended')}
+                      </span>
                     </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Lock className="h-3 w-3 text-primary" aria-hidden />
-                      {t('discovery.enquireBenefitSecure')}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Smartphone className="h-3 w-3 text-primary" aria-hidden />
-                      {t('discovery.enquireBenefitAnywhere')}
-                    </span>
+                    <OptionInfoTip
+                      tone="green"
+                      label={t('discovery.enquireAppInfoLabel')}
+                      body={t('discovery.enquireAppInfoBody')}
+                    />
+                  </span>
+                  <span className="mt-1 block text-[12px] leading-snug text-text-secondary">
+                    {t('discovery.enquireAppHint')}
+                  </span>
+                  <span className="mt-2 flex justify-end text-[13px] font-bold text-primary">
+                    {t('discovery.enquireContinue')}
                   </span>
                 </span>
-                <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-primary/70" aria-hidden />
               </div>
             </button>
-
-            <OrDivider label={t('discovery.enquireOptionOr')} />
 
             {showViewHere ? (
               <button
                 type="button"
                 disabled={busy}
                 onClick={() => void onViewHere()}
-                className="w-full rounded-2xl border border-sky-200 bg-[#F3F8FF] p-3 text-left transition hover:border-sky-300 disabled:opacity-60"
+                className="w-full rounded-2xl border border-sky-200 bg-[#F3F8FF] px-3 py-2.5 text-left transition hover:border-sky-300 disabled:opacity-60"
               >
                 <div className="flex items-start gap-2.5">
-                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-700">
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-700">
                     <Eye className="h-4 w-4" aria-hidden />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[15px] font-bold leading-tight text-navy">
-                      {t('discovery.enquireViewHereTitle')}
+                    <span className="flex items-start justify-between gap-2">
+                      <span className="flex min-w-0 flex-wrap items-center gap-1.5">
+                        <span className="text-[14px] font-bold leading-tight text-sky-900">
+                          {t('discovery.enquireViewHereTitle')}
+                        </span>
+                        <span className="inline-flex rounded-full bg-sky-100 px-1.5 py-0.5 text-[10px] font-bold text-sky-800">
+                          {t('discovery.enquireRemainingBadge', { remaining: viewHereRemaining })}
+                        </span>
+                      </span>
+                      <OptionInfoTip
+                        tone="sky"
+                        label={t('discovery.enquireViewInfoLabel')}
+                        body={t('discovery.enquireViewHereBody')}
+                      />
                     </span>
-                    <span className="mt-1 block text-[12px] leading-snug text-navy/70">
+                    <span className="mt-1 block text-[12px] leading-snug text-text-secondary">
                       {t('discovery.enquireViewHereBody')}
                     </span>
-                    <span className="mt-2 inline-block max-w-full rounded-full bg-sky-100 px-2 py-0.5 text-[12px] font-semibold leading-tight text-sky-800">
-                      {viewHereRemaining === 1
-                        ? t('discovery.enquireViewHereRemainingOne', {
-                            remaining: viewHereRemaining,
-                            limit: viewHereLimit,
-                          })
-                        : t('discovery.enquireViewHereRemaining', {
-                            remaining: viewHereRemaining,
-                            limit: viewHereLimit,
-                          })}
+                    <span className="mt-2 flex justify-end text-[13px] font-bold text-sky-700">
+                      {t('discovery.enquireContinue')}
                     </span>
                   </span>
-                  <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-sky-700/70" aria-hidden />
                 </div>
               </button>
             ) : null}
 
-            {showViewHereExhausted ? (
-              <p className="rounded-xl bg-sky-50 px-3 py-2 text-center text-[13px] leading-snug text-sky-900">
-                {t('discovery.enquireViewHereExhausted')}
-              </p>
-            ) : null}
-
-            {showViewHere || showViewHereExhausted ? <OrDivider label={t('discovery.enquireOptionOr')} /> : null}
-
-            {/* EMAIL — limited unless admin disabled purchases. Paid credits send. */}
+            {/* EMAIL — same handlers as before; compact card layout only */}
             <button
               type="button"
               disabled={busy}
               onClick={() => onChooseEmail()}
-              className="w-full rounded-2xl border border-amber-300/70 bg-[#FFF4EC] p-3 text-left transition hover:border-amber-400 disabled:opacity-60"
+              className="w-full rounded-2xl border border-amber-300/80 bg-[#FFF4EC] px-3 py-2.5 text-left transition hover:border-amber-400 disabled:opacity-60"
             >
               <div className="flex items-start gap-2.5">
-                <span className="relative mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/90 text-amber-700 shadow-sm ring-1 ring-amber-200/80">
+                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFE4CC] text-amber-800">
                   <Mail className="h-4 w-4" aria-hidden />
-                  {remainingKnown ? (
-                    <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-coral px-1 text-[10px] font-bold text-white">
-                      {remainingToday}
-                    </span>
-                  ) : null}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[12px] font-semibold text-navy/80">
-                    {freeDailyExhausted
-                      ? offerCount
-                        ? t('discovery.enquireEmailCtaExhausted', { count: offerCount })
-                        : t('discovery.enquireEmailCtaExhaustedPending')
-                      : t('discovery.enquireEmailCtaReady')}
+                  <span className="flex items-start justify-between gap-2">
+                    <span className="flex min-w-0 flex-wrap items-center gap-1.5">
+                      <span className="text-[14px] font-bold leading-tight text-amber-950">
+                        {freeDailyExhausted
+                          ? offerCount
+                            ? t('discovery.enquireEmailCtaExhausted', { count: offerCount })
+                            : t('discovery.enquireEmailCtaExhaustedPending')
+                          : t('discovery.enquireGetByEmail')}
+                      </span>
+                      {remainingKnown ? (
+                        <span className="inline-flex rounded-full bg-[#FFE0C2] px-1.5 py-0.5 text-[10px] font-bold text-amber-900">
+                          {t('discovery.enquireRemainingBadge', { remaining: remainingToday })}
+                        </span>
+                      ) : null}
+                    </span>
+                    <OptionInfoTip
+                      tone="orange"
+                      label={t('discovery.enquireEmailInfoLabel')}
+                      body={
+                        freeDailyExhausted
+                          ? offerAmount
+                            ? t('discovery.enquireEmailExhaustedHint', { amount: offerAmount })
+                            : t('discovery.enquireEmailReceiveDesc')
+                          : t('discovery.enquireEmailInfoBody')
+                      }
+                    />
                   </span>
-                  {remainingKnown ? (
-                    <span className="mt-1 inline-block max-w-full whitespace-nowrap rounded-md bg-amber-100/90 px-1.5 py-0.5 text-[13px] font-bold leading-tight text-amber-900">
-                      {remainingToday === 1
-                        ? t('discovery.enquireEmailRemainingOne', {
-                            remaining: remainingToday,
-                            limit: dailyLimit,
-                          })
-                        : t('discovery.enquireEmailRemaining', {
-                            remaining: remainingToday,
-                            limit: dailyLimit,
-                          })}
-                    </span>
-                  ) : null}
-                  {remainingKnown && !freeDailyExhausted ? (
-                    <span className="mt-1 block text-[12px] font-semibold text-navy/55">
-                      {t('discovery.enquireEmailDailyLimit', { count: dailyLimit })}
-                    </span>
-                  ) : null}
-                  {freeDailyExhausted && offerCount && offerAmount ? (
-                    <span className="mt-1 block text-[12px] font-semibold text-navy/55">
-                      {t('discovery.limitCreditsCta', { count: offerCount, amount: offerAmount })}
-                    </span>
-                  ) : null}
-                  <span className="mt-1.5 block text-[12px] text-navy/60">
+                  <span className="mt-1 block text-[12px] leading-snug text-text-secondary">
                     {freeDailyExhausted
                       ? offerAmount
                         ? t('discovery.enquireEmailExhaustedHint', { amount: offerAmount })
-                        : null
-                      : t('discovery.enquireEmailCardHint')}
+                        : offerCount && offerAmount
+                          ? t('discovery.limitCreditsCta', { count: offerCount, amount: offerAmount })
+                          : t('discovery.enquireEmailReceiveDesc')
+                      : t('discovery.enquireEmailReceiveDesc')}
+                  </span>
+                  <span className="mt-2 flex justify-end text-[13px] font-bold text-amber-800">
+                    {t('discovery.enquireContinue')}
                   </span>
                 </span>
-                <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-amber-700/60" aria-hidden />
               </div>
             </button>
           </div>
 
-          <ActionButton variant="ghost" className="mt-3 w-full" onClick={handleClose} disabled={busy}>
+          <button
+            type="button"
+            onClick={handleClose}
+            disabled={busy}
+            className="mt-3.5 w-full rounded-full border border-primary bg-white py-2.5 text-[15px] font-semibold text-primary transition hover:bg-[#F3FBF7] disabled:opacity-60"
+          >
             {t('discovery.enquireDone')}
-          </ActionButton>
+          </button>
           {IS_LOCAL_DEV ? (
             <>
               <ActionButton

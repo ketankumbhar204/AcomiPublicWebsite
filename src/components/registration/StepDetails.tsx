@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Field, inputClasses } from '../form/Field';
 import { TextField } from '../form/TextField';
 import type { ListingKind } from '../../constants/listing';
@@ -37,6 +38,9 @@ function RupeeField({
   error,
   placeholder,
   onChange,
+  pricingUnitLabel,
+  chooseUnitLabel,
+  basisLabel,
 }: {
   id: string;
   label: string;
@@ -47,6 +51,9 @@ function RupeeField({
   error?: string;
   placeholder: string;
   onChange: (value: string) => void;
+  pricingUnitLabel: string;
+  chooseUnitLabel: string;
+  basisLabel: (id: PriceBasis, fallback: string) => string;
 }) {
   return (
     <Field htmlFor={id} label={label} required error={error}>
@@ -72,15 +79,15 @@ function RupeeField({
         {onBasisChange ? (
           <select
             id={`${id}-basis`}
-            aria-label="Pricing unit"
+            aria-label={pricingUnitLabel}
             value={basis ?? ''}
             onChange={(event) => onBasisChange(event.target.value as PriceBasis)}
             className="h-11 shrink-0 rounded-lg border border-border bg-background px-3 text-[12px] font-medium text-text-secondary sm:w-[170px]"
           >
-            {!basis ? <option value="">Choose unit</option> : null}
+            {!basis ? <option value="">{chooseUnitLabel}</option> : null}
             {PRICE_BASIS_OPTIONS.map((option) => (
               <option key={option.id} value={option.id}>
-                {option.label}
+                {basisLabel(option.id, option.label)}
               </option>
             ))}
           </select>
@@ -98,53 +105,75 @@ function RupeeField({
 }
 
 export function StepDetails({ form, errors, kind, onChange }: StepDetailsProps) {
+  const { t } = useTranslation();
   // Step 1 guarantees a type before this step can be reached.
   const option = form.propertyType ? getPropertyTypeOption(form.propertyType) : null;
+  const typeKey = form.propertyType ?? 'PG';
+  const capacityLabel = option
+    ? t(`registration.propertyTypes.${typeKey}.capacityLabel`, { defaultValue: option.capacityLabel })
+    : t('registration.fields.capacityFallback');
+  const capacityPlaceholder = option
+    ? t(`registration.propertyTypes.${typeKey}.capacityPlaceholder`, {
+        defaultValue: option.capacityPlaceholder,
+      })
+    : t('registration.propertyTypes.PG.capacityPlaceholder');
+  const basisLabel = (id: PriceBasis, fallback: string) =>
+    t(`registration.priceBasis.${id}`, { defaultValue: fallback });
 
   return (
     <div className="space-y-6">
-      <Section title="Location">
+      <Section title={t('registration.sections.location')}>
         <AddressLocationField form={form} errors={errors} kind={kind} onChange={onChange} />
       </Section>
 
-      <Section title="Pricing">
+      <Section title={t('registration.sections.pricing')}>
         <RupeeField
           id="startingPrice"
-          label={kind === 'mess' ? 'Monthly price' : 'Starting price'}
+          label={
+            kind === 'mess'
+              ? t('registration.fields.monthlyPrice')
+              : t('registration.fields.startingPrice')
+          }
           value={form.startingPrice}
           basis={form.priceBasis ?? defaultPriceBasis(form.propertyType) ?? undefined}
           onBasisChange={(value) => onChange('priceBasis', value)}
           error={errors.startingPrice}
           placeholder={kind === 'mess' ? '3500' : '6000'}
           onChange={(value) => onChange('startingPrice', value)}
+          pricingUnitLabel={t('registration.fields.pricingUnit')}
+          chooseUnitLabel={t('registration.fields.chooseUnit')}
+          basisLabel={basisLabel}
         />
         {kind === 'mess' ? (
           <RupeeField
             id="mealPrice"
-            label="Per meal / tiffin"
+            label={t('registration.fields.perMealTiffin')}
             value={form.mealPrice}
-            suffix="per meal / tiffin"
+            suffix={t('registration.fields.perMealTiffinSuffix')}
             error={errors.mealPrice}
             placeholder="80"
             onChange={(value) => onChange('mealPrice', value)}
+            pricingUnitLabel={t('registration.fields.pricingUnit')}
+            chooseUnitLabel={t('registration.fields.chooseUnit')}
+            basisLabel={basisLabel}
           />
         ) : null}
       </Section>
 
-      <Section title="Capacity">
+      <Section title={t('registration.sections.capacity')}>
         <TextField
           id="capacityEstimate"
-          label={`${option?.capacityLabel ?? 'Capacity'} (optional)`}
+          label={`${capacityLabel} ${t('registration.optional')}`}
           value={form.capacityEstimate}
           onChange={(value) => onChange('capacityEstimate', digitsOnly(value, 6))}
           error={errors.capacityEstimate}
-          placeholder={option?.capacityPlaceholder ?? 'e.g. 24'}
+          placeholder={capacityPlaceholder}
           inputMode="numeric"
         />
       </Section>
 
       {option?.supportsAmenities ? (
-        <Section title="Amenities">
+        <Section title={t('registration.sections.amenities')}>
           <AmenityChips
             selected={form.amenities}
             onChange={(amenities: AmenityAssignment[]) => onChange('amenities', amenities)}

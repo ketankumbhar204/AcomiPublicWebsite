@@ -1,4 +1,5 @@
 import { CheckCircle2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Field, inputClasses } from '../form/Field';
 import { OtpInput } from '../form/OtpInput';
 import type { ListingKind } from '../../constants/listing';
@@ -51,14 +52,20 @@ export function StepVerify({
   localSkipChecked = false,
   onLocalSkipChange,
 }: StepVerifyProps) {
+  const { t } = useTranslation();
   const locked = phase !== 'idle';
 
   return (
     <div className="space-y-5" data-listing-kind={kind}>
       <div>
-        <h3 className="text-[15px] font-semibold text-text">Verify your mobile number</h3>
+        <h3 className="text-[15px] font-semibold text-text">{t('registration.verify.title')}</h3>
         <div className="mt-3">
-          <Field htmlFor="mobileNumber" label="Mobile number" required error={errors.mobileNumber}>
+          <Field
+            htmlFor="mobileNumber"
+            label={t('registration.fields.mobileNumber')}
+            required
+            error={errors.mobileNumber}
+          >
             <div className="flex items-stretch gap-2">
               <span className="flex items-center rounded-lg border border-border bg-background px-3 text-[14px] font-medium text-text-secondary">
                 +91
@@ -70,7 +77,7 @@ export function StepVerify({
                 disabled={locked}
                 inputMode="numeric"
                 autoComplete="tel-national"
-                placeholder="98765 43210"
+                placeholder={t('registration.fields.mobilePlaceholder')}
                 aria-invalid={errors.mobileNumber ? true : undefined}
                 aria-describedby={errors.mobileNumber ? 'mobileNumber-error' : undefined}
                 className={`${inputClasses(Boolean(errors.mobileNumber))} flex-1 disabled:bg-background disabled:text-text-secondary`}
@@ -87,7 +94,7 @@ export function StepVerify({
               className="mt-3 w-full"
               disabled={form.mobileNumber.length !== 10}
             >
-              Send OTP
+              {t('registration.verify.sendOtp')}
             </CtaButton>
             {sendError ? (
               <p role="alert" className="mt-2 text-[12px] text-danger">
@@ -103,14 +110,14 @@ export function StepVerify({
             onClick={onChangeNumber}
             className="reg-focus mt-2 rounded text-[12px] font-semibold text-register hover:underline"
           >
-            Change number
+            {t('registration.verify.changeNumber')}
           </button>
         ) : null}
       </div>
 
       {phase === 'sent' ? (
         <div className="space-y-3">
-          <p className="text-[13px] font-semibold text-text">Enter the 6-digit OTP</p>
+          <p className="text-[13px] font-semibold text-text">{t('registration.verify.enterOtp')}</p>
           <OtpInput
             value={otp}
             onChange={onOtpChange}
@@ -121,7 +128,7 @@ export function StepVerify({
           <div className="flex items-center justify-between gap-3">
             {resendSeconds > 0 ? (
               <p className="text-[12px] text-muted" aria-live="polite">
-                Resend OTP in {formatCountdown(resendSeconds)}
+                {t('registration.verify.resendIn', { time: formatCountdown(resendSeconds) })}
               </p>
             ) : (
               <button
@@ -130,11 +137,11 @@ export function StepVerify({
                 disabled={sending}
                 className="reg-focus rounded text-[12px] font-semibold text-register hover:underline disabled:opacity-50"
               >
-                Resend OTP
+                {t('registration.verify.resendOtp')}
               </button>
             )}
             <CtaButton onClick={() => onVerifyOtp()} loading={verifying} disabled={otp.length !== 6}>
-              Verify OTP
+              {t('registration.verify.verifyOtp')}
             </CtaButton>
           </div>
           {/* Resend problems belong to sending, so they never render as a verify failure. */}
@@ -149,7 +156,7 @@ export function StepVerify({
       {phase === 'verified' ? (
         <p className="flex items-center gap-2 rounded-lg bg-register-soft px-3 py-2 text-[13px] font-semibold text-register">
           <CheckCircle2 aria-hidden className="h-4 w-4" />
-          Mobile verified
+          {t('registration.verify.mobileVerified')}
         </p>
       ) : null}
 
@@ -162,8 +169,9 @@ export function StepVerify({
             className="mt-0.5 h-4 w-4 accent-register"
           />
           <span>
-            <span className="font-semibold text-text">Local test</span>
-            {' — '}skip OTP for this listing. Uses the number above (logged-in or test). Never shown in production.
+            <span className="font-semibold text-text">{t('registration.verify.localTest')}</span>
+            {' — '}
+            {t('registration.verify.localSkipHint')}
           </span>
         </label>
       ) : null}

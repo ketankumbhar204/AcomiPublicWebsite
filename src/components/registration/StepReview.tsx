@@ -1,8 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import type { ListingKind } from '../../constants/listing';
-import { LISTING_COPY } from '../../constants/listing';
 import { getPropertyTypeOption } from '../../constants/propertyRegistration';
 import { formatRupees } from '../../lib/indianMobile';
-import { priceBasisLabel } from '../../lib/priceBasis';
+import { isPriceBasis, priceBasisLabel } from '../../lib/priceBasis';
 import { locationSummary, type RegistrationForm } from './registrationForm';
 import type { SelectedListingPhoto } from './StepPhotos';
 
@@ -18,10 +18,12 @@ function ReviewRow({
   label,
   value,
   onEdit,
+  editLabel,
 }: {
   label: string;
   value: string;
   onEdit?: () => void;
+  editLabel: string;
 }) {
   return (
     <div className="flex items-baseline justify-between gap-3 py-1.5">
@@ -34,7 +36,7 @@ function ReviewRow({
             onClick={onEdit}
             className="reg-focus rounded text-[11px] font-semibold text-register hover:underline"
           >
-            Edit
+            {editLabel}
           </button>
         ) : null}
       </dd>
@@ -43,48 +45,99 @@ function ReviewRow({
 }
 
 export function StepReview({ form, kind, photos, keepCurrentPhotos = false, onEditStep }: StepReviewProps) {
+  const { t } = useTranslation();
   const option = form.propertyType ? getPropertyTypeOption(form.propertyType) : null;
   const price = Number(form.startingPrice);
   const mealPrice = Number(form.mealPrice);
-  const copy = LISTING_COPY[kind];
+  const dash = t('registration.emDash');
+  const editLabel = t('registration.edit');
+  const typeTitle = option
+    ? t(`registration.propertyTypes.${option.id}.title`, { defaultValue: option.title })
+    : dash;
+  const basisText = (() => {
+    if (isPriceBasis(form.priceBasis)) {
+      return t(`registration.priceBasis.${form.priceBasis}`, {
+        defaultValue: priceBasisLabel(form.priceBasis, form.propertyType),
+      });
+    }
+    if (form.propertyType === 'CORPORATE_STAY') {
+      return t('registration.priceBasis.chooseCorporate');
+    }
+    return t(`registration.priceBasis.${form.priceBasis ?? 'PER_UNIT'}`, {
+      defaultValue: priceBasisLabel(form.priceBasis, form.propertyType),
+    });
+  })();
 
   return (
     <div className="space-y-4">
-      <h3 className="text-[15px] font-semibold text-text">Review and submit</h3>
+      <h3 className="text-[15px] font-semibold text-text">{t('registration.review.title')}</h3>
       <dl className="divide-y divide-border rounded-xl border border-border px-3 py-1">
-        <ReviewRow label={copy.reviewNameLabel} value={form.propertyName} onEdit={() => onEditStep(1)} />
-        <ReviewRow label="Building" value={form.buildingName} onEdit={() => onEditStep(2)} />
-        {kind === 'property' ? (
-          <ReviewRow label="Type" value={option?.title ?? '—'} onEdit={() => onEditStep(1)} />
-        ) : null}
-        <ReviewRow label="Location" value={locationSummary(form) || '—'} onEdit={() => onEditStep(2)} />
         <ReviewRow
-          label={kind === 'mess' ? 'Monthly price' : 'Starting price'}
-          value={
-            Number.isFinite(price)
-              ? `₹${formatRupees(price)} ${priceBasisLabel(form.priceBasis, form.propertyType)}`
-              : '—'
-          }
+          label={t(`registration.${kind}.reviewNameLabel`)}
+          value={form.propertyName}
+          onEdit={() => onEditStep(1)}
+          editLabel={editLabel}
+        />
+        <ReviewRow
+          label={t('registration.review.building')}
+          value={form.buildingName}
           onEdit={() => onEditStep(2)}
+          editLabel={editLabel}
+        />
+        {kind === 'property' ? (
+          <ReviewRow
+            label={t('registration.review.type')}
+            value={typeTitle}
+            onEdit={() => onEditStep(1)}
+            editLabel={editLabel}
+          />
+        ) : null}
+        <ReviewRow
+          label={t('registration.review.location')}
+          value={locationSummary(form) || dash}
+          onEdit={() => onEditStep(2)}
+          editLabel={editLabel}
+        />
+        <ReviewRow
+          label={
+            kind === 'mess'
+              ? t('registration.fields.monthlyPrice')
+              : t('registration.fields.startingPrice')
+          }
+          value={Number.isFinite(price) ? `₹${formatRupees(price)} ${basisText}` : dash}
+          onEdit={() => onEditStep(2)}
+          editLabel={editLabel}
         />
         {kind === 'mess' ? (
           <ReviewRow
-            label="Per meal / tiffin"
-            value={Number.isFinite(mealPrice) ? `₹${formatRupees(mealPrice)} per meal / tiffin` : '—'}
+            label={t('registration.fields.perMealTiffin')}
+            value={
+              Number.isFinite(mealPrice)
+                ? t('registration.review.mealPriceValue', { amount: formatRupees(mealPrice) })
+                : dash
+            }
             onEdit={() => onEditStep(2)}
+            editLabel={editLabel}
           />
         ) : null}
-        {form.capacityEstimate ? <ReviewRow label="Capacity" value={form.capacityEstimate} /> : null}
+        {form.capacityEstimate ? (
+          <ReviewRow
+            label={t('registration.review.capacity')}
+            value={form.capacityEstimate}
+            editLabel={editLabel}
+          />
+        ) : null}
         <ReviewRow
-          label="Photos"
+          label={t('registration.review.photos')}
           value={
             photos.length === 0
               ? keepCurrentPhotos
-                ? 'Current photos kept'
-                : 'None'
-              : `${photos.length} of 3`
+                ? t('registration.photos.currentKept')
+                : t('registration.photos.none')
+              : t('registration.photos.ofThree', { count: photos.length })
           }
           onEdit={() => onEditStep(4)}
+          editLabel={editLabel}
         />
       </dl>
       {photos.length > 0 ? (

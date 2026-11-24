@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { inputClasses } from '../form/Field';
 import {
   AMENITY_ICONS,
@@ -18,14 +19,8 @@ type AmenityChipsProps = {
   onChange: (next: AmenityAssignment[]) => void;
 };
 
-const CUSTOM_ERRORS: Record<CustomAmenityError, string> = {
-  required: 'Enter a name for the custom amenity.',
-  tooLong: 'Custom amenity name is too long.',
-  duplicate: 'This amenity is already added.',
-  maxReached: 'Maximum number of amenities reached.',
-};
-
 export function AmenityChips({ selected, onChange }: AmenityChipsProps) {
+  const { t } = useTranslation();
   const [customLabel, setCustomLabel] = useState('');
   const [customError, setCustomError] = useState<CustomAmenityError | null>(null);
   const customAmenities = selected.filter((item) => item.code === 'CUSTOM');
@@ -60,7 +55,9 @@ export function AmenityChips({ selected, onChange }: AmenityChipsProps) {
               }`}
             >
               <Icon aria-hidden className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{PRESET_AMENITY_LABELS[code]}</span>
+              <span className="truncate">
+                {t(`discovery.amenity.${code}`, { defaultValue: PRESET_AMENITY_LABELS[code] })}
+              </span>
             </button>
           );
         })}
@@ -75,7 +72,7 @@ export function AmenityChips({ selected, onChange }: AmenityChipsProps) {
               <span className="truncate">{amenity.label}</span>
               <button
                 type="button"
-                aria-label={`Remove ${amenity.label}`}
+                aria-label={t('registration.amenities.removeAria', { label: amenity.label })}
                 onClick={() => onChange(removeCustomAmenity(selected, amenity.label))}
                 className="reg-focus grid h-5 w-5 shrink-0 place-items-center rounded-full hover:bg-white"
               >
@@ -100,8 +97,8 @@ export function AmenityChips({ selected, onChange }: AmenityChipsProps) {
               addCustom();
             }
           }}
-          placeholder="e.g. Gym access"
-          aria-label="Add custom amenity"
+          placeholder={t('registration.amenities.customPlaceholder')}
+          aria-label={t('registration.amenities.addCustomAria')}
           aria-invalid={customError ? true : undefined}
           aria-describedby={customError ? 'customAmenity-error' : undefined}
           className={`${inputClasses(Boolean(customError))} min-w-0 flex-1`}
@@ -111,12 +108,12 @@ export function AmenityChips({ selected, onChange }: AmenityChipsProps) {
           onClick={addCustom}
           className="reg-focus h-[46px] shrink-0 rounded-2xl border border-register bg-register-soft px-4 text-[13px] font-semibold text-register transition hover:bg-register hover:text-white"
         >
-          Add custom amenity
+          {t('registration.amenities.addCustom')}
         </button>
       </div>
       {customError ? (
         <p id="customAmenity-error" className="text-[12px] text-danger">
-          {CUSTOM_ERRORS[customError]}
+          {t(`registration.amenities.errors.${customError}`)}
         </p>
       ) : null}
     </div>

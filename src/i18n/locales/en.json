@@ -226,6 +226,21 @@
       "REJECTED": "Unable to fulfil",
       "EXPIRED": "Expired",
       "CANCELLED": "Cancelled"
+    },
+    "received": {
+      "from": "From",
+      "to": "To",
+      "senderDetails": "Sender details",
+      "name": "Name",
+      "mobile": "Mobile",
+      "email": "Email",
+      "account": "Account",
+      "notAvailable": "Not available",
+      "listsProperty": "Lists a property",
+      "member": "Member",
+      "call": "Call",
+      "message": "Message",
+      "openListing": "Open listing"
     }
   },
   "hero": {
@@ -251,13 +266,13 @@
       "shortLabel": "Mess vendor"
     },
     "ACCOMMODATION_SEEKER": {
-      "title": "Search PGs and Rentals",
-      "description": "Find PGs, hostels, co-living, rentals and corporate stays.",
+      "title": "I need a place",
+      "description": "Find a PG, hostel, co-living or rental.",
       "shortLabel": "Looking for a place"
     },
     "MEAL_SEEKER": {
-      "title": "Search Tiffin and Meal Services",
-      "description": "Find tiffin providers, mess services and meal options.",
+      "title": "I need meals",
+      "description": "Find a mess or meal service.",
       "shortLabel": "Looking for meals"
     }
   },
@@ -527,7 +542,6 @@
       "lodgingEyebrow": "PG · Hostel · Co-living · Rental",
       "lodgingTitle": "Accommodation",
       "lodgingBody": "Manage your property, members and payments easily.",
-
       "steps": {
         "building": "Building",
         "floor": "Floor",
@@ -770,6 +784,11 @@
       "activePeople": "Active people",
       "messCustomers": "MESS customers",
       "pgResidents": "PG residents"
+    },
+    "whatsappChat": {
+      "businessAccount": "Business Account",
+      "message": "Message",
+      "today": "Today"
     }
   },
   "features": {
@@ -1294,7 +1313,7 @@
     "enquireViewingShort": "Viewing…",
     "enquireViewFailed": "Unable to show contact details right now. Please try again.",
     "enquireSendFailed": "Unable to send your enquiry right now. Please try again.",
-    "enquireViewHereExhausted": "Your instant views are used for today. You can still request contact details by email.",
+    "enquireViewHereExhausted": "Daily free views used. You can still get contact details by email.",
     "contactDetailsViewed": "Contact details viewed",
     "inquirySentTo": "Sent to {{email}}",
     "enquireSuccessTitle": "Enquiry sent!",
@@ -1361,9 +1380,7 @@
     "enquireOwnBody": "You cannot enquire about a Space you own. Owner contact information stays hidden.",
     "enquirePrivacy": "Owner contact details are shared by email for web enquiries.",
     "enquireEmailLabel": "Email",
-    "enquireSavedEmails": "Saved emails",
     "enquireUseDifferentEmail": "Use a different email",
-    "enquireEmailInvalid": "Enter a valid email address.",
     "enquireListingUnavailable": "We could not start an enquiry for this listing. Please try again or pick another listing.",
     "enquireSubmitError": "We could not submit your enquiry. Please try again.",
     "enquireSubmitting": "Sending…",
@@ -1538,7 +1555,18 @@
       "BEDS": "Beds",
       "WARDROBE": "Wardrobe / Cupboard",
       "CUSTOM": "Custom"
-    }
+    },
+    "closeDetails": "Close details",
+    "enquireGetOnApp": "Get on Acomi App",
+    "enquireGetByEmail": "Get details by email",
+    "enquireEmailReceiveDesc": "Receive owner's contact details in your registered email.",
+    "enquireRemainingBadge": "{{remaining}} remaining",
+    "enquireContinue": "Continue →",
+    "enquireAppInfoLabel": "About Acomi App enquiries",
+    "enquireAppInfoBody": "Use the Acomi Android app for unlimited free enquiries. Contact details stay available in the app.",
+    "enquireEmailInfoLabel": "About email enquiries",
+    "enquireEmailInfoBody": "ACOMI emails the owner contact details to your registered email when the listing is eligible. Daily free email enquiries are limited.",
+    "enquireViewInfoLabel": "About viewing here"
   },
   "places": {
     "seo": {
@@ -1633,5 +1661,248 @@
     "description": "PG, hostel, rental or co-living. Share your property details and our team will take it forward.",
     "freeNote": "It's free to register your property.",
     "backHome": "Back to home"
+  },
+  "openApp": {
+    "opening": "Opening Acomi…",
+    "getOnPlay": "Get Acomi on Google Play"
+  },
+  "product": {
+    "ops": {
+      "todaysOperations": "Today's operations",
+      "ownerView": "Owner view",
+      "occupancy": "Occupancy",
+      "occupiedOf": "{{occupied}} / {{total}} occupied",
+      "paymentSummary": "Payment summary",
+      "thisMonth": "This month",
+      "todaysMealHeadcount": "Today's meal headcount",
+      "mealsPrepareExpected": "Meals to prepare / Expected",
+      "noResponseCount": "{{count}} no response",
+      "mealOperations": "Meal operations",
+      "customers": "Customers",
+      "todaysHeadcount": "Today's headcount",
+      "noBuildingsHint": "No buildings, rooms, or beds — customers and plates."
+    }
+  },
+  "registration": {
+    "editListing": "Edit listing",
+    "back": "Back",
+    "continue": "Continue",
+    "close": "Close",
+    "backToPreviousStep": "Back to previous step",
+    "skipOtp": "Skip OTP",
+    "saving": "Saving…",
+    "saveListing": "Save listing",
+    "submitProperty": "Submit property",
+    "submitMess": "Submit mess",
+    "progressAria": "Registration progress",
+    "currentStep": "(current step)",
+    "emDash": "—",
+    "edit": "Edit",
+    "reference": "Reference",
+    "backToAcomi": "Back to ACOMI",
+    "optional": "(optional)",
+    "photosReplaceNote": "New photos replace the current ones. Leave this empty to keep them.",
+    "steps": {
+      "property": "Property",
+      "mess": "Mess",
+      "details": "Details",
+      "verify": "Verify",
+      "photos": "Photos",
+      "review": "Review"
+    },
+    "property": {
+      "title": "Register your property for free",
+      "typeLegend": "What type of property do you manage?",
+      "nameLabel": "Property name",
+      "namePlaceholder": "e.g. Sunrise PG",
+      "buildingLabel": "Property / Apartment / Building name",
+      "buildingPlaceholder": "e.g. Sunrise Residency, ABC Apartments",
+      "descriptionPlaceholder": "Describe your property in a few words",
+      "reviewNameLabel": "Property",
+      "successTitle": "Property registration received",
+      "successBody": "Thanks! We’ve received your property details. Our team may contact you for verification."
+    },
+    "mess": {
+      "title": "Register your mess for free",
+      "typeLegend": "What type of food service do you run?",
+      "nameLabel": "Mess name",
+      "namePlaceholder": "e.g. Sunrise Mess",
+      "buildingLabel": "Property / Apartment / Building name",
+      "buildingPlaceholder": "e.g. Sunrise Residency, ABC Apartments",
+      "descriptionPlaceholder": "Describe your mess in a few words",
+      "reviewNameLabel": "Mess",
+      "successTitle": "Mess registration received",
+      "successBody": "Thanks! We’ve received your mess details. Our team may contact you for verification."
+    },
+    "fields": {
+      "ownerName": "Owner name",
+      "ownerNamePlaceholder": "e.g. Ketan Kumbhar",
+      "shortDescription": "Short description (optional)",
+      "monthlyPrice": "Monthly price",
+      "startingPrice": "Starting price",
+      "pricingUnit": "Pricing unit",
+      "chooseUnit": "Choose unit",
+      "perMealTiffin": "Per meal / tiffin",
+      "perMealTiffinSuffix": "per meal / tiffin",
+      "capacityFallback": "Capacity",
+      "searchLocation": "Search location",
+      "searchLocationPlaceholder": "Search building, road, area, locality or landmark",
+      "locality": "Locality",
+      "city": "City",
+      "state": "State",
+      "pincode": "Pincode",
+      "district": "District",
+      "mapLink": "Google Maps link (optional)",
+      "mapLinkPlaceholder": "Paste a Google Maps link",
+      "mobileNumber": "Mobile number",
+      "mobilePlaceholder": "98765 43210"
+    },
+    "sections": {
+      "location": "Location",
+      "pricing": "Pricing",
+      "capacity": "Capacity",
+      "amenities": "Amenities"
+    },
+    "propertyTypes": {
+      "PG": {
+        "title": "PG",
+        "subtitle": "Paying guest",
+        "priceSuffix": "per bed / month",
+        "capacityLabel": "Approximate beds",
+        "capacityPlaceholder": "e.g. 24"
+      },
+      "HOSTEL": {
+        "title": "Hostel",
+        "subtitle": "Hostel accommodation",
+        "priceSuffix": "per bed / month",
+        "capacityLabel": "Approximate beds",
+        "capacityPlaceholder": "e.g. 60"
+      },
+      "RENTAL": {
+        "title": "Rental",
+        "subtitle": "Rental property",
+        "priceSuffix": "per month",
+        "capacityLabel": "Units",
+        "capacityPlaceholder": "e.g. 4"
+      },
+      "CORPORATE_STAY": {
+        "title": "Corporate Stay",
+        "subtitle": "Company accommodation",
+        "priceSuffix": "choose a unit",
+        "capacityLabel": "Units",
+        "capacityPlaceholder": "e.g. 4"
+      },
+      "CO_LIVING": {
+        "title": "Co-living",
+        "subtitle": "Shared accommodation",
+        "priceSuffix": "per room / month",
+        "capacityLabel": "Approximate residents",
+        "capacityPlaceholder": "e.g. 12"
+      },
+      "MESS": {
+        "title": "Mess",
+        "subtitle": "Mess / tiffin / meal service",
+        "priceSuffix": "per month",
+        "capacityLabel": "Approximate customers",
+        "capacityPlaceholder": "e.g. 80"
+      }
+    },
+    "priceBasis": {
+      "PER_BED": "per bed / month",
+      "PER_ROOM": "per room / month",
+      "PER_UNIT": "per month",
+      "chooseCorporate": "choose per bed, room, or unit"
+    },
+    "location": {
+      "useTyped": "Use “{{query}}”",
+      "useTypedHint": "Continue with this text. A suggestion is optional.",
+      "searching": "Searching locations...",
+      "noMatches": "No matching places. You can continue with the location you typed.",
+      "searchFailed": "Unable to search locations. Please try again.",
+      "selected": "Location selected",
+      "openInMaps": "Open in Google Maps",
+      "changeLocation": "Change location",
+      "detailsTitle": "Location details",
+      "detailsHint": "Optional. Add city, district and the other details for “{{query}}”."
+    },
+    "verify": {
+      "title": "Verify your mobile number",
+      "sendOtp": "Send OTP",
+      "changeNumber": "Change number",
+      "enterOtp": "Enter the 6-digit OTP",
+      "resendIn": "Resend OTP in {{time}}",
+      "resendOtp": "Resend OTP",
+      "verifyOtp": "Verify OTP",
+      "mobileVerified": "Mobile verified",
+      "localTest": "Local test",
+      "localSkipHint": "skip OTP for this listing. Uses the number above (logged-in or test). Never shown in production.",
+      "beforeContinue": "Verify your mobile number before continuing.",
+      "enterSixDigit": "Enter the 6-digit OTP."
+    },
+    "photos": {
+      "title": "Upload photos",
+      "subtitle": "Add up to 3 photos. Maximum 3 MB per photo.",
+      "choose": "Choose photos",
+      "threeAdded": "3 photos added",
+      "countAdded": "{{count}} of 3 photos added.",
+      "optionalContinue": "Photos are optional. You can continue without any.",
+      "removeAria": "Remove {{name}}",
+      "ofThree": "{{count}} of 3",
+      "none": "None",
+      "currentKept": "Current photos kept",
+      "upToThree": "You can add up to 3 photos.",
+      "invalidType": "Use a JPEG, PNG, or WebP image.",
+      "tooLarge": "Each photo must be 3 MB or smaller.",
+      "empty": "That photo is empty."
+    },
+    "review": {
+      "title": "Review and submit",
+      "building": "Building",
+      "type": "Type",
+      "location": "Location",
+      "capacity": "Capacity",
+      "photos": "Photos",
+      "mealPriceValue": "₹{{amount}} per meal / tiffin"
+    },
+    "amenities": {
+      "addCustom": "Add custom amenity",
+      "customPlaceholder": "e.g. Gym access",
+      "addCustomAria": "Add custom amenity",
+      "removeAria": "Remove {{label}}",
+      "errors": {
+        "required": "Enter a name for the custom amenity.",
+        "tooLong": "Custom amenity name is too long.",
+        "duplicate": "This amenity is already added.",
+        "maxReached": "Maximum number of amenities reached."
+      }
+    },
+    "errors": {
+      "selectPropertyType": "Select a property type.",
+      "propertyNameRequired": "Property name is required.",
+      "messNameRequired": "Mess name is required.",
+      "ownerNameRequired": "Owner name is required.",
+      "buildingRequired": "Property / Apartment / Building name is required.",
+      "enterLocation": "Enter a location.",
+      "invalidPincode": "Enter a valid 6-digit pincode.",
+      "chooseCorporateBasis": "Choose per bed, per room, or per unit for Corporate Stay.",
+      "invalidMonthlyPrice": "Enter a valid monthly price.",
+      "invalidMealPrice": "Enter a valid per meal / tiffin price.",
+      "wholeNumber": "Enter a whole number.",
+      "invalidMapUrl": "Enter a link starting with http:// or https://",
+      "invalidLatitude": "Enter a valid latitude between -90 and 90.",
+      "invalidLongitude": "Enter a valid longitude between -180 and 180.",
+      "invalidMobile": "Enter a valid 10-digit mobile number.",
+      "network": "You appear to be offline. Check your connection and try again.",
+      "otpTooMany": "Too many OTP requests. Please try again later.",
+      "otpWait": "Please wait a moment before requesting another OTP.",
+      "otpSendFailed": "Unable to send OTP. Please try again.",
+      "otpExpired": "OTP expired. Please request a new one.",
+      "otpTooManyAttempts": "Too many incorrect attempts. Please request a new OTP.",
+      "otpAlreadyUsed": "That OTP has already been used. Please request a new one.",
+      "otpIncorrect": "Incorrect OTP. Please try again.",
+      "verificationExpired": "Your mobile verification expired. Please verify your number again.",
+      "submitFailed": "We couldn't submit your property. Please try again.",
+      "saveFailed": "We couldn't save this listing. Please try again."
+    }
   }
 }

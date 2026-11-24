@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { PropertyType } from '../../api/types';
 import { PROPERTY_TYPE_OPTIONS } from '../../constants/propertyRegistration';
 
@@ -55,10 +56,11 @@ const CARD_TONE: Record<
  * come from the platform rather than hand-rolled key handling.
  */
 export function PropertyTypeSelect({ value, onChange, error, locked = false }: PropertyTypeSelectProps) {
+  const { t } = useTranslation();
   return (
     <fieldset disabled={locked}>
       <legend className="text-[15px] font-semibold text-text">
-        What type of property do you manage?
+        {t('registration.property.typeLegend')}
       </legend>
       <div className="mt-3 grid grid-cols-2 gap-2.5">
         {PROPERTY_TYPE_OPTIONS.map((option) => {
@@ -88,8 +90,14 @@ export function PropertyTypeSelect({ value, onChange, error, locked = false }: P
                 <option.Icon className={`h-5 w-5 ${tone.icon}`} />
               </span>
               <span className="flex min-w-0 flex-1 flex-col pr-4">
-                <span className="text-[13px] leading-tight font-semibold text-text">{option.title}</span>
-                <span className="text-[11px] leading-tight text-muted">{option.subtitle}</span>
+                <span className="text-[13px] leading-tight font-semibold text-text">
+                  {t(`registration.propertyTypes.${option.id}.title`, { defaultValue: option.title })}
+                </span>
+                <span className="text-[11px] leading-tight text-muted">
+                  {t(`registration.propertyTypes.${option.id}.subtitle`, {
+                    defaultValue: option.subtitle,
+                  })}
+                </span>
               </span>
               <span
                 aria-hidden

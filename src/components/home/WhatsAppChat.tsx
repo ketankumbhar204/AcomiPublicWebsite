@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Camera, Check, ChevronLeft, MoreVertical, Paperclip, Phone, Smile } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { BrandMark } from '../common/BrandMark';
 
 type WhatsAppChatProps = {
@@ -9,6 +10,7 @@ type WhatsAppChatProps = {
 };
 
 export function WhatsAppChat({ children, time = '8:24 AM', caption }: WhatsAppChatProps) {
+  const { t } = useTranslation();
   return (
     <figure className="w-[176px] shrink-0 2xl:w-[188px]">
       <div className="h-[353px] overflow-hidden 2xl:h-[377px]">
@@ -29,7 +31,7 @@ export function WhatsAppChat({ children, time = '8:24 AM', caption }: WhatsAppCh
                   <Check className="h-2.5 w-2.5" strokeWidth={3} aria-hidden />
                 </span>
               </p>
-              <p className="text-[11px] text-white/70">Business Account</p>
+              <p className="text-[11px] text-white/70">{t('home.whatsappChat.businessAccount')}</p>
             </div>
             <Phone className="h-4 w-4 text-white/90" strokeWidth={1.8} aria-hidden />
             <MoreVertical className="h-4 w-4 text-white/90" strokeWidth={1.8} aria-hidden />
@@ -37,7 +39,7 @@ export function WhatsAppChat({ children, time = '8:24 AM', caption }: WhatsAppCh
 
           <div className="wa-wallpaper flex flex-1 flex-col px-2.5 pt-3 pb-2">
             <p className="mx-auto mb-3 rounded-full bg-white/80 px-3 py-0.5 text-[11px] font-semibold text-[#54656f] shadow-sm">
-              Today
+              {t('home.whatsappChat.today')}
             </p>
             {children}
             <p className="mt-1 pr-1 text-right text-[10px] text-[#667781]">{time}</p>
@@ -46,7 +48,7 @@ export function WhatsAppChat({ children, time = '8:24 AM', caption }: WhatsAppCh
           <div className="flex items-center gap-1.5 bg-[#f0f2f5] px-2 py-1.5">
             <div className="flex flex-1 items-center gap-2 rounded-full bg-white px-3 py-2 text-[#54656f]">
               <Smile className="h-4 w-4" strokeWidth={1.8} aria-hidden />
-              <span className="flex-1 text-[13px]">Message</span>
+              <span className="flex-1 text-[13px]">{t('home.whatsappChat.message')}</span>
               <Paperclip className="h-4 w-4" strokeWidth={1.8} aria-hidden />
               <Camera className="h-4 w-4" strokeWidth={1.8} aria-hidden />
             </div>

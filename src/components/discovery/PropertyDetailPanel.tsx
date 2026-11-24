@@ -153,6 +153,23 @@ export function PropertyDetailPanel({
         </div>
       ) : null}
       </div>
+      {(listing.rules?.length ?? 0) > 0 ? (
+        <div className="mt-5">
+          <h3 className="text-sm font-semibold text-navy">
+            {t('discovery.rules', { defaultValue: 'Rules & Guidelines' })}
+          </h3>
+          <ul className="mt-3 space-y-2">
+            {listing.rules!.map((rule, index) => (
+              <li key={`${rule.code}-${index}`} className="flex items-start gap-2 text-[12px] text-text-secondary">
+                <span className="text-register" aria-hidden>
+                  ✓
+                </span>
+                <span>{rule.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       <ListingUnavailableDetails hidePhotos={hasActualListingPhotos(meta.images)} />
       {isOwnListing ? null : (
       <PhotoRequestAction

@@ -92,6 +92,9 @@ export function toPropertyListing(detail: DiscoverSpaceCard & Partial<DiscoverSp
     capacityEstimate: null,
     amenityCodes: amenities.codes,
     amenityLabels: amenities.labels,
+    rules: (detail.rules ?? [])
+      .filter((rule) => rule?.label?.trim())
+      .map((rule) => ({ code: rule.code, label: rule.label.trim() })),
     foodIncludedInRent: detail.foodIncludedInRent === true,
     foodAvailability: foodAvailabilityOf(detail.foodAvailability),
     genderPolicy: genderPolicyOf(detail.genderPolicy),
@@ -126,6 +129,9 @@ export function toMessListing(detail: DiscoverSpaceCard & Partial<DiscoverSpaceD
     mealPrice: toNumber(detail.mealPrice),
     priceBasis: isPriceBasis(detail.priceBasis) ? detail.priceBasis : null,
     amenityCodes: amenities.codes,
+    rules: (detail.rules ?? [])
+      .filter((rule) => rule?.label?.trim())
+      .map((rule) => ({ code: rule.code, label: rule.label.trim() })),
     foodIncludedInRent: detail.foodIncludedInRent === true,
     foodAvailability:
       foodAvailabilityOf(detail.foodAvailability) ?? (detail.foodIncludedInRent ? 'INCLUDED' : null),

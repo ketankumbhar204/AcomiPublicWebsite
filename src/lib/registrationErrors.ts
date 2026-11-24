@@ -1,11 +1,10 @@
+import type { TFunction } from 'i18next';
 import { ApiError } from '../api/client';
 
 /*
  * Every branch returns copy authored here. Backend text is only ever matched against,
  * never rendered, so provider errors and exception messages cannot reach the page.
  */
-
-const NETWORK = 'You appear to be offline. Check your connection and try again.';
 
 function backendText(error: unknown): string {
   return error instanceof ApiError ? error.message.toLowerCase() : '';
@@ -19,49 +18,55 @@ function status(error: unknown): number {
   return error instanceof ApiError ? error.status : -1;
 }
 
-export function sendOtpErrorMessage(error: unknown): string {
+export function sendOtpErrorMessage(error: unknown, t: TFunction): string {
   if (isNetwork(error)) {
-    return NETWORK;
+    return t('registration.errors.network');
   }
   const text = backendText(error);
   if (text.includes('too many otp requests')) {
-    return 'Too many OTP requests. Please try again later.';
+    return t('registration.errors.otpTooMany');
   }
   if (status(error) === 429 || text.includes('please wait before requesting')) {
-    return 'Please wait a moment before requesting another OTP.';
+    return t('registration.errors.otpWait');
   }
   if (text.includes('valid 10-digit') || text.includes('mobile number')) {
-    return 'Enter a valid 10-digit mobile number.';
+    return t('registration.errors.invalidMobile');
   }
-  return 'Unable to send OTP. Please try again.';
+  return t('registration.errors.otpSendFailed');
 }
 
-export function verifyOtpErrorMessage(error: unknown): string {
+export function verifyOtpErrorMessage(error: unknown, t: TFunction): string {
   if (isNetwork(error)) {
-    return NETWORK;
+    return t('registration.errors.network');
   }
   const text = backendText(error);
   if (text.includes('expired')) {
-    return 'OTP expired. Please request a new one.';
+    return t('registration.errors.otpExpired');
   }
   if (text.includes('too many incorrect attempts')) {
-    return 'Too many incorrect attempts. Please request a new OTP.';
+    return t('registration.errors.otpTooManyAttempts');
   }
   if (text.includes('no longer valid')) {
-    return 'That OTP has already been used. Please request a new one.';
+    return t('registration.errors.otpAlreadyUsed');
   }
-  return 'Incorrect OTP. Please try again.';
+  return t('registration.errors.otpIncorrect');
 }
 
-export function submitErrorMessage(error: unknown): string {
+export function submitErrorMessage(
+  error: unknown,
+  t: TFunction,
+  mode: 'create' | 'edit' = 'create',
+): string {
   if (isNetwork(error)) {
-    return NETWORK;
+    return t('registration.errors.network');
   }
   const text = backendText(error);
   if (text.includes('verification token') || text.includes('already been used')) {
-    return 'Your mobile verification expired. Please verify your number again.';
+    return t('registration.errors.verificationExpired');
   }
-  return "We couldn't submit your property. Please try again.";
+  return mode === 'edit'
+    ? t('registration.errors.saveFailed')
+    : t('registration.errors.submitFailed');
 }
 
 /** True when the stored verification token is no longer usable and step 3 must restart. */

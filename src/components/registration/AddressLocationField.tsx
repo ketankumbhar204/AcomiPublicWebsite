@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { Check, MapPin, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { locationsApi } from '../../api/locationsApi';
 import {
   AUTOCOMPLETE_DEBOUNCE_MS,
@@ -10,7 +11,7 @@ import {
   suggestionTitle,
   type LocationAutocompleteSuggestion,
 } from '../../data/listings/locationAutocomplete';
-import { LISTING_COPY, type ListingKind } from '../../constants/listing';
+import type { ListingKind } from '../../constants/listing';
 import { digitsOnly } from '../../lib/indianMobile';
 import { Field, inputClasses } from '../form/Field';
 import { TextField } from '../form/TextField';
@@ -59,11 +60,11 @@ function DetailInput({
   );
 }
 
-function ReadOnly({ label, value }: { label: string; value: string }) {
+function ReadOnly({ label, value, empty }: { label: string; value: string; empty: string }) {
   return (
     <div className="min-w-0">
       <dt className="text-[11px] font-medium tracking-wide text-muted uppercase">{label}</dt>
-      <dd className="truncate text-[13px] text-navy">{value || '—'}</dd>
+      <dd className="truncate text-[13px] text-navy">{value || empty}</dd>
     </div>
   );
 }
@@ -75,14 +76,16 @@ export function AddressLocationField({
   requireBuilding = true,
   onChange,
 }: AddressLocationFieldProps) {
-  const copy = LISTING_COPY[kind];
+  const { t } = useTranslation();
   const listId = useId();
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState(form.locationQuery);
   const [suggestions, setSuggestions] = useState<LocationAutocompleteSuggestion[]>([]);
   const [status, setStatus] = useState<SearchStatus>('idle');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
+  const dash = t('registration.emDash');
 
   useEffect(() => {
     setQuery(form.locationQuery);
@@ -209,7 +212,7 @@ export function AddressLocationField({
     <div className="space-y-3">
       <TextField
         id="buildingName"
-        label={copy.buildingLabel}
+        label={t(`registration.${kind}.buildingLabel`)}
         required={requireBuilding}
         value={form.buildingName}
         onChange={(next) => {
@@ -217,11 +220,16 @@ export function AddressLocationField({
           onChange('buildingNameEdited', true);
         }}
         error={errors.buildingName}
-        placeholder={copy.buildingPlaceholder}
+        placeholder={t(`registration.${kind}.buildingPlaceholder`)}
         maxLength={150}
         autoComplete="organization"
       />
-      <Field htmlFor="locationQuery" label="Search location" required error={errors.locationQuery}>
+      <Field
+        htmlFor="locationQuery"
+        label={t('registration.fields.searchLocation')}
+        required
+        error={errors.locationQuery}
+      >
         <div className="relative">
           <Search
             aria-hidden
@@ -244,7 +252,7 @@ export function AddressLocationField({
             onBlur={() => {
               window.setTimeout(() => setOpen(false), 150);
             }}
-            placeholder="Search building, road, area, locality or landmark"
+            placeholder={t('registration.fields.searchLocationPlaceholder')}
             autoComplete="off"
             className={`${inputClasses(Boolean(errors.locationQuery))} pl-10`}
           />
@@ -261,21 +269,27 @@ export function AddressLocationField({
               className="block w-full border-b border-border bg-[#F7FBF8] px-3.5 py-2.5 text-left"
               onClick={keepTypedLocation}
             >
-              <span className="block text-[14px] font-medium text-navy">Use “{query.trim()}”</span>
+              <span className="block text-[14px] font-medium text-navy">
+                {t('registration.location.useTyped', { query: query.trim() })}
+              </span>
               <span className="mt-0.5 block text-[12px] text-text-secondary">
-                Continue with this text. A suggestion is optional.
+                {t('registration.location.useTypedHint')}
               </span>
             </button>
             {status === 'loading' ? (
-              <p className="px-3.5 py-3 text-[13px] text-text-secondary">Searching locations...</p>
+              <p className="px-3.5 py-3 text-[13px] text-text-secondary">
+                {t('registration.location.searching')}
+              </p>
             ) : null}
             {status === 'empty' ? (
               <p className="px-3.5 py-3 text-[13px] text-text-secondary">
-                No matching places. You can continue with the location you typed.
+                {t('registration.location.noMatches')}
               </p>
             ) : null}
             {status === 'error' ? (
-              <p className="px-3.5 py-3 text-[13px] text-danger">Unable to search locations. Please try again.</p>
+              <p className="px-3.5 py-3 text-[13px] text-danger">
+                {t('registration.location.searchFailed')}
+              </p>
             ) : null}
             {status === 'ready'
               ? suggestions.map((suggestion, index) => {
@@ -310,7 +324,7 @@ export function AddressLocationField({
         <div className="rounded-2xl border border-primary/20 bg-[#F3FBF7] px-3.5 py-3">
           <p className="flex items-center gap-1.5 text-[13px] font-semibold text-primary">
             <Check aria-hidden className="h-4 w-4" />
-            Location selected
+            {t('registration.location.selected')}
           </p>
           {form.buildingName.trim() ? (
             <p className="mt-1.5 text-[14px] font-semibold text-navy">{form.buildingName.trim()}</p>
@@ -318,11 +332,19 @@ export function AddressLocationField({
           <p className="mt-1 text-[13px] leading-snug text-text">{form.addressLine}</p>
           {summaryLine ? <p className="mt-1 text-[13px] text-text-secondary">{summaryLine}</p> : null}
           <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2">
-            <ReadOnly label="Locality" value={form.locality} />
-            <ReadOnly label="City" value={form.city} />
-            <ReadOnly label="State" value={form.state} />
-            {form.pincode ? <ReadOnly label="Pincode" value={form.pincode} /> : null}
-            {form.district ? <ReadOnly label="District" value={form.district} /> : null}
+            <ReadOnly label={t('registration.fields.locality')} value={form.locality} empty={dash} />
+            <ReadOnly label={t('registration.fields.city')} value={form.city} empty={dash} />
+            <ReadOnly label={t('registration.fields.state')} value={form.state} empty={dash} />
+            {form.pincode ? (
+              <ReadOnly label={t('registration.fields.pincode')} value={form.pincode} empty={dash} />
+            ) : null}
+            {form.district ? (
+              <ReadOnly
+                label={t('registration.fields.district')}
+                value={form.district}
+                empty={dash}
+              />
+            ) : null}
           </dl>
           {form.mapUrl ? (
             <a
@@ -332,7 +354,7 @@ export function AddressLocationField({
               className="mt-2 inline-flex items-center gap-1 text-[13px] font-semibold text-primary underline underline-offset-2"
             >
               <MapPin aria-hidden className="h-3.5 w-3.5" />
-              Open in Google Maps
+              {t('registration.location.openInMaps')}
             </a>
           ) : null}
           <button
@@ -345,40 +367,40 @@ export function AddressLocationField({
             }}
             className="mt-2 block text-[13px] font-semibold text-primary"
           >
-            Change location
+            {t('registration.location.changeLocation')}
           </button>
         </div>
       ) : form.locationQuery.trim() && !open ? (
         <div className="rounded-2xl border border-border bg-white px-3.5 py-3">
-          <p className="text-[13px] font-semibold text-navy">Location details</p>
+          <p className="text-[13px] font-semibold text-navy">{t('registration.location.detailsTitle')}</p>
           <p className="mt-0.5 text-[12px] leading-snug text-text-secondary">
-            Optional. Add city, district and the other details for “{form.locationQuery.trim()}”.
+            {t('registration.location.detailsHint', { query: form.locationQuery.trim() })}
           </p>
           <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2.5">
             <DetailInput
               id="locality"
-              label="Locality"
+              label={t('registration.fields.locality')}
               value={form.locality}
               onChange={(value) => onChange('locality', value)}
               maxLength={80}
             />
             <DetailInput
               id="city"
-              label="City"
+              label={t('registration.fields.city')}
               value={form.city}
               onChange={(value) => onChange('city', value)}
               maxLength={80}
             />
             <DetailInput
               id="state"
-              label="State"
+              label={t('registration.fields.state')}
               value={form.state}
               onChange={(value) => onChange('state', value)}
               maxLength={80}
             />
             <DetailInput
               id="pincode"
-              label="Pincode"
+              label={t('registration.fields.pincode')}
               value={form.pincode}
               onChange={(value) => onChange('pincode', digitsOnly(value, 6))}
               error={errors.pincode}
@@ -387,7 +409,7 @@ export function AddressLocationField({
             />
             <DetailInput
               id="district"
-              label="District"
+              label={t('registration.fields.district')}
               value={form.district}
               onChange={(value) => onChange('district', value)}
               maxLength={80}
@@ -399,11 +421,11 @@ export function AddressLocationField({
 
       <TextField
         id="mapUrl"
-        label="Google Maps link (optional)"
+        label={t('registration.fields.mapLink')}
         value={form.mapUrl}
         onChange={(value) => onChange('mapUrl', value)}
         error={errors.mapUrl}
-        placeholder="Paste a Google Maps link"
+        placeholder={t('registration.fields.mapLinkPlaceholder')}
         inputMode="url"
       />
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { sendOtp, verifyOtp } from '../../api/authApi';
 import { createMessRegistration } from '../../api/messRegistrationApi';
 import { createPropertyRegistration } from '../../api/propertyRegistrationApi';
@@ -181,6 +182,7 @@ export function PropertyRegistrationDrawer({
   onClose,
   onSaved,
 }: PropertyRegistrationDrawerProps) {
+  const { t } = useTranslation();
   const editing = editListing != null;
   const copy = LISTING_COPY[kind];
   const { user } = useAuth();
@@ -286,27 +288,27 @@ export function PropertyRegistrationDrawer({
   function handleContinue() {
     if (step === 3) {
       if (phase !== 'verified' || !verificationToken) {
-        setVerifyError('Verify your mobile number before continuing.');
+        setVerifyError(t('registration.verify.beforeContinue'));
         return;
       }
       goToStep(4);
       return;
     }
     if (step === 4) {
-      const rejection = photos.map((photo) => listingPhotoError(photo.file, 0)).find(Boolean);
+      const rejection = photos.map((photo) => listingPhotoError(photo.file, 0, t)).find(Boolean);
       if (rejection) {
         setSubmitError(rejection);
         return;
       }
       if (photos.length > 3) {
-        setSubmitError('You can add up to 3 photos.');
+        setSubmitError(t('registration.photos.upToThree'));
         return;
       }
       setSubmitError(null);
       goToStep(5);
       return;
     }
-    const found = step === 1 ? validatePropertyStep(form) : validateDetailsStep(form);
+    const found = step === 1 ? validatePropertyStep(form, t) : validateDetailsStep(form, t);
     const firstInvalid = Object.keys(found)[0];
     if (firstInvalid) {
       setErrors(found);
@@ -378,7 +380,7 @@ export function PropertyRegistrationDrawer({
   }, [open, kind, copy.draftKey, user?.mobileNumber, user?.fullName, editListing]);
 
   async function handleSendOtp() {
-    const found = validateMobile(form);
+    const found = validateMobile(form, t);
     if (Object.keys(found).length > 0) {
       setErrors(found);
       return;
@@ -393,7 +395,7 @@ export function PropertyRegistrationDrawer({
       // Cooldown comes from the backend so the provider's policy stays server-side.
       setResendAt(Date.now() + Math.max(0, response.resendAfter) * 1000);
     } catch (error) {
-      setSendError(sendOtpErrorMessage(error));
+      setSendError(sendOtpErrorMessage(error, t));
     } finally {
       setSending(false);
     }
@@ -403,7 +405,7 @@ export function PropertyRegistrationDrawer({
     if (!IS_LOCAL_DEV || !localSkipChecked) {
       return;
     }
-    const found = validateMobile(form);
+    const found = validateMobile(form, t);
     if (Object.keys(found).length > 0) {
       setErrors(found);
       return;
@@ -418,7 +420,7 @@ export function PropertyRegistrationDrawer({
 
   async function handleVerifyOtp(candidate = otp) {
     if (candidate.length !== 6) {
-      setVerifyError('Enter the 6-digit OTP.');
+      setVerifyError(t('registration.verify.enterSixDigit'));
       return;
     }
     setVerifying(true);
@@ -430,7 +432,7 @@ export function PropertyRegistrationDrawer({
       setSendError(null);
     } catch (error) {
       // Kept separate from sendError so a verify failure can never surface send copy.
-      setVerifyError(verifyOtpErrorMessage(error));
+      setVerifyError(verifyOtpErrorMessage(error, t));
     } finally {
       setVerifying(false);
     }
@@ -508,12 +510,7 @@ export function PropertyRegistrationDrawer({
         onSaved?.();
         onClose();
       } catch (error) {
-        const message = submitErrorMessage(error);
-        setSubmitError(
-          message === "We couldn't submit your property. Please try again."
-            ? "We couldn't save this listing. Please try again."
-            : message,
-        );
+        setSubmitError(submitErrorMessage(error, t, 'edit'));
       } finally {
         setSubmitting(false);
       }
@@ -533,7 +530,7 @@ export function PropertyRegistrationDrawer({
       clearDraft(copy.draftKey);
       setResult(response);
     } catch (error) {
-      setSubmitError(submitErrorMessage(error));
+      setSubmitError(submitErrorMessage(error, t, 'create'));
       if (isVerificationExpired(error)) {
         // The token is single-use, so a rejected one can never succeed on retry.
         resetVerification();
@@ -560,7 +557,9 @@ export function PropertyRegistrationDrawer({
     onClose();
   }
 
-  const visibleSteps = editing ? copy.stepper.filter((label) => label !== 'Verify') : copy.stepper;
+  const visibleSteps = editing
+    ? copy.stepper.filter((stepId) => stepId !== 'verify')
+    : copy.stepper;
   const displayStep = editing && step >= 4 ? step - 1 : step;
   const pastVerify = editing || phase === 'verified';
 
@@ -576,8 +575,8 @@ export function PropertyRegistrationDrawer({
       {result ? (
         <RegistrationSuccess
           titleId={copy.titleId}
-          title={copy.successTitle}
-          body={copy.successBody}
+          title={t(`registration.${kind}.successTitle`)}
+          body={t(`registration.${kind}.successBody`)}
           reference={result.reference}
           onClose={handleClose}
         />
@@ -589,19 +588,19 @@ export function PropertyRegistrationDrawer({
                 <button
                   type="button"
                   onClick={() => goToStep(previousStep(step))}
-                  aria-label="Back to previous step"
+                  aria-label={t('registration.backToPreviousStep')}
                   className="reg-focus -ml-1.5 rounded-lg p-1.5 text-muted transition hover:bg-background hover:text-text"
                 >
                   <ArrowLeft aria-hidden className="h-4 w-4" />
                 </button>
               ) : null}
               <h2 id={copy.titleId} className="flex-1 text-[16px] font-semibold text-text">
-                {editing ? 'Edit listing' : copy.title}
+                {editing ? t('registration.editListing') : t(`registration.${kind}.title`)}
               </h2>
               <button
                 type="button"
                 onClick={handleClose}
-                aria-label="Close"
+                aria-label={t('registration.close')}
                 className="reg-focus -mr-1.5 rounded-lg p-1.5 text-muted transition hover:bg-background hover:text-text"
               >
                 <X aria-hidden className="h-5 w-5" />
@@ -617,7 +616,7 @@ export function PropertyRegistrationDrawer({
               <StepProperty
                 form={form}
                 errors={errors}
-                copy={copy}
+                kind={kind}
                 showTypeSelect={kind === 'property'}
                 onChange={updateField}
               />
@@ -654,7 +653,7 @@ export function PropertyRegistrationDrawer({
               <StepPhotos
                 photos={photos}
                 onChange={setPhotos}
-                note={editing ? 'New photos replace the current ones. Leave this empty to keep them.' : undefined}
+                note={editing ? t('registration.photosReplaceNote') : undefined}
               />
             ) : null}
             {step === 5 && pastVerify ? (
@@ -678,7 +677,7 @@ export function PropertyRegistrationDrawer({
               {step > 1 ? (
                 <SecondaryButton onClick={() => goToStep(previousStep(step))}>
                   <ArrowLeft aria-hidden className="h-4 w-4" />
-                  Back
+                  {t('registration.back')}
                 </SecondaryButton>
               ) : null}
               {IS_LOCAL_DEV && !editing && step === 3 && phase !== 'verified' ? (
@@ -686,7 +685,7 @@ export function PropertyRegistrationDrawer({
                   onClick={handleSkipOtp}
                   disabled={!localSkipChecked || form.mobileNumber.length !== 10}
                 >
-                  Skip OTP
+                  {t('registration.skipOtp')}
                 </SecondaryButton>
               ) : null}
               {step < LAST_STEP ? (
@@ -695,7 +694,7 @@ export function PropertyRegistrationDrawer({
                   disabled={!editing && step === 3 && phase !== 'verified'}
                   className="flex-1"
                 >
-                  Continue
+                  {t('registration.continue')}
                   <ArrowRight aria-hidden className="h-4 w-4" />
                 </CtaButton>
               ) : (
@@ -705,7 +704,13 @@ export function PropertyRegistrationDrawer({
                   disabled={!editing && (phase !== 'verified' || !verificationToken)}
                   className="flex-1"
                 >
-                  {submitting ? 'Saving…' : editing ? 'Save listing' : kind === 'mess' ? 'Submit mess' : 'Submit property'}
+                  {submitting
+                    ? t('registration.saving')
+                    : editing
+                      ? t('registration.saveListing')
+                      : kind === 'mess'
+                        ? t('registration.submitMess')
+                        : t('registration.submitProperty')}
                 </CtaButton>
               )}
             </div>

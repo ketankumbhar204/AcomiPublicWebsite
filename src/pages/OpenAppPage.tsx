@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.acomi&hl=en_IN';
 
@@ -7,6 +8,7 @@ const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.acomi&
  * Android: open the installed Acomi app. Otherwise: Play Store.
  */
 export function OpenAppPage() {
+  const { t } = useTranslation();
   useEffect(() => {
     const android = /Android/i.test(navigator.userAgent || '');
     if (!android) {
@@ -28,9 +30,9 @@ export function OpenAppPage() {
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', fontFamily: 'sans-serif' }}>
       <div style={{ textAlign: 'center', padding: 24 }}>
-        <p>Opening Acomi…</p>
+        <p>{t('openApp.opening')}</p>
         <p>
-          <a href={PLAY_STORE_URL}>Get Acomi on Google Play</a>
+          <a href={PLAY_STORE_URL}>{t('openApp.getOnPlay')}</a>
         </p>
       </div>
     </main>

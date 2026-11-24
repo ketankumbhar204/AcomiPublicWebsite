@@ -1,22 +1,28 @@
+import type { TFunction } from 'i18next';
+
 export const MAX_LISTING_PHOTOS = 3;
 export const MAX_LISTING_PHOTO_BYTES = 3 * 1024 * 1024;
 
 const ACCEPTED_TYPES = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp']);
 
-export function listingPhotoError(file: File, alreadySelected: number): string | null {
+export function listingPhotoError(
+  file: File,
+  alreadySelected: number,
+  t: TFunction,
+): string | null {
   if (alreadySelected >= MAX_LISTING_PHOTOS) {
-    return 'You can add up to 3 photos.';
+    return t('registration.photos.upToThree');
   }
   const type = file.type.toLowerCase();
   const extensionOk = /\.(jpe?g|png|webp)$/.test(file.name.toLowerCase());
   if (!ACCEPTED_TYPES.has(type) && !(type === '' && extensionOk)) {
-    return 'Use a JPEG, PNG, or WebP image.';
+    return t('registration.photos.invalidType');
   }
   if (file.size > MAX_LISTING_PHOTO_BYTES) {
-    return 'Each photo must be 3 MB or smaller.';
+    return t('registration.photos.tooLarge');
   }
   if (file.size <= 0) {
-    return 'That photo is empty.';
+    return t('registration.photos.empty');
   }
   return null;
 }

@@ -1,4 +1,5 @@
-import type { ListingCopy } from '../../constants/listing';
+import { useTranslation } from 'react-i18next';
+import type { ListingKind } from '../../constants/listing';
 import { TextAreaField, TextField } from '../form/TextField';
 import { PropertyTypeSelect } from './PropertyTypeSelect';
 import { DESCRIPTION_MAX } from './registrationForm';
@@ -7,7 +8,7 @@ import type { FieldErrors, RegistrationForm } from './registrationForm';
 type StepPropertyProps = {
   form: RegistrationForm;
   errors: FieldErrors;
-  copy: ListingCopy;
+  kind: ListingKind;
   showTypeSelect: boolean;
   ownerRequired?: boolean;
   typeLocked?: boolean;
@@ -17,12 +18,13 @@ type StepPropertyProps = {
 export function StepProperty({
   form,
   errors,
-  copy,
+  kind,
   showTypeSelect,
   ownerRequired = true,
   typeLocked = false,
   onChange,
 }: StepPropertyProps) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-5">
       {showTypeSelect ? (
@@ -36,34 +38,34 @@ export function StepProperty({
 
       <TextField
         id="propertyName"
-        label={copy.nameLabel}
+        label={t(`registration.${kind}.nameLabel`)}
         required
         value={form.propertyName}
         onChange={(value) => onChange('propertyName', value)}
         error={errors.propertyName}
-        placeholder={copy.namePlaceholder}
+        placeholder={t(`registration.${kind}.namePlaceholder`)}
         maxLength={150}
         autoComplete="organization"
       />
 
       <TextField
         id="ownerName"
-        label="Owner name"
+        label={t('registration.fields.ownerName')}
         required={ownerRequired}
         value={form.ownerName}
         onChange={(value) => onChange('ownerName', value)}
         error={errors.ownerName}
-        placeholder="e.g. Ketan Kumbhar"
+        placeholder={t('registration.fields.ownerNamePlaceholder')}
         maxLength={120}
         autoComplete="name"
       />
 
       <TextAreaField
         id="description"
-        label="Short description (optional)"
+        label={t('registration.fields.shortDescription')}
         value={form.description}
         onChange={(value) => onChange('description', value)}
-        placeholder={copy.descriptionPlaceholder}
+        placeholder={t(`registration.${kind}.descriptionPlaceholder`)}
         maxLength={DESCRIPTION_MAX}
       />
     </div>

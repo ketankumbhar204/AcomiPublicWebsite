@@ -143,8 +143,8 @@ function ReceivedEnquiries({
             </option>
           ))}
         </select>
-        <input type="date" value={from} onChange={(event) => setFrom(event.target.value)} className="rounded-xl border border-border px-3 py-2 text-sm" aria-label="From" />
-        <input type="date" value={to} onChange={(event) => setTo(event.target.value)} className="rounded-xl border border-border px-3 py-2 text-sm" aria-label="To" />
+        <input type="date" value={from} onChange={(event) => setFrom(event.target.value)} className="rounded-xl border border-border px-3 py-2 text-sm" aria-label={t('enquiries.received.from')} />
+        <input type="date" value={to} onChange={(event) => setTo(event.target.value)} className="rounded-xl border border-border px-3 py-2 text-sm" aria-label={t('enquiries.received.to')} />
       </div>
       {loading ? <p className="mt-6 text-sm text-text-secondary">{t('auth.pleaseWait')}</p> : null}
       {error ? (
@@ -169,7 +169,7 @@ function ReceivedEnquiries({
               onClick={() => setSelectedId(row.enquiryId)}
               className="w-full rounded-2xl border border-border bg-white px-4 py-3 text-left"
             >
-              <span className="block font-semibold text-navy">{row.requesterName || 'Member'}</span>
+              <span className="block font-semibold text-navy">{row.requesterName || t('enquiries.received.member')}</span>
               {[row.requesterMobile, row.requesterEmail].filter(Boolean).length > 0 ? (
                 <span className="block text-sm font-semibold text-navy">
                   {[row.requesterMobile, row.requesterEmail].filter(Boolean).join(' · ')}
@@ -185,22 +185,22 @@ function ReceivedEnquiries({
       </ul>
       {selected ? (
         <div className="mt-4 rounded-2xl border border-border bg-white p-4">
-          <p className="font-semibold text-navy">{selected.requesterName || 'Member'}</p>
+          <p className="font-semibold text-navy">{selected.requesterName || t('enquiries.received.member')}</p>
           <p className="text-sm text-text-secondary">{selected.locationLabel}</p>
           <p className="mt-1 text-sm font-semibold text-navy">{selected.status}</p>
           <div className="mt-3 rounded-2xl bg-[#E7F6EE] p-3">
-            <p className="text-xs font-bold tracking-wide text-[#0F6B4C] uppercase">Sender details</p>
-            <p className="mt-2 text-xs font-semibold text-text-secondary">Name</p>
-            <p className="text-sm font-semibold text-navy">{selected.requesterName?.trim() || 'Not available'}</p>
-            <p className="mt-2 text-xs font-semibold text-text-secondary">Mobile</p>
-            <p className="text-sm font-semibold text-navy">{selected.requesterMobile?.trim() || 'Not available'}</p>
-            <p className="mt-2 text-xs font-semibold text-text-secondary">Email</p>
-            <p className="text-sm font-semibold text-navy">{selected.requesterEmail?.trim() || 'Not available'}</p>
+            <p className="text-xs font-bold tracking-wide text-[#0F6B4C] uppercase">{t('enquiries.received.senderDetails')}</p>
+            <p className="mt-2 text-xs font-semibold text-text-secondary">{t('enquiries.received.name')}</p>
+            <p className="text-sm font-semibold text-navy">{selected.requesterName?.trim() || t('enquiries.received.notAvailable')}</p>
+            <p className="mt-2 text-xs font-semibold text-text-secondary">{t('enquiries.received.mobile')}</p>
+            <p className="text-sm font-semibold text-navy">{selected.requesterMobile?.trim() || t('enquiries.received.notAvailable')}</p>
+            <p className="mt-2 text-xs font-semibold text-text-secondary">{t('enquiries.received.email')}</p>
+            <p className="text-sm font-semibold text-navy">{selected.requesterEmail?.trim() || t('enquiries.received.notAvailable')}</p>
             {selected.requesterType ? (
               <>
-                <p className="mt-2 text-xs font-semibold text-text-secondary">Account</p>
+                <p className="mt-2 text-xs font-semibold text-text-secondary">{t('enquiries.received.account')}</p>
                 <p className="text-sm font-semibold text-navy">
-                  {selected.requesterType === 'OWNER' ? 'Lists a property' : 'Member'}
+                  {selected.requesterType === 'OWNER' ? t('enquiries.received.listsProperty') : t('enquiries.received.member')}
                 </p>
               </>
             ) : null}
@@ -208,21 +208,21 @@ function ReceivedEnquiries({
           <div className="mt-3 flex flex-wrap gap-2">
             {selected.requesterMobile ? (
               <a className="rounded-full bg-primary px-3 py-2 text-sm font-semibold text-white" href={`tel:${selected.requesterMobile}`}>
-                Call
+                {t('enquiries.received.call')}
               </a>
             ) : null}
             {selected.requesterMobile ? (
               <a className="rounded-full border border-border px-3 py-2 text-sm font-semibold text-navy" href={`sms:${selected.requesterMobile}`}>
-                Message
+                {t('enquiries.received.message')}
               </a>
             ) : null}
             {selected.requesterEmail ? (
               <a className="rounded-full border border-border px-3 py-2 text-sm font-semibold text-navy" href={`mailto:${selected.requesterEmail}`}>
-                Email
+                {t('enquiries.received.email')}
               </a>
             ) : null}
             <Link className="rounded-full border border-border px-3 py-2 text-sm font-semibold text-navy" to={listingPath(selected)}>
-              Open listing
+              {t('enquiries.received.openListing')}
             </Link>
           </div>
         </div>
